@@ -1,4 +1,109 @@
+    /**
+* filtration for selecting previous month in filtration block above calendar view.
+*/
 
+function filteration_calendar_month() {
+  var role = $('.validate_check_roles').html();
+  if(role != 'employee')  {
+    var id = document.getElementById('filter_by_choice_team').value;
+    var val = document.getElementById('filtered_date_month').value;
+    var py = document.getElementById('filtered_date_year').value;
+    var pm;
+    switch(val){
+      case "January":pm = "01";break;
+       case  "February":pm = "02";break;
+       case "March":pm = "03";break;
+       case "April":pm = "04";break;
+       case "May":pm = "05";break;
+       case  "June":pm = "06";break;
+       case "July":pm = "07";break;
+       case "August":pm = "08";break;
+      case "September":pm="09";break;
+      case "October":pm = "10";break;
+       case "November":pm = "11";break;
+      case "December":pm="12";break;
+      default:var d = new Date(); 
+        pm=d.getMonth()+1;
+        if(pm<10){
+          pm = '0'+pm;
+        }
+      break;
+    }
+  }
+  else {
+    var val = document.getElementById('filtered_date_month').value;
+    var py = document.getElementById('filtered_date_year').value;
+    var pm;
+    switch(val){
+      case "January":pm = "01";break;
+       case  "February":pm = "02";break;
+       case "March":pm = "03";break;
+       case "April":pm = "04";break;
+       case "May":pm = "05";break;
+       case  "June":pm = "06";break;
+       case "July":pm = "07";break;
+       case "August":pm = "08";break;
+      case "September":pm="09";break;
+      case "October":pm = "10";break;
+       case "November":pm = "11";break;
+      case "December":pm="12";break;
+      default:var d = new Date(); 
+        pm=d.getMonth()+1;
+        if(pm<10){
+          pm = '0'+pm;
+        }
+      break;
+    }
+  }
+  var xmlhttp;
+  if(window.XMLHttpRequest) {
+    xmlhttp = new XMLHttpRequest();
+  }
+
+  else {
+    xmlhttp = new ActiveXObjct("Microsoft.XMLHTTP");
+  }
+
+  xmlhttp.onreadystatechange = function() {
+    if(xmlhttp.readyState===4 && xmlhttp.status==200) {
+      document.getElementById("calendar-view").innerHTML=xmlhttp.responseText;
+      if(role != 'employee') {
+        $('.working_checks').css("display","none");
+        $('.working_hrs').css("display","block");
+      } else {
+        $('.working_hrs').css("display","none");
+        $('.working_checks').css("display","block");
+      }
+    }
+  }
+  if(role!='employee'){
+    xmlhttp.open("POST","calendar_view_page.php?p-month="+pm+"&p-year="+py+"&emp_id="+id,true);
+  }else {
+    xmlhttp.open("POST","calendar_view_page.php?p-month="+pm+"&p-year="+py,true);
+  }
+  xmlhttp.send();
+}
+  function autoId(){
+              
+              var team = document.getElementById('team').value;
+        
+              var xmlhttp;
+              if(window.XMLHttpRequest) {
+                xmlhttp = new XMLHttpRequest();
+              }
+              else {
+                xmlhttp = new ActiveXObjct("Microsoft.XMLHTTP");
+              }
+        
+            xmlhttp.onreadystatechange = function() {
+             if(xmlhttp.readyState===4 && xmlhttp.status==200) {
+                 document.getElementById("empid").value = xmlhttp.responseText;
+               }
+             }
+           xmlhttp.open("POST","autoid_Ajax.php?team="+team,true);
+           xmlhttp.send();
+           
+      }
 function get_data_biomatric_csv(){
   var month = document.getElementById('choose_month_csv').value;
   alert(month);
@@ -15,24 +120,6 @@ function get_data_biomatric_csv(){
 /**
  * started here filteration block click event for reseting the current applied filteration..............................
 */
-$('#fi_previous_month').click(function() {
-    var monthNames = ["01", "02", "03", "04", "05", "06","07", "08", "09", "10", "11", "12"];
-    var d = new Date();
-    var name = monthNames[d.getMonth()];
-    document.getElementById('previous_month').value= name;
-    $('#fi_previous_month').removeClass('fa fa-times').addClass('hidden');
-    $('#li_previous_month').removeClass('hidden').addClass('visible');
-    filteration_calendar_month();
- });
-
-$('#fi_previous_year').click(function() {
-    var d = new Date();
-    var name = d.getFullYear();
-    document.getElementById('previous_year').value= name;
-    $('#fi_previous_year').removeClass('fa fa-times').addClass('hidden');
-    $('#li_previous_year').removeClass('hidden').addClass('visible');
-    filteration_calendar_month();
- });
 
 $('#fi_onedate').click(function() {
    document.getElementById('onedate').value='';
@@ -56,30 +143,30 @@ $('#fi_todate').click(function() {
  
 });
 
-$('#fi_filter_by_choice_button').click(function() {
-  document.getElementById('filter_by_choice_team').value='';
-  $('#li_filter_by_choice_team').removeClass('hidden').addClass('visible');
-  $('#fi_filter_by_choice_button').removeClass('fa fa-times').addClass('hidden');
-  var d =location.href.split("/").slice(-1);
-  if(d =='viewsigninout.php'|| d=='viewsigninout.php#') {
-    filtration_checkin();
-  }
-  if(d == 'dashboard.php' || d =='dashboard.php#') {
-    filteration_calendar_month();
-  }
-  if(d =='modifyemployee.php' || d =='modifyemployee.php#') {
-    filteration_modify_employee();
-  }
-  if(d =='viewemployeedetails.php' || d=='viewemployeedetails.php#') {
-    filtration_view_employee_details();
-  }
-  if(d =='availableleaves.php' || d=='availableleaves.php#') {
-    filtration_leavehistory();
-  }
-   if(d =='monthlyshift.php' || d=='monthlyshift.php#') {
-    filtration_monthlyshift();
-  }
-});
+// $('#fi_filter_by_choice_button').click(function() {
+//   document.getElementById('filter_by_choice_team').value='';
+//   $('#li_filter_by_choice_team').removeClass('hidden').addClass('visible');
+//   $('#fi_filter_by_choice_button').removeClass('fa fa-times').addClass('hidden');
+//   var d =location.href.split("/").slice(-1);
+//   if(d =='viewsigninout.php'|| d=='viewsigninout.php#') {
+//     filtration_checkin();
+//   }
+//   if(d == 'dashboard.php' || d =='dashboard.php#') {
+//     filteration_calendar_month();
+//   }
+//   if(d =='modifyemployee.php' || d =='modifyemployee.php#') {
+//     filteration_modify_employee();
+//   }
+//   if(d =='viewemployeedetails.php' || d=='viewemployeedetails.php#') {
+//     filtration_view_employee_details();
+//   }
+//   if(d =='availableleaves.php' || d=='availableleaves.php#') {
+//     filtration_leavehistory();
+//   }
+//    if(d =='monthlyshift.php' || d=='monthlyshift.php#') {
+//     filtration_monthlyshift();
+//   }
+// });
 
 /**
  * ./closed here filteration block click event for reseting the current applied filteration..............................
@@ -455,48 +542,7 @@ function filteration_modify_employee() {
     }
   });
 }
-/**
-* filtration for selecting previous month in filtration block above calendar view.
-*/
 
-function filteration_calendar_month() {
-  var role = $('.validate_check_roles').html();
-  if(role != 'employee')  {
-    var pm = document.getElementById('previous_month').value;
-    var py = document.getElementById('previous_year').value;
-    var id = document.getElementById('filter_by_choice_team').value;
-  }
-  else {
-      var pm = document.getElementById('previous_month').value;
-      var py = document.getElementById('previous_year').value;
-  }
-  var xmlhttp;
-  if(window.XMLHttpRequest) {
-    xmlhttp = new XMLHttpRequest();
-  }
-  else {
-    xmlhttp = new ActiveXObjct("Microsoft.XMLHTTP");
-  }
-
-  xmlhttp.onreadystatechange = function() {
-    if(xmlhttp.readyState===4 && xmlhttp.status==200) {
-      document.getElementById("calendar-view").innerHTML=xmlhttp.responseText;
-      if(role != 'employee') {
-        $('.working_checks').css("display","none");
-        $('.working_hrs').css("display","block");
-      } else {
-        $('.working_hrs').css("display","none");
-        $('.working_checks').css("display","block");
-      }
-    }
-  }
-  if(role != 'employee'){
-  xmlhttp.open("POST","calendar_view_page.php?p-month="+pm+"&p-year="+py+"&emp-id="+id,true);
-} else {
-  xmlhttp.open("POST","calendar_view_page.php?p-month="+pm+"&p-year="+py,true);
-}
-  xmlhttp.send();
-}
 
 /**
  * filtration method for the report page calling onchagne by id and name select box...................//
@@ -613,50 +659,72 @@ function filtration_one_report()
   xmlhttp.send();
 }
 
-
+/* filteration by search by id and search by name at navigation bar*/
+$('#id_filter').click(function () {
+  $.ajax({
+    url:'id_filter_ajax_call.php',
+    method:'post',
+    data:{},
+    dataType:'text',
+    success:function(output) {
+      document.getElementById('filter_by_choice_team').innerHTML =output;
+    }
+  });
+});
+$('#name_filter').click(function () {
+   $.ajax({
+    url:'name_filter_ajax_call.php',
+    method:'post',
+    data:{},
+    dataType:'text',
+    success:function(output) {
+      document.getElementById('filter_by_choice_team').innerHTML =output;
+    }
+  });
+});
 /**
   * below code is used for the filteration on the basis of filter by team button on the filteration block
 */
 
-$("#filter_by_team").change(function() {
- var value = document.getElementById('filter_by_team').value;
- $('#li_filter_by_choice_team').removeClass('hidden').addClass('visible');
- var xmlhttp;
-  if(window.XMLHttpRequest) {
-    xmlhttp = new XMLHttpRequest();
-  }
-  else {
-    xmlhttp = new ActiveXObjct("Microsoft.XMLHTTP");
-  }
+// $("#filter_by_team").change(function() {
+//  var value = document.getElementById('filter_by_team').value;
+//  $('#li_filter_by_choice_team').removeClass('hidden').addClass('visible');
+//  var xmlhttp;
+//   if(window.XMLHttpRequest) {
+//     xmlhttp = new XMLHttpRequest();
+//   }
+//   else {
+//     xmlhttp = new ActiveXObjct("Microsoft.XMLHTTP");
+//   }
 
-  xmlhttp.onreadystatechange = function() {
-    if(xmlhttp.readyState===4 && xmlhttp.status==200) {
-      document.getElementById("filter_by_choice_team").innerHTML=xmlhttp.responseText;
-    }
-  }
-  xmlhttp.open("POST","fiteration_choice_team_ajax_call.php?choice="+value,true);
+//   xmlhttp.onreadystatechange = function() {
+//     if(xmlhttp.readyState===4 && xmlhttp.status==200) {
+//       document.getElementById("filter_by_choice_team").innerHTML=xmlhttp.responseText;
+//     }
+//   }
+//   xmlhttp.open("POST","fiteration_choice_team_ajax_call.php?choice="+value,true);
 
-  xmlhttp.send();
- });
+//   xmlhttp.send();
+//  });
 
 
-/**
-  * below code is used for the filteration on the basis of filter by shift button on the filteration block
-*/
-$("#filter_by_shift").change(function () {
-    var role = $('.validate_check_roles').html();
-    var value = document.getElementById('filter_by_shift').value;
-    $('#li_filter_by_choice_team').removeClass('hidden').addClass('visible');
-    $.ajax({
-        url: 'fiteration_choice_team_ajax_call.php',
-        method:'post',
-        data: {'choice-shift':value},
-        dataType:'text',
-        success:function(output) {
-          document.getElementById("filter_by_choice_team").innerHTML = output;
-        }
-    });
-});
+// *
+//   * below code is used for the filteration on the basis of filter by shift button on the filteration block
+
+// $("#filter_by_shift").change(function () {
+//     var role = $('.validate_check_roles').html();
+//     var value = document.getElementById('filter_by_shift').value;
+//     $('#li_filter_by_choice_team').removeClass('hidden').addClass('visible');
+//     $.ajax({
+//         url: 'fiteration_choice_team_ajax_call.php',
+//         method:'post',
+//         data: {'choice-shift':value},
+//         dataType:'text',
+//         success:function(output) {
+//           document.getElementById("filter_by_choice_team").innerHTML = output;
+//         }
+//     });
+// });
   // if(role == 'admin') {
   //   var value2 = document.getElementById('filter_by_team').value;
   //   my_choice_team(value,value2);  
@@ -689,28 +757,7 @@ $("#filter_by_shift").change(function () {
 //   });
 // }
 
-$('#id_filter').click(function () {
-  $.ajax({
-    url:'id_filter_ajax_call.php',
-    method:'post',
-    data:{},
-    dataType:'text',
-    success:function(output) {
-      document.getElementById('filter_by_choice_team').innerHTML =output;
-    }
-  });
-});
-$('#name_filter').click(function () {
-   $.ajax({
-    url:'name_filter_ajax_call.php',
-    method:'post',
-    data:{},
-    dataType:'text',
-    success:function(output) {
-      document.getElementById('filter_by_choice_team').innerHTML =output;
-    }
-  });
-});
+
 
 // $("#filter_list_by_id").change(function () {
 //     var value = document.getElementById("filter_list_by_id").value;
@@ -769,66 +816,66 @@ $('#name_filter').click(function () {
 //     });
 // });
 
-$('#filter_list_by_manager_name').change(function (){
-  var value = document.getElementById('filter_list_by_manager_name').value;
-  $.ajax({
-      url:'change_shift_ajax_call.php',
-      method:'post',
-      data:{'value':value},
-      dataType:'text',
-      success:function(result){
-        document.getElementById("change_shift_employee").value = result;
-      }
-    });
-});
+// $('#filter_list_by_manager_name').change(function (){
+//   var value = document.getElementById('filter_list_by_manager_name').value;
+//   $.ajax({
+//       url:'change_shift_ajax_call.php',
+//       method:'post',
+//       data:{'value':value},
+//       dataType:'text',
+//       success:function(result){
+//         document.getElementById("change_shift_employee").value = result;
+//       }
+//     });
+// });
 
-function filter_manager(){
-  var role = document.getElementById('filter_button_manager').value;
-  $('#li_filter_by_choice_team').removeClass('hidden').addClass('visible');
-  $('#li_filter_by_team').removeClass('visible').addClass('hidden');
-  $('#li_filter_by_shift').removeClass('visible').addClass('hidden');
-  $.ajax({
-    url: 'emp_manager_ajax_call.php',
-    method: "post",
-    data: {'user_role':role},
-    dataType:'text',
-    success: function(result){
-      document.getElementById("filter_by_choice_team").innerHTML=result;
-    }
-  });
-  $.ajax({
-      url: 'emp_name_ajax_call.php',
-      method:"post",
-      data:{'user_role':role},
-      dataType:'text',
-      success: function(result) {
-      document.getElementById("filter_list_by_name").innerHTML=result;
-      }
-  });
-}
+// function filter_manager(){
+//   var role = document.getElementById('filter_button_manager').value;
+//   $('#li_filter_by_choice_team').removeClass('hidden').addClass('visible');
+//   $('#li_filter_by_team').removeClass('visible').addClass('hidden');
+//   $('#li_filter_by_shift').removeClass('visible').addClass('hidden');
+//   $.ajax({
+//     url: 'emp_manager_ajax_call.php',
+//     method: "post",
+//     data: {'user_role':role},
+//     dataType:'text',
+//     success: function(result){
+//       document.getElementById("filter_by_choice_team").innerHTML=result;
+//     }
+//   });
+//   $.ajax({
+//       url: 'emp_name_ajax_call.php',
+//       method:"post",
+//       data:{'user_role':role},
+//       dataType:'text',
+//       success: function(result) {
+//       document.getElementById("filter_list_by_name").innerHTML=result;
+//       }
+//   });
+// }
 
-function filter_employee(){
-  var role = document.getElementById('filter_button_employee').value;
-  $('#li_filter_by_choice_team').removeClass('hidden').addClass('visible');
-  $('#li_filter_by_team').removeClass('visible').addClass('hidden');
-  $('#li_filter_by_shift').removeClass('visible').addClass('hidden');
-  $.ajax({
-    url: 'emp_manager_ajax_call.php',
-    method: "post",
-    data: {'user_role':role},
-    dataType:'text',
-    success: function(result){
-      document.getElementById("filter_by_choice_team").innerHTML=result;
-    }
-  });
-  $.ajax({
-      url: 'emp_name_ajax_call.php',
-      method:"post",
-      data:{'user_role':role},
-      dataType:'text',
-      success: function(result) {
-      document.getElementById("filter_list_by_name").innerHTML=result;
-      }
-  });
-}
+// function filter_employee(){
+//   var role = document.getElementById('filter_button_employee').value;
+//   $('#li_filter_by_choice_team').removeClass('hidden').addClass('visible');
+//   $('#li_filter_by_team').removeClass('visible').addClass('hidden');
+//   $('#li_filter_by_shift').removeClass('visible').addClass('hidden');
+//   $.ajax({
+//     url: 'emp_manager_ajax_call.php',
+//     method: "post",
+//     data: {'user_role':role},
+//     dataType:'text',
+//     success: function(result){
+//       document.getElementById("filter_by_choice_team").innerHTML=result;
+//     }
+//   });
+//   $.ajax({
+//       url: 'emp_name_ajax_call.php',
+//       method:"post",
+//       data:{'user_role':role},
+//       dataType:'text',
+//       success: function(result) {
+//       document.getElementById("filter_list_by_name").innerHTML=result;
+//       }
+//   });
+// }
 

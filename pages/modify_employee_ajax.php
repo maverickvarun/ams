@@ -10,6 +10,7 @@ else {
 }
 $query = mysqli_query($con," select * from emp_table where empid='".$user."'");
   while($row = mysqli_fetch_array($query)) {
+    $id=$row['id'];
     $empid = $row['empid'];
     $firstname = $row['firstname'];
     $lastname = $row['lastname'];
@@ -25,6 +26,7 @@ $query = mysqli_query($con," select * from emp_table where empid='".$user."'");
     $permanentaddress = $row['permanentaddress'];
     $tempaddress = $row['tempaddress'];
     $shift = $row['shift'];
+    $status = $row['status'];
     $flag = $row['flag'];
     $employeerole = $row['employeerole'];
     $workunderteam = $row['workunderteam'];
@@ -35,6 +37,18 @@ $query = mysqli_query($con," select * from emp_table where empid='".$user."'");
     $nameinbank = $row['nameinbank'];
     $accounttype = $row['accounttype'];
     $ifsccode = $row['ifsccode'];
+    if($status==1)
+    {
+      $statusopt="Active";
+    }
+    else{
+      $statusopt="Inactive";
+    }
+  }
+   $query1 = mysqli_query($con," select * from template_roster where emp_id='".$user."'");
+  while($row1 = mysqli_fetch_array($query1)) {
+    $firstweekoff=$row1['firstweekoff'];
+    $secondweekoff=$row1['secondweekoff'];
   }
   echo' <div class="row">
    <form class="form-horizontal"  role="form" method="post" enctype="multipart/form-data" id="modify_employee_div">
@@ -42,6 +56,9 @@ $query = mysqli_query($con," select * from emp_table where empid='".$user."'");
       <div class="panel panel-default">
       <div class="panel-body">
       <fieldset><legend>Personal Details:</legend>
+    
+          <input type="hidden" name="id" value="'.$id.'">
+            
           <div class="col-lg-6">
             <div class="form-group required">
               <label class="control-label">Employee ID</label>
@@ -199,11 +216,55 @@ $query = mysqli_query($con," select * from emp_table where empid='".$user."'");
               <input class="form-control" type="text"  id="rmi" name="rmi" value="'.$reportedmanagerid.'">
             </div>
           </div> 
+            <div class="col-lg-6"> 
+           <div class="form-group">
+              <label class="control-label">Status</label>
+              <select class="form-control myselect " id="team" name="status" >';
+                   echo '<option value="'.$status.'">'.$statusopt.'</option>';
+                   echo '<option value="1">Active</option>';
+                   echo '<option value="0">Inactive</option>';
+             echo'</select>
+            </div>
+          </div> 
+
+           <div class="col-lg-6">
+            <div class="form-group required">
+              <label class="control-label">First Week Off</label>
+              <select class="form-control" name="firstweekoff" >
+                <option value='.$firstweekoff.'> '.$firstweekoff.'</option>
+                <option value="sunday">Sunday</option>
+                <option value="monday">Monday</option>
+                <option value="tuesday">Tuesday</option>
+                <option value="wednesday">Wednesday</option>
+                <option value="thursday">Thursday</option>
+                <option value="friday">Friday</option>
+                <option value="saturday">Saturday</option>                 
+              </select>
+            </div>
+          </div>
+
+          
+           <div class="col-lg-6">
+            <div class="form-group required">
+              <label class="control-label">Second Week Off</label>
+              <select class="form-control" name="secondweekoff" >
+                <option value='.$secondweekoff.'> '.$secondweekoff.'</option>
+                <option value="sunday">Sunday</option>
+                <option value="monday">Monday</option>
+                <option value="tuesday">Tuesday</option>
+                <option value="wednesday">Wednesday</option>
+                <option value="thursday">Thursday</option>
+                <option value="friday">Friday</option>
+                <option value="saturday">Saturday</option>                 
+              </select>
+            </div>
+          </div>
+
       </fieldset>         
     </div>
     </div>
   </div> 
-<!-- /col-lg-6
+<!-- /col-lg-6 
    below code is for the bank details panel of employeee...........
   -->
   <div class="col-lg-6">

@@ -85,7 +85,7 @@ if(isset($_POST['login_submit'])) {
   $password = base64_encode($_POST['login_password']);
   date_default_timezone_set('Asia/Kolkata');
   $date = date("Y-m-d");
-  $qur = mysqli_query($con, "select empid,biomatric_id,firstname,lastname,password,flag,employeerole from emp_table where empid='".$login_id."' and password='".$password."'");
+  $qur = mysqli_query($con, "select empid,biomatric_id,firstname,lastname,reportedmanagerid,password,flag,employeerole,workunderteam from emp_table where empid='".$login_id."' and password='".$password."'");
   $result = mysqli_num_rows($qur);
   if($result == 1) {
     while($row = mysqli_fetch_array($qur)) {
@@ -96,6 +96,8 @@ if(isset($_POST['login_submit'])) {
       $pass=$row['password'];
       $flag=$row['flag'];
       $role=$row['employeerole'];
+      $workunderteam = $row['workunderteam'];
+      $reportedmanagerid = $row['reportedmanagerid'];
     }
     if(isset($id) && isset($pass)) {
       if($id == $login_id && $pass == $password) {
@@ -105,6 +107,8 @@ if(isset($_POST['login_submit'])) {
         $_SESSION['firstname'] = $firstname;
         $_SESSION['lastname'] = $lastname;
         $_SESSION['flag'] = $flag;
+        $_SESSION['workunderteam'] = $workunderteam;
+        $_SESSION['reportedmanagerid'] = $reportedmanagerid;
         header("Location:dashboard.php");
       }
     }

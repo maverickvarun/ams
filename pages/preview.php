@@ -9,7 +9,31 @@
   $flag = $_SESSION['flag'];
   $check_in_out = $_SESSION['check_in_out'];
   $last_swipe = $_SESSION['last_swipe'];
-  date_default_timezone_set('Asia/Kolkata');           
+  date_default_timezone_set('Asia/Kolkata');
+
+   if($role!='employee'){
+      define("SDFE_CSVSeparator", ",");           // Separator
+      define("SDFE_CSVLineTerminator", "\n");     // Line termination
+      define("SDFE_CSVFolder", "csv");            // The folder for csv files. Must exist!
+      define("SDFE_CSVFolderBackup", "csvbackup"); // The folder for backup files. Must exist!
+      define("SDFE_CSVFileExtension", "csv");     // The csv file extension
+
+      // opening csv files ........................................
+
+      // Get array of CSV files
+      $csvpath = SDFE_CSVFolder . "/";
+      $files = scandir($csvpath); // this is all files in dir 
+       // clean up file list (to exclude)should only include csv files
+        $csvfiles = array();
+        foreach ($files as $basename) {
+          if(substr($basename, -3)==SDFE_CSVFileExtension) {
+              array_push($csvfiles, $basename);
+          }
+        }
+        if($role=='manager'){
+        $csvname=$csvpath.$workunderteam.".".SDFE_CSVFileExtension;
+        } 
+  }           
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -182,22 +206,42 @@
                      ?>
                      <li>
                        <?php include('connection.php');
-                         $d=date('d');
-                         // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
-                         if($d < 10){
-                           $d2 = 2*$d-$d;
-                           $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
+                        if($role !='employee'){
+                           if($role=='manager'){
+                             if(file_exists($csvname)){
+                              echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                              }
+                            else {
+                              echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
+                             }
+                          }else{
+                             if(!empty($csvfiles)){
+                                echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                                }
+                             else {
+                               echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
                          }
-                         else{
-                           $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date('d-M-y')."' ");
-                         }
-                         $count =mysqli_fetch_row($query);
-                         if($count) {
-                           echo'<a href="monthlyshift.php">Monthly Shift</a>';
-                         }
-                         else {
-                           echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
-                         }
+                        }
+                        }
+                       //  else{
+                       //    $d=date('d');
+                       //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
+                       //   if($d < 10){
+                       //     $d2 = 2*$d-$d;
+                       //     $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
+                       //    }
+                       //   else{
+                       //     $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date('d-M-y')."' ");
+                       //    }
+                       //   $count=mysqli_fetch_row($query);
+                       //   if($count) {
+                       //     echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                       //   }
+                       //   else {
+                       //     echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
+                       //   }
+                       // }
+                         
                        ?>
                      </li>
                    </ul>
@@ -386,12 +430,27 @@
               <input class="form-control" type="text"  id="shift" name="shift" value="<?php echo $_POST['shift']; ?>">
             </div>
           </div>
+        
           <div class="col-lg-6">
-            <div class="form-group required">
+            <div class="form-group ">
               <label class="control-label">Reportee</label>
               <input class="form-control" type="text"  id="rmi" name="rmi" value="<?php echo $_POST['reportee_manager_id']; ?>">
             </div>
           </div> 
+
+           <div class="col-lg-6">
+            <div class="form-group ">
+              <label class="control-label">Week Off</label>
+              <input class="form-control" type="text"  id="rmi" name="firstweekoff" value="<?php echo $_POST['firstweekoff']; ?>">
+              </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="form-group ">
+              <label class="control-label">Second Week Off</label>
+              <input class="form-control" type="text"  id="rmi" name="secondweekoff" value="<?php echo $_POST['secondweekoff']; ?>">
+              </div>
+          </div>
+          
       </fieldset>         
     </div>
     </div>
@@ -596,12 +655,15 @@ if(isset($_POST['submit_preview'])) {
   $emp_id = $_POST['empid'];
   $pass = $_POST['emppassword'];
    $new_password =base64_encode($pass);
-  $query = mysqli_query($con," INSERT INTO emp_table (empid,biomatric_id,firstname,lastname,gender,password,dateofbirth,mobilenumber,emercontactno,emailid,dateofjoining,bloodgroup,parents,permanentaddress,tempaddress,shift,flag,employeerole,workunderteam,reportedmanagerid,refecontactno,bankacdetails,bankacnumber,nameinbank,accounttype,ifsccode,leaves) values ('".$_POST['empid']."','".$_POST['bmi']."','".$_POST['firstname']."','".$_POST['last_name']."','".$_POST['gender']."','".$new_password."','".$_POST['dateofbirth']."','".$_POST['mobilenumber']."','".$_POST['ecn']."','".$_POST['emailid']."','".$_POST['dateofjoining']."','".$_POST['bloodgroup']."','".$_POST['parents']."','".$_POST['parmentaddress']."','".$_POST['tempaddress']."','".$_POST['shift']."','".$_POST['flag']."','".$_POST['employeerole']."','".$_POST['workingteam']."','".$_POST['rmi']."','".$_POST['rcn']."','".$_POST['bankacdetails']."','".$_POST['ban']."','".$_POST['nib']."','".$_POST['accounttype']."','".$_POST['ifsc']."',21)");
-  $query1 = mysqli_query($con,"ALTER TABLE monthly_shift_table ADD $emp_id varchar(500) DEFAULT '' ");
+  $query = mysqli_query($con," INSERT INTO emp_table (empid,biomatric_id,firstname,lastname,gender,password,dateofbirth,mobilenumber,emercontactno,emailid,dateofjoining,bloodgroup,parents,permanentaddress,tempaddress,shift,status,flag,employeerole,workunderteam,reportedmanagerid,refecontactno,bankacdetails,bankacnumber,nameinbank,accounttype,ifsccode,leaves) values ('".$_POST['empid']."','".$_POST['bmi']."','".$_POST['firstname']."','".$_POST['last_name']."','".$_POST['gender']."','".$new_password."','".$_POST['dateofbirth']."','".$_POST['mobilenumber']."','".$_POST['ecn']."','".$_POST['emailid']."','".$_POST['dateofjoining']."','".$_POST['bloodgroup']."','".$_POST['parents']."','".$_POST['parmentaddress']."','".$_POST['tempaddress']."','".$_POST['shift']."',1,'".$_POST['flag']."','".$_POST['employeerole']."','".$_POST['workingteam']."','".$_POST['rmi']."','".$_POST['rcn']."','".$_POST['bankacdetails']."','".$_POST['ban']."','".$_POST['nib']."','".$_POST['accounttype']."','".$_POST['ifsc']."',21)");
+ // $query1 = mysqli_query($con,"ALTER TABLE monthly_shift_table ADD $emp_id varchar(500) DEFAULT '' ");
+   $query2=mysqli_query($con,"INSERT INTO template_roster (emp_id,shift,firstweekoff,secondweekoff) values('".$_POST['empid']."','".$_POST['shift']."','".$_POST['firstweekoff']."','".$_POST['secondweekoff']."')");
+    $query3 = mysqli_query($con,"ALTER TABLE template_roster ADD $emp_id varchar(500) DEFAULT '' ");
   if($query) {
     echo '<script type="text/javascript" >alert("success");
          window.location = "http://localhost/ams/pages/addemployee.php";
       </script>';    
   }
+
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
- move_uploaded_file ($_FILES['csv_file'] ['tmp_name'],
-    "{$_FILES['csv_file'] ['name']}");
+ move_uploaded_file ($_FILES['file'] ['tmp_name'],
+    "{$_FILES['file'] ['name']}");
     if (isset($_SERVER["HTTP_REFERER"])) {
         header("Location: " . $_SERVER["HTTP_REFERER"]);
     }
@@ -13,7 +13,7 @@ $tableName = "csv_table";
 //get the first row fields 
 $fields = "";
 $fieldsInsert = "";
-if (($handle = fopen("Attendance Logs.csv", "r")) !== FALSE) {
+if (($handle = fopen($_FILES['file'] ['name'], "r")) !== FALSE) {
     if(($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
         $num = count($data);
         $fieldsInsert .= '(';

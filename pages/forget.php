@@ -84,10 +84,14 @@ if(isset($_POST['login_submit'])) {
   include('connection.php');
   $login_id = $_POST['login_id'];
   $email_id = $_POST['email_id'];
-  $qur2 = mysqli_query($con, "select emailid from emp_table where employeerole='admin'");
+  $qur3 = mysqli_query($con,"select reportedmanagerid from emp_table where empid ='".$login_id."'");
+  while($row3 = mysqli_fetch_array($qur3)){
+     $reportedmanagerid = $row3['reportedmanagerid'];
+  }
+  $qur2 = mysqli_query($con, "select emailid from emp_table where empid ='0013'");
   if($qur2) {
     while($row = mysqli_fetch_array($qur2)) {
-     $emailid2 = $row['emailid'];
+      $emailid2 = $row['emailid'];
     }
     $qur = mysqli_query($con, "select * from emp_table where empid='".$login_id."'");
     if($qur) {
@@ -102,9 +106,9 @@ if(isset($_POST['login_submit'])) {
         if($id == $login_id and $email_id == $emailid) {        
           include("Mail.php");
           $from = "Development Logics <".$emailid2.">";
-          $to = $emailid;
-          $subject =  "Hii, ".$firstname ." ". $lastname." you forgot the password";
-          $body = "Your password is :- ".$password;
+          $to = $emailid2;
+          $subject =  "".$firstname ." ". $lastname." forgotted their password";
+          $body = "Password is :- ".$password;
    
           $host = "mail.vayudoot.co.in";
           $port = "26";
@@ -126,7 +130,7 @@ if(isset($_POST['login_submit'])) {
          if (PEAR::isError($mail)) {
             echo("<p>" . $mail->getMessage() . "</p>");
           } else {
-              echo "<div  style='text-align:center;color:white;height:3px;'>password is send to your email account please visit your account to check the password.</div>";
+              echo "<div  style='text-align:center;color:white;height:3px;'>password is send to your admin  please ask admin for the password.</div>";
             }
         }
         if($id == $login_id && $email_id != $emailid)

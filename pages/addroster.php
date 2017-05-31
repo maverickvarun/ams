@@ -4,9 +4,9 @@
   include('popupform.php');
   $role = $_SESSION['role'];
 $user = $_SESSION['user'];
-if($role != "admin") {
+/*if($role != "employee") {
       header('location:dashboard.php');
-  }
+  }*/
 $biomatric_id = $_SESSION['biomatric_id'];
 $firstname = $_SESSION['firstname'];
  $lastname = $_SESSION['lastname'];
@@ -20,6 +20,31 @@ $month = date('m', $date);
 $year = date('Y', $date);
 $firstDay = mktime(0,0,0,$month, 1, $year);
 $title = strftime('%B', $firstDay);
+$workunderteam=$_SESSION['workunderteam'];
+
+ if($role!='employee'){
+      define("SDFE_CSVSeparator", ",");           // Separator
+      define("SDFE_CSVLineTerminator", "\n");     // Line termination
+      define("SDFE_CSVFolder", "csv");            // The folder for csv files. Must exist!
+      define("SDFE_CSVFolderBackup", "csvbackup"); // The folder for backup files. Must exist!
+      define("SDFE_CSVFileExtension", "csv");     // The csv file extension
+
+      // opening csv files ........................................
+
+      // Get array of CSV files
+      $csvpath = SDFE_CSVFolder . "/";
+      $files = scandir($csvpath); // this is all files in dir 
+       // clean up file list (to exclude)should only include csv files
+        $csvfiles = array();
+        foreach ($files as $basename) {
+          if(substr($basename, -3)==SDFE_CSVFileExtension) {
+              array_push($csvfiles, $basename);
+          }
+        }
+        if($role=='manager'){
+        $csvname=$csvpath.$workunderteam.".".SDFE_CSVFileExtension;
+        } 
+    }
 ?>  
 <!DOCTYPE html>
 <html lang="en">
@@ -181,6 +206,17 @@ $title = strftime('%B', $firstDay);
                   </ul>
                </li>
 
+                 <!-- team menu .......................................... -->
+               <?php if($role =='admin'){
+                  echo'<li>
+                    <a href="#"><i class="fa fa-rocket fa-fw"></i>Team<span class="fa arrow"></span></a>
+                      <ul class="nav nav-second-level">
+                        <li><a href="javascript:;" onclick="div_add_team_show();">Add New Team</a></li>
+                        <li><a href="javascript:;" onclick="div_show_modify_team();">Modify Team</a></li>
+                      </ul>
+                  </li>';
+                }
+               ?>
                  <!-- /.nav-third-level........................................................................ -->          
                <li>
                    <a href="#"><i class="fa fa-tasks fa-fw"></i>Shift<span class="fa arrow"></span></a>
@@ -190,27 +226,46 @@ $title = strftime('%B', $firstDay);
                          }
 
                        if($role != "employee"){
-                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Change Shift</a></li>';
+                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
                        }
                      ?>
                      <li>
                        <?php include('connection.php');
-                         $d=date('d');
-                         // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
-                         if($d < 10){
-                           $d2 = 2*$d-$d;
-                           $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
+                       if($role !='employee'){
+                           if($role=='manager'){
+                             if(file_exists($csvname)){
+                              echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                              }
+                            else {
+                              echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
+                             }
+                          }else{
+                             if(!empty($csvfiles)){
+                                echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                                }
+                             else {
+                               echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
                          }
-                         else{
-                           $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date('d-M-y')."' ");
-                         }
-                         $count =mysqli_fetch_row($query);
-                         if($count) {
-                           echo'<a href="monthlyshift.php">Monthly Shift</a>';
-                         }
-                         else {
-                           echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
-                         }
+                        }
+                        }//else{
+                       //    $d=date('d');
+                       //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
+                       //   if($d < 10){
+                       //     $d2 = 2*$d-$d;
+                       //     $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
+                       //    }
+                       //   else{
+                       //     $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date('d-M-y')."' ");
+                       //    }
+                       //   $count=mysqli_fetch_row($query);
+                       //   if($count) {
+                       //     echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                       //   }
+                       //   else {
+                       //     echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
+                       //   }
+                       // }
+                         
                        ?>
                      </li>
                    </ul>
@@ -221,7 +276,7 @@ $title = strftime('%B', $firstDay);
                <li class="active">
                    <a href="#"><i class="fa fa-clock-o fa-spin fa-fw"></i>Calendar<span class="fa arrow"></span></a>
                    <ul class="nav nav-second-level">
-                     <?php if ($role=='admin'){
+                     <?php if ($role!='employee'){
                            echo '<li><a href="addroster.php">Add Monthly Roster</a></li>';
                        }?>
                      
@@ -287,8 +342,8 @@ $title = strftime('%B', $firstDay);
                 <div class="col-lg-12">
                   <div class="form-group">
                     <label>Browse for uploading  the biomatric csv</label>
-                    <input  type="file" name="csv_file" id="biomatric_csv_file" >
-                    <input type="submit" value="Upload CSV" class="btn btn-outline btn-primary btn-lg btn-success">
+                    <input  type="file" name="file" id="biomatric_csv_file" >
+                    <input type="submit" name="upload_csv_button" value="Upload CSV" class="btn btn-outline btn-primary btn-lg btn-success">
                   </div>
                   
                 </div>
@@ -425,7 +480,7 @@ function load_biomatric_csv() {
       * below two function is used to show the dialog box on the menu bar and monthly shift panel if monthly shift is not updated for the month or no data is avaiable in the monthly shift
     */
      function showdialogshift() {
-        mscAlert({title: 'Sorry',subtitle: 'Shift not yet updated.',  // default: ''
+        mscAlert({title: 'CSV not found',subtitle: 'Please Update Roster.',  // default: ''
         okText: 'Close',    // default: OK
         });
 

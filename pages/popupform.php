@@ -82,6 +82,64 @@
 </div>
 </div>
 <!-- add team div is closed here -->
+
+
+<!-- modify team  popup block is started here -->
+<div id="modify_team_popup">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 col-md-offset-4">
+        <div class="login-panel panel panel-default">
+          <div class="panel-heading">
+            <button class="close" onclick="div_hide_modify_team();">x</button>
+            <h3>Modify Team</h3>
+          </div>
+          <div class="panel-body">
+            <form role="form"  method='post' name="modify_team_form" enctype="multipart/form-data">
+                <div class="form-group">
+                  <label class="control-label">Select Team</label>
+                  <div class="input-group">
+                    <div class="input-group-addon">
+                      <span class="fa fa-rocket"></span>
+                    </div>
+                    <select class="form-control" name="modify_team" id="modify_team_id" style="width:100%;">
+                      <option>Choose Team</option>
+                      <?php 
+                        $query = mysqli_query($con,"select team_name from team_table");
+                        while($result = mysqli_fetch_array($query)) {
+                          $team_name = $result['team_name'];
+                          echo "<option value='".$team_name."'>".$team_name."</option>";
+                        }
+                       ?>
+                    </select>
+                    </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Team Name</label>
+                        <input class="form-control" type ="text" name="modify_team_name" id="modify_team_name">
+                    </div>
+                                                                
+              <!-- Change this to a button or input when using this as a form -->
+              <div class="form-group">
+                <div class="col-md-8">
+                  <input type="submit" name="submit_modify_team" id="submit_modify_team" value="Modify"  
+                  class="btn btn-lg btn-success btn-block" />
+                </div>
+                <div class="col-md-4">
+                  <input type="submit" name="delete_modify_team" id="delete_modify_team" value="Delete"  
+                  class="btn btn-lg btn-primary btn-block" />
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- /modify team Popup block is closed here -->
+
 <!-- leave request popup form block is started here -->
 <div id="leave_request">
   <div class="container">
@@ -362,10 +420,11 @@
                 <label class="control-label " for="email">
                  Shift Name:
                 </label>
+                <small class="pull-right"> Shift name as e.g. general shift</small>
                 <div class="input-group">
                   <input class="form-control" type ="text" name="new_shift_name" id="add_new_shift_name" placeholder="enter the name of new shift">
                   <div class="input-group-addon">
-                    <span class="fa fa-user"></span> 
+                    <span class="fa fa-flag"></span> 
                   </div>
                 </div>
               </div>
@@ -425,49 +484,44 @@
                   <label class="control-label">Select Shift</label>
                   <div class="input-group">
                     <div class="input-group-addon">
-                      <span class="fa fa-user"></span>
+                      <span class="fa fa-flag"></span>
                     </div>
-                    <select class="form-control myselect" name="change_shift" style="width:100%;">
+                    <select class="form-control" name="change_shift" id="change_shift_id" style="width:100%;">
+                      <option>choose shift</option>
                       <?php 
                         $query = mysqli_query($con,"select shift_name from shift_table");
                         while($result = mysqli_fetch_array($query)) {
                           $shift_name = $result['shift_name'];
-                          echo '<option value='.$shift_name.'>'.$shift_name.'</option>';
+                          echo "<option value='".$shift_name."'>".$shift_name."</option>";
                         }
                        ?>
                     </select>
-                  </div>
-                </div>
-                <div class="form-group">
-                    <label>Shift In Time</label>
-                      <div class="radio">
-                        <label>
-                          <input type="radio" id="change-shift-in-current-time" name="change_in_time" value="" checked>Current Time
-                        </label>
-                     
-                        <label>
-                          <input type="radio" name="change_in_time" value="" id="change-in-custom-time">Custom Time
-                        </label>
+                    </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Shift Name</label>
+                        <input class="form-control" type ="text" name="change_shift_name" id="change_new_shift_name">
+                    </div>
+                    <div class="form-group">
+                      <label>Shift In Time</label>
                         <div class="inner cover indexpicker"> <input id="timepicker5" type="text" name="timepicker5" value="" /> </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Shift Out Time</label>
+                        <div class="inner cover indexpicker"> <input id="timepicker6" type="text" name="timepicker6" value=""/> </div>
                       </div>
-                  </div>
-              <div class="form-group">
-                    <label>Shift Out Time</label>
-                      <div class="radio">
-                        <label>
-                          <input type="radio" id="change-out-current-time" name="change_out_time" value="" checked>Current Time
-                        </label>
-                      
-                        <label>
-                          <input type="radio"  name="change_out_time" value="" id="change-out-custom-time">Custom Time
-                        </label>
-                        <div class="inner cover indexpicker"> <input id="timepicker6" type="text" name="timepicker6" value="" style="display:none;"/> </div>
-                      </div>
-                  </div>
-                            
+                                             
               <!-- Change this to a button or input when using this as a form -->
-              <input type="submit" name="submit_modify_shift" id="submit_modify_shift" value="submit"  
+              <div class="form-group">
+                <div class="col-md-8">
+                  <input type="submit" name="submit_modify_shift" id="submit_modify_shift" value="Modify"  
                   class="btn btn-lg btn-success btn-block" />
+                </div>
+                <div class="col-md-4">
+                  <input type="submit" name="delete_modify_shift" id="delete_modify_shift" value="Delete"  
+                  class="btn btn-lg btn-primary btn-block" />
+                </div>
+              </div>
             </fieldset>
           </form>
         </div>
@@ -618,19 +672,34 @@
     });
     // change shift popup setting
     $('#timepicker5').timepicki();
-    $('#change-shift-in-current-time').click(function(){
-      $('#timepicker5').hide();
-    });
-    $('#change-in-custom-time').click(function(){
-      $('#timepicker5').show();
-    });
     $('#timepicker6').timepicki();
-    $('#change-out-current-time').click(function(){
-      $('#timepicker6').hide();
-    });
-    $('#change-out-custom-time').click(function(){
-      $('#timepicker6').show();
-    });
+     $("#change_shift_id").change(function(){
+        var shift = document.getElementById('change_shift_id').value;
+        document.getElementById('change_new_shift_name').value = shift;
+        $.ajax({
+            url: 'modify_shift_start_time_ajax.php',
+            method: "post",
+            data: {'shift_change':shift},
+            dataType:'text',
+            success: function(result){
+              document.getElementById("timepicker5").value=result;
+            }
+          });
+        $.ajax({
+            url: 'modify_shift_end_time_ajax.php',
+            method: "post",
+            data: {'shift_change':shift},
+            dataType:'text',
+            success: function(result){
+              document.getElementById("timepicker6").value=result;
+            }
+          });
+      });
+     $('#modify_team_id').change(function(){
+        var team = document.getElementById('modify_team_id').value;
+        document.getElementById('modify_team_name').value = team;
+     });
+   
     
     // remote checkin popup setting
     $('#timepicker1').timepicki();
@@ -648,10 +717,12 @@
     $('#edit_current-time').click(function() {
       $('#timepicker4').hide();
     });
+    
     // change shift popup setting 
   </script>
 
   <script type="text/javascript">
+  
   //Function To Display Popup
   function div_show() {
     document.getElementById('change_password').style.display = "block";
@@ -691,6 +762,12 @@
   function div_add_team_hide(){
     document.getElementById('add_team_popup').style.display='none';
   }
+   function div_show_modify_team(){
+    document.getElementById('modify_team_popup').style.display="block";
+  }
+   function div_hide_modify_team(){
+    document.getElementById('modify_team_popup').style.display="none";
+  }
   function div_edit_attendance_show(id,b_id){
     document.getElementById('edit_attendance_popup').style.display='block';
     document.getElementById('edit_attendance_id').value=id;
@@ -724,6 +801,11 @@
          });
       });
    });
+
+  /* function modify_shift_ajax(){
+    var shift = document.getElementsByName(change_shift);
+    alert(shift);
+   }*/
 </script>
 
 </body>
@@ -731,6 +813,7 @@
 </html>
 
 <?php
+/* php block for the add new team submit */
 if(isset($_POST['add_team_submit'])){
  // connection file is included for database connection......
   include('connection.php');
@@ -740,7 +823,9 @@ if(isset($_POST['add_team_submit'])){
         echo"<script type='text/javascript'>
         mscAlert({title: 'Done',subtitle: 'Your ".$team_name." team is successfully added.',  // default: ''
         okText: 'Close',    // default: OK
-        });</script>";
+        });
+        window.location.href = window.location.href;
+        </script>";
       }
       else {
         echo"<script type='text/javascript'>
@@ -749,6 +834,45 @@ if(isset($_POST['add_team_submit'])){
         });</script>";
       }
 }
+// php block for modify the shift 
+if(isset($_POST['delete_modify_team'])) {
+    $team = $_POST['modify_team'];
+    $query = mysqli_query($con,"DELETE FROM `team_table` WHERE  team_name = '".$team."'");
+    if($query) {
+      echo"<script type='text/javascript'>
+          mscAlert({title: 'Done',subtitle: '".$team." is successfully deleted.',  // default: ''
+          okText: 'Close',    // default: OK
+          });
+          window.location.href = window.location.href;
+          </script>";
+    }
+    else {
+      echo"<script type='text/javascript'>
+        mscAlert({title: 'Sorry',subtitle: 'failed to deleted the ".$team." .',  // default: ''
+        okText: 'Close',    // default: OK
+        });</script>";
+    }
+  }
+// php block for modify the shift 
+if(isset($_POST['submit_modify_team'])) {
+    $team = $_POST['modify_team'];
+    $team_name = $_POST['modify_team_name'];
+    $query = mysqli_query($con,"UPDATE team_table set `team_name` = '".$team_name."' where team_name = '".$team."'");
+    if($query) {
+      echo"<script type='text/javascript'>
+          mscAlert({title: 'Done',subtitle: '".$team." is successfully modified.',  // default: ''
+          okText: 'Close',    // default: OK
+          });
+          window.location.href = window.location.href;
+          </script>";
+    }
+    else {
+      echo"<script type='text/javascript'>
+        mscAlert({title: 'Sorry',subtitle: 'failed to modified the ".$team.".',  // default: ''
+        okText: 'Close',    // default: OK
+        });</script>";
+    }
+  }
 
 /* add team submit is closed here.....................................*/
 if(isset($_POST['submitleave'])){
@@ -871,28 +995,44 @@ if($l>0) {
   }
 }
 // php block for modify the shift 
+if(isset($_POST['delete_modify_shift'])) {
+    $shift = $_POST['change_shift'];
+    $query = mysqli_query($con,"DELETE FROM `shift_table` WHERE  shift_name = '".$shift."'");
+    if($query) {
+      echo"<script type='text/javascript'>
+          mscAlert({title: 'Done',subtitle: '".$shift." is successfully deleted.',  // default: ''
+          okText: 'Close',    // default: OK
+          });
+          window.location.href = window.location.href;
+          </script>";
+    }
+    else {
+      echo"<script type='text/javascript'>
+        mscAlert({title: 'Sorry',subtitle: 'failed to deleted the ".$shift." .',  // default: ''
+        okText: 'Close',    // default: OK
+        });</script>";
+    }
+  }
+// php block for modify the shift 
 if(isset($_POST['submit_modify_shift'])) {
+    $shift_name =$_POST['change_shift_name'];
     $shift = $_POST['change_shift'];
     $in_time = $_POST['timepicker5'];
-    $in_time = date("H:i", strtotime($in_time));
-    if($in_time == "") {
-        $in_time = date('H:i A ');
-      }
-     $out_time = $_POST['timepicker6'];
-     $out_time = date("H:i", strtotime($out_time));
-      if($out_time == "") {
-        $out_time = date('H:i A ');
-      } 
-      $query = mysqli_query($con,"UPDATE shift_table set `start_time` = ".$in_time." , `end_time` =".$out_time." where ".$shift." =".$shift."");
+     $in_time = date("H:i", strtotime($in_time));
+      $out_time = $_POST['timepicker6'];
+    $out_time = date("H:i", strtotime($out_time));
+      $query = mysqli_query($con,"UPDATE shift_table set `shift_name` = '".$shift_name."' , `start_time` = '".$in_time."' , `end_time` ='".$out_time."' where shift_name = '".$shift."'");
     if($query) {
       echo"<script type='text/javascript'>
           mscAlert({title: 'Done',subtitle: '".$shift." is successfully modified.',  // default: ''
           okText: 'Close',    // default: OK
-          });</script>";
+        });
+          window.location.href = window.location.href;
+          </script>";
     }
     else {
       echo"<script type='text/javascript'>
-        mscAlert({title: 'Sorry',subtitle: 'failed ".$shift." to modified .',  // default: ''
+        mscAlert({title: 'Sorry',subtitle: 'failed to modified the ".$shift.".',  // default: ''
         okText: 'Close',    // default: OK
         });</script>";
     }
@@ -917,7 +1057,15 @@ if(isset($_POST['submit_modify_shift'])) {
       echo"<script type='text/javascript'>
           mscAlert({title: 'Done',subtitle: 'A new shift is successfully added.',  // default: ''
           okText: 'Close',    // default: OK
-          });</script>";
+          });
+          window.location.href = window.location.href;
+          </script>";
+    }
+    else{
+          echo"<script type='text/javascript'>
+        mscAlert({title: 'Sorry',subtitle: 'failed to add the new ".$shift.".',  // default: ''
+        okText: 'Close',    // default: OK
+        });</script>";
     }  
   }
 

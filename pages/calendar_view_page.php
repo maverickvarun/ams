@@ -5,12 +5,15 @@ $biomatric_id=$_SESSION['biomatric_id'];
 include('connection.php');
   $m1 = $_REQUEST['p-month'];
   $y1 = $_REQUEST['p-year'];
-  if($role !='employee') {
-    $emp_id = $_REQUEST['emp-id'];
-    if($emp_id !='') {
-      $biomatric_id = $emp_id;
+  if($role!='employee') {
+    $emp_id = $_REQUEST['emp_id'];
+    if($emp_id!='') {
+      $query_bioId = mysqli_query($con,"SELECT biomatric_id from emp_table where empid = '".$emp_id."'");
+      while($result_bioId=mysqli_fetch_array($query_bioId)){
+        $biomatric_id = $result_bioId['biomatric_id'];
+      }
     }
-  }  
+  }
   /* Set the default timezone */
   date_default_timezone_set('Asia/Kolkata');
   /* Set the date */
@@ -32,9 +35,7 @@ include('connection.php');
   $blank = date('w', strtotime("{$year}-{$month}-01"));
   ?>
   <table width="100%" class="table table-bordered table-hover common-table" id="calendar-view">
-    <tr> 
-    <th colspan="7" class="text-center" valign="middle" > <?php echo strtoupper($title); ?> <?php echo $year ?> </th>
-    </tr>
+    
     <tr>
     <?php foreach($weekDays as $key => $weekDay) : ?>
         <th class="text-center bg-warning" ><?php echo strtoupper($weekDay); ?></th>

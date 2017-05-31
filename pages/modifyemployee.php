@@ -34,6 +34,12 @@
     $nameinbank = $row['nameinbank'];
     $accounttype = $row['accounttype'];
     $ifsccode = $row['ifsccode'];
+   
+  }
+  $query1 = mysqli_query($con," select * from template_roster where emp_id='".$user."'");
+  while($row1 = mysqli_fetch_array($query1)) {
+    $firstweekoff=$row1['firstweekoff'];
+    $secondweekoff=$row1['secondweekoff'];
   }
   $user = $_SESSION['user'];
   $role = $_SESSION['role'];
@@ -43,7 +49,31 @@
   $flag = $_SESSION['flag'];
   $check_in_out = $_SESSION['check_in_out'];
   $last_swipe = $_SESSION['last_swipe'];
-  date_default_timezone_set('Asia/Kolkata');           
+  date_default_timezone_set('Asia/Kolkata'); 
+
+   if($role!='employee'){
+      define("SDFE_CSVSeparator", ",");           // Separator
+      define("SDFE_CSVLineTerminator", "\n");     // Line termination
+      define("SDFE_CSVFolder", "csv");            // The folder for csv files. Must exist!
+      define("SDFE_CSVFolderBackup", "csvbackup"); // The folder for backup files. Must exist!
+      define("SDFE_CSVFileExtension", "csv");     // The csv file extension
+
+      // opening csv files ........................................
+
+      // Get array of CSV files
+      $csvpath = SDFE_CSVFolder . "/";
+      $files = scandir($csvpath); // this is all files in dir 
+       // clean up file list (to exclude)should only include csv files
+        $csvfiles = array();
+        foreach ($files as $basename) {
+          if(substr($basename, -3)==SDFE_CSVFileExtension) {
+              array_push($csvfiles, $basename);
+          }
+        }
+        if($role=='manager'){
+        $csvname=$csvpath.$workunderteam.".".SDFE_CSVFileExtension;
+        } 
+  }         
 ?>
  
 <!DOCTYPE html>
@@ -176,43 +206,35 @@
          <div class="sidebar-nav navbar-collapse" >
             <ul class="nav" id="side-menu">
                <li><a href="dashboard.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>  
-               <li class="active"><a href="#"><i class="fa fa-male fa-fw"></i>Employee<span class="fa arrow"></span></a>
+             <li class="active"><a href="#"><i class="fa fa-male fa-fw"></i>Employee<span class="fa arrow"></span></a>
                  <ul class="nav nav-second-level">
                          <?php if ($role=='admin'){
-                                       echo '<li><a href="addemployee.php">Add Employee</a></li>';
-                                       echo '<li class="active"><a href="modifyemployee.php">Modify Employee</a>
-                                          <ul class="nav nav-second-level">
-                                            <li>
-                                            <div class="col-lg-12 filter_top"> 
-                                              <div class="form-group">
-                                                <label>Modify Others</label>
-                                                <div class="radio">
-                                                  <label>
-                                                    <input type="radio" name="choice_filter" id="id_filter" value="employee">Employee Id
-                                                  </label>
-                                                </div>
-                                                <div class="radio">
-                                                  <label>
-                                                    <input type="radio" name="choice_filter" id="name_filter" value="name">Employee Name
-                                                  </label>
-                                                </div>
-                                              </div> 
-                                            </div>          
-                                                <div class="col-sm-6">
-                                                  <input type="button" class="form-control input-sm btn-sm btn-success" id="filter_button_manager" value="manager" onclick="filter_manager();">
-                                                </div>
-                                                <div class="col-sm-6 filter_bottom">
-                                                  <input type="button" class="form-control input-sm btn btn-sm btn-success" id="filter_button_employee" value="employee" onclick="filter_employee();">
-                                                </div>
-                                                <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_choice_team">
-                                                  <select class = "form-control input-sm myselect" id="filter_by_choice_team" onchange="filteration_modify_employee();" style="width:100%;">
-                                                </select>
-                                                </div>
-                                          </li>
-                                          </ul> 
-
-                                       </li>';
-                                   }
+                            echo '<li><a href="addemployee.php">Add Employee</a></li>';
+                            echo '<li><a href="modifyemployee.php">Modify Employee<span class="fa arrow"></span></a>
+                                  <ul class="nav">
+                                    <li><a href="#">Modify Others<span class="fa arrow"></span></a>
+                                      <ul class="nav-second-level-level">
+                                       <div class="radio">
+                                          <label>
+                                            <input type="radio" name="choice_filter" id="id_filter" value="employee">Employee Id
+                                          </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                              <input type="radio" name="choice_filter" id="name_filter" value="name">Employee Name
+                                            </label>
+                                          </div>
+                                        </ul>
+                                    </li>
+                                    <li> 
+                                      <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_choice_team">
+                                          <select class = "form-control input-sm myselect" id="filter_by_choice_team" onchange="filteration_modify_employee();" style="width:100%;">
+                                          </select>
+                                      </div>
+                                    </li>
+                                  </ul> 
+                              </li>';
+                           }
                          ?>
                      <li><a href="viewsigninout.php" >View Attendance</a></li>
                      
@@ -237,6 +259,17 @@
                   </ul>
                </li>
 
+                 <!-- team menu .......................................... -->
+               <?php if($role =='admin'){
+                  echo'<li>
+                    <a href="#"><i class="fa fa-rocket fa-fw"></i>Team<span class="fa arrow"></span></a>
+                      <ul class="nav nav-second-level">
+                        <li><a href="javascript:;" onclick="div_add_team_show();">Add New Team</a></li>
+                        <li><a href="javascript:;" onclick="div_show_modify_team();">Modify Team</a></li>
+                      </ul>
+                  </li>';
+                }
+               ?>
                  <!-- /.nav-third-level........................................................................ -->          
                <li>
                    <a href="#"><i class="fa fa-tasks fa-fw"></i>Shift<span class="fa arrow"></span></a>
@@ -246,27 +279,48 @@
                          }
 
                        if($role != "employee"){
-                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Change Shift</a></li>';
+                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
                        }
                      ?>
                      <li>
                        <?php include('connection.php');
-                         $d=date('d');
-                         // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
-                         if($d < 10){
-                           $d2 = 2*$d-$d;
-                           $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
+                        <?php include('connection.php');
+                       if($role !='employee'){
+                           if($role=='manager'){
+                             if(file_exists($csvname)){
+                              echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                              }
+                            else {
+                              echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
+                             }
+                          }else{
+                             if(!empty($csvfiles)){
+                                echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                                }
+                             else {
+                               echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
                          }
-                         else{
-                           $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date('d-M-y')."' ");
-                         }
-                         $count =mysqli_fetch_row($query);
-                         if($count) {
-                           echo'<a href="monthlyshift.php">Monthly Shift</a>';
-                         }
-                         else {
-                           echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
-                         }
+                        }
+                        }
+                       //  else{
+                       //    $d=date('d');
+                       //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
+                       //   if($d < 10){
+                       //     $d2 = 2*$d-$d;
+                       //     $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
+                       //    }
+                       //   else{
+                       //     $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date('d-M-y')."' ");
+                       //    }
+                       //   $count=mysqli_fetch_row($query);
+                       //   if($count) {
+                       //     echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                       //   }
+                       //   else {
+                       //     echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
+                       //   }
+                       // }
+                         
                        ?>
                      </li>
                    </ul>
@@ -342,62 +396,61 @@
           <div class="col-lg-6">
             <div class="form-group required">
               <label class="control-label">Employee ID</label>
-                 <input class="form-control" placeholder="Enter employee id" id="empid" name="empid" value="<?php echo $empid ;?>" >
+                 <input class="form-control" placeholder="Enter employee id" id="empid" name="empid"  >
             </div>
           </div>
           <div class="col-lg-6">  
              <div class="form-group">
               <label class="control-label">Biomatric Id</label>
-                <input class="form-control" type="number" value="<?php echo $biomatric_id;?>" id="bmi"  name="bmi" >
+                <input class="form-control" type="number"  id="bmi"  name="bmi" >
             </div>
           </div> 
           <div class="col-lg-6"> 
             <div class="form-group required">
               <label class="control-label">First Name</label>
-                <input class="form-control" type="text"  id="firstname"  name="firstname" value="<?php echo $firstname ;?>" >
+                <input class="form-control" type="text"  id="firstname"  name="firstname" >
             </div>
           </div> 
           <div class="col-lg-6">  
              <div class="form-group">
               <label class="control-label">Last Name</label>
-                <input class="form-control" type="text" id="last_name" name="last_name"  value="<?php echo $lastname;?>">
+                <input class="form-control" type="text" id="last_name" name="last_name"  >
             </div>
           </div>
           <div class="col-lg-6">  
              <div class="form-group required">
               <label class="control-label">Email ID</label>
-                <input class="form-control" type="text" value="<?php echo $emailid ;?>" name="emailid" id="email">
+                <input class="form-control" type="text"  name="emailid" id="email">
             </div>
           </div>
           <div class="col-lg-6">
             <div class="form-group">
               <label class="control-label">Mobile Number</label>
-                <input class="form-control" type="text" value="<?php echo $mobilenumber;?>" id="mobilenumber"  name="mobilenumber">
+                <input class="form-control" type="text" id="mobilenumber"  name="mobilenumber">
             </div>
           </div> 
           <div class="col-lg-6"> 
             <div class="form-group">
               <label class="control-label">Emergency Contact No.</label>
-                <input class="form-control" type="text" value="<?php echo $emercontactno;?>" id="ecn"  name="ecn">
+                <input class="form-control" type="text" id="ecn"  name="ecn">
             </div>
           </div>
           <div class="col-lg-6">  
              <div class="form-group">
               <label class="control-label">Reference Cont No.</label>
-                <input class="form-control" type="text"id="rcn" name="rcn" value="<?php echo $refecontactno; ?>" >
+                <input class="form-control" type="text"id="rcn" name="rcn"  >
             </div>
           </div> 
           <div class="col-lg-6">  
              <div class="form-group">
               <label class="control-label">Gender</label>
-                <input class="form-control" type="text" name="gender"  value="<?php echo $gender;?>">
+                <input class="form-control" type="text" name="gender" >
             </div>
           </div>
           <div class="col-lg-6">  
              <div class="form-group">
               <label class="control-label">Check IN</label>
                 <select class="form-control" name="flag">
-                  <option value="<?php echo $flag ; ?>"><?php echo $flag ; ?></option>
                   <option value="manual">manual</option>
                   <option value="remote">remote</option>
                 </select>
@@ -406,7 +459,7 @@
           <div class="col-lg-6">
             <div class="form-group">
               <label class="control-label">Date of Birth</label>
-                <input class="example1 form-control" type="text" id="dateofbirth" name="dateofbirth"  value="<?php echo $dateofbirth; ?>">
+                <input class="example1 form-control" type="text" id="dateofbirth" name="dateofbirth"  >
             </div>
           </div> 
           <div class="col-lg-6"> 
@@ -421,7 +474,7 @@
                     this.selectedIndex=idx;
                   }
                 }" >
-                <option value="<?php echo $bloodgroup; ?>"><?php echo $bloodgroup; ?></option>
+              
                 <option value="A+">A+</option> <option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option><option value="O+">O+</option>
                 <option value="O-">O-</option><option value="AB+">AB+</option><option value="AB-">AB-</option><option value="HH">HH</option>
                 <option value="Other">Other</option></select>
@@ -430,7 +483,7 @@
           <div class="col-lg-6">
             <div class="form-group">
               <label class="control-label">Date of Joining</label>
-                <input class="example1 form-control" type="text" id="dateofjoining" name="dateofjoining" value="<?php echo $dateofjoining; ?>">
+                <input class="example1 form-control" type="text" id="dateofjoining" name="dateofjoining" >
             </div>
           </div> 
           <div class="col-lg-6"> 
@@ -455,17 +508,18 @@
              <div class="form-group required">
               <label class="control-label">Employee Role</label>
               <select class="form-control" id="employeerole" name="employeerole">
-                <option value="<?php echo $employeerole; ?>"><?php echo $employeerole; ?></option>
+               
                 <option value="employee">Employee</option> <option value="manager">Manager</option><option value="admin">Admin</option>
               </select>
               
             </div>
           </div>
+          
           <div class="col-lg-6"> 
              <div class="form-group">
               <label class="control-label">Working Team</label>
               <select class="form-control" id="workingteam" name="workingteam">
-                <option value="<?php echo $workunderteam; ?>"><?php echo $workunderteam; ?></option>
+             
                 <?php 
                   $query = mysqli_query($con,"select team_name from team_table");
                   while($result = mysqli_fetch_array($query)) {
@@ -481,7 +535,7 @@
              <div class="form-group">
               <label class="control-label">Shift</label>
               <select class="form-control" name="shift" id="shift" >
-                <option value="<?php echo $shift; ?>"><?php echo $shift; ?></option>
+                
                 <?php 
                   $query = mysqli_query($con,"select shift_name from shift_table");
                   while($result = mysqli_fetch_array($query)) {
@@ -498,6 +552,49 @@
               <input class="form-control" type="text"  id="rmi" name="rmi" value="<?php echo $reportedmanagerid; ?>">
             </div>
           </div> 
+             <div class="col-lg-6"> 
+           <div class="form-group">
+              <label class="control-label">Status</label>
+              <select class="form-control myselect " id="team" name="status" >
+                   echo '<option value="1">Active</option>';
+                   echo '<option value="0">Inactive</option>';
+               </select>
+            </div>
+          </div> 
+         <!--  <div class="col-lg-6">
+            <div class="form-group required">
+              <label class="control-label">First Week Off</label>
+              <select class="form-control" name="firstweekoff" >
+                <option value="<?php echo $firstweekoff;?>"><?php echo $firstweekoff;?></option>
+                <option value="sunday">Sunday</option>
+                <option value="monday">Monday</option>
+                <option value="tuesday">Tuesday</option>
+                <option value="wednesday">Wednesday</option>
+                <option value="thursday">Thursday</option>
+                <option value="friday">Friday</option>
+                <option value="saturday">Saturday</option>
+                 
+              </select>
+            </div>
+          </div>
+
+           <div class="col-lg-6 hidden" id="secondwo">
+            <div class="form-group required ">
+              <label class="control-label">Second Week Off</label>
+              <select class="form-control" name="secondweekoff">
+                <option value="<?php echo $secondweekoff;?>"><?php echo $secondweekoff;?></option>
+                <option value="sunday">Sunday</option>
+                <option value="monday">Monday</option>
+                <option value="tuesday">Tuesday</option>
+                <option value="wednesday">Wednesday</option>
+                <option value="thursday">Thursday</option>
+                <option value="friday">Friday</option>
+                <option value="saturday">Saturday</option>
+                 
+              </select>
+            </div>
+            </div> -->
+
       </fieldset>         
     </div>
     </div>
@@ -527,7 +624,7 @@
                     this.selectedIndex=idx;
                   }
                 }">
-            <option value="<?php echo $bankacdetails ; ?>"><?php echo $bankacdetails ; ?></option>
+           
             <option value="state bank of india">State Bank Of India</option>
             <option value="punjab nataional bank">Punjab National Bank</option>
             <option value="hdfc">HDFC</option>
@@ -547,7 +644,7 @@
               this.selectedIndex=idx;
             }
           }">
-          <option value="<?php echo $accounttype; ?>"><?php echo $accounttype; ?></option>
+        
           <option value="saving account">Saving Account</option>
           <option value="current account">Current Account</option>
           <option value="Other">Other</option>
@@ -742,7 +839,7 @@
       * below two function is used to show the dialog box on the menu bar and monthly shift panel if monthly shift is not updated for the month or no data is avaiable in the monthly shift
     */
      function showdialogshift() {
-        mscAlert({title: 'Sorry',subtitle: 'Shift not yet updated.',  // default: ''
+         mscAlert({title: 'CSV not found',subtitle: 'Please Update Roster.', // default: ''
         okText: 'Close',    // default: OK
         });
 
@@ -758,9 +855,10 @@
 <?php 
 if(isset($_POST['submit_preview'])) {
   include('connection.php');
-  $query = mysqli_query($con,"UPDATE emp_table SET empid = '".$_POST['empid']."', biomatric_id='".$_POST['bmi']."',firstname = '".$_POST['firstname']."',lastname = '".$_POST['last_name']."', gender = '".$_POST['gender']."',dateofbirth= '".$_POST['dateofbirth']."',mobilenumber = '".$_POST['mobilenumber']."',emercontactno = '".$_POST['ecn']."',emailid = '".$_POST['emailid']."',dateofjoining = '".$_POST['dateofjoining']."',bloodgroup = '".$_POST['bloodgroup']."' ,parents = '".$_POST['parents']."',permanentaddress ='".$_POST['parmentaddress']."' ,tempaddress = '".$_POST['tempaddress']."',shift = '".$_POST['shift']."' ,flag = '".$_POST['flag']."',employeerole = '".$_POST['employeerole']."',workunderteam = '".$_POST['workingteam']."',reportedmanagerid = '".$_POST['rmi']."',refecontactno = '".$_POST['rcn']."' ,bankacdetails = '".$_POST['bankacdetails']."',bankacnumber = '".$_POST['ban']."' ,nameinbank = '".$_POST['nib']."',accounttype = '".$_POST['accounttype']."',ifsccode = '".$_POST['ifsc']."' where empid = '".$_POST['empid']."'");
+  $query = mysqli_query($con,"UPDATE emp_table SET empid = '".$_POST['empid']."', biomatric_id='".$_POST['bmi']."',firstname = '".$_POST['firstname']."',lastname = '".$_POST['last_name']."', gender = '".$_POST['gender']."',dateofbirth= '".$_POST['dateofbirth']."',mobilenumber = '".$_POST['mobilenumber']."',emercontactno = '".$_POST['ecn']."',emailid = '".$_POST['emailid']."',dateofjoining = '".$_POST['dateofjoining']."',bloodgroup = '".$_POST['bloodgroup']."' ,parents = '".$_POST['parents']."',permanentaddress ='".$_POST['parmentaddress']."' ,tempaddress = '".$_POST['tempaddress']."',shift = '".$_POST['shift']."',status = '".$_POST['status']."' ,flag = '".$_POST['flag']."',employeerole = '".$_POST['employeerole']."',workunderteam = '".$_POST['workingteam']."',reportedmanagerid = '".$_POST['rmi']."',refecontactno = '".$_POST['rcn']."' ,bankacdetails = '".$_POST['bankacdetails']."',bankacnumber = '".$_POST['ban']."' ,nameinbank = '".$_POST['nib']."',accounttype = '".$_POST['accounttype']."',ifsccode = '".$_POST['ifsc']."' where id = '".$_POST['id']."'");
   $user = $_POST['empid'];
   $j = 0; 
+  $query1= mysqli_query($con,"UPDATE template_roster set firstweekoff='".$_POST['firstweekoff']."',secondweekoff='".$_POST['secondweekoff']."' where emp_id='".$_POST['empid']."'");
   // Declaring Path for uploaded images.
   $target_path = "uploaded_images/";
   if (!file_exists($target_path.$user)) {

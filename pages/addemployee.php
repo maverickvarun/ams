@@ -14,7 +14,30 @@
   $flag = $_SESSION['flag'];
   $check_in_out = $_SESSION['check_in_out'];
   $last_swipe = $_SESSION['last_swipe'];
-  date_default_timezone_set('Asia/Kolkata');           
+  date_default_timezone_set('Asia/Kolkata');  
+  if($role!='employee'){
+      define("SDFE_CSVSeparator", ",");           // Separator
+      define("SDFE_CSVLineTerminator", "\n");     // Line termination
+      define("SDFE_CSVFolder", "csv");            // The folder for csv files. Must exist!
+      define("SDFE_CSVFolderBackup", "csvbackup"); // The folder for backup files. Must exist!
+      define("SDFE_CSVFileExtension", "csv");     // The csv file extension
+
+      // opening csv files ........................................
+
+      // Get array of CSV files
+      $csvpath = SDFE_CSVFolder . "/";
+      $files = scandir($csvpath); // this is all files in dir 
+       // clean up file list (to exclude)should only include csv files
+        $csvfiles = array();
+        foreach ($files as $basename) {
+          if(substr($basename, -3)==SDFE_CSVFileExtension) {
+              array_push($csvfiles, $basename);
+          }
+        }
+          if($role=='manager'){
+        $csvname=$csvpath.$workunderteam.".".SDFE_CSVFileExtension;
+        }  
+  }                
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -57,7 +80,7 @@
    
    <link href="custom-css/select2.min.css" rel="stylesheet" />
 
-    
+   
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -176,6 +199,17 @@
                   </ul>
                </li>
 
+                <!-- team menu .......................................... -->
+               <?php if($role =='admin'){
+                  echo'<li>
+                    <a href="#"><i class="fa fa-rocket fa-fw"></i>Team<span class="fa arrow"></span></a>
+                      <ul class="nav nav-second-level">
+                        <li><a href="javascript:;" onclick="div_add_team_show();">Add New Team</a></li>
+                        <li><a href="javascript:;" onclick="div_show_modify_team();">Modify Team</a></li>
+                      </ul>
+                  </li>';
+                }
+               ?>
                  <!-- /.nav-third-level........................................................................ -->          
                <li>
                    <a href="#"><i class="fa fa-tasks fa-fw"></i>Shift<span class="fa arrow"></span></a>
@@ -185,27 +219,47 @@
                          }
 
                        if($role != "employee"){
-                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Change Shift</a></li>';
+                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
                        }
                      ?>
                      <li>
                        <?php include('connection.php');
-                         $d=date('d');
-                         // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
-                         if($d < 10){
-                           $d2 = 2*$d-$d;
-                           $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
+                       if($role !='employee'){
+                           if($role=='manager'){
+                             if(file_exists($csvname)){
+                              echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                              }
+                            else {
+                              echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
+                             }
+                          }else{
+                             if(!empty($csvfiles)){
+                                echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                                }
+                             else {
+                               echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
                          }
-                         else{
-                           $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date('d-M-y')."' ");
-                         }
-                         $count =mysqli_fetch_row($query);
-                         if($count) {
-                           echo'<a href="monthlyshift.php">Monthly Shift</a>';
-                         }
-                         else {
-                           echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
-                         }
+                        }
+                       }
+                       // else{
+                       //    $d=date('d');
+                       //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
+                       //   if($d < 10){
+                       //     $d2 = 2*$d-$d;
+                       //     $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
+                       //    }
+                       //   else{
+                       //     $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date('d-M-y')."' ");
+                       //    }
+                       //   $count=mysqli_fetch_row($query);
+                       //   if($count) {
+                       //     echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                       //   }
+                       //   else {
+                       //     echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
+                       //   }
+                       // }
+                         
                        ?>
                      </li>
                    </ul>
@@ -253,6 +307,7 @@
       <div class="col-lg-12">
         <h2 >Add Employee</h2>
       </div>
+
       <!-- /.col-lg-12 -->
   </div>
   <div class="row">
@@ -261,6 +316,21 @@
       <div class="panel panel-default">
       <div class="panel-body">
       <fieldset><legend>Personal Details:</legend>
+         <div class="col-lg-6"> 
+           <div class="form-group">
+              <label class="control-label">Working Team</label>
+              <select class="form-control myselect" id="team" name="workingteam" onchange="autoid(event)">
+                <?php 
+                  $query = mysqli_query($con,"select team_name from team_table");
+                   echo '<option value="">-Select team-</option>';
+                  while($result = mysqli_fetch_array($query)) {
+                    $team_name = $result['team_name'];
+                    echo '<option value='.$team_name.'>'.$team_name.'</option>';
+                  }
+                 ?>
+              </select>
+            </div>
+          </div> 
           <div class="col-lg-6">
             <div class="form-group required">
               <label class="control-label">Employee ID</label>
@@ -276,31 +346,31 @@
           <div class="col-lg-6"> 
             <div class="form-group required">
               <label class="control-label">First Name</label>
-                  <input class="form-control" type="text"  id="firstname"  name="firstname">
+                  <input class="form-control" type="text"  id="firstname"  name="firstname"  required="true" >
             </div>
           </div> 
           <div class="col-lg-6">  
              <div class="form-group">
               <label class="control-label">Last Name</label>
-                  <input class="form-control" type="text" id="last_name"  name="last_name">
+                  <input class="form-control" type="text" id="last_name"  name="last_name"  >
             </div>
           </div>
           <div class="col-lg-6">
             <div class="form-group required">
               <label class="control-label">Password</label>
-                  <input class="form-control" type="password" id="emp_password" name="emppassword">
+                  <input class="form-control" type="password" id="emp_password" name="emppassword"  required="true">
             </div>
           </div> 
           <div class="col-lg-6"> 
             <div class="form-group">
               <label class="control-label">Confirm Password</label>
-                  <input class="form-control" type="password" id="confirm_password" name="confirmpassword" ><span id="password_msg"></span>
+                  <input class="form-control" type="password" id="confirmpassword" name="confirmpassword"  ><span id="password_msg"></span>
             </div>
           </div> 
           <div class="col-lg-6">  
              <div class="form-group required">
               <label class="control-label">Email ID</label>
-                <input class="form-control"  type="email" id="email" name="emailid" >
+                <input class="form-control"  type="email" id="email" name="emailid"  required="true">
                 <span id="result"></span>
             </div>
           </div>
@@ -322,6 +392,22 @@
                   <input class="form-control" type="text" id="rcn"  name="rcn" >
             </div>
           </div> 
+
+          <div class="col-lg-6">  
+             <div class="form-group">
+              <label class="control-label">Shift</label>
+              <select class="form-control" name="shift" >
+                <?php 
+                  $query = mysqli_query($con,"select shift_name from shift_table");
+                  while($result = mysqli_fetch_array($query)) {
+                    $shift_name = $result['shift_name'];
+                    echo '<option value='.$shift_name.'>'.$shift_name.'</option>';
+                  }
+                 ?>
+              </select>
+            </div>
+          </div>
+          
           <div class="col-lg-6">  
              <div class="form-group">
               <label class="control-label">Gender</label>
@@ -348,6 +434,7 @@
                 </div>
             </div>
           </div>
+
           <div class="col-lg-6">
             <div class="form-group">
               <label class="control-label">Date of Birth</label>
@@ -398,42 +485,16 @@
                   <textarea class="form-control" rows="3" id="tempaddress" name="tempaddress"></textarea>
             </div>
           </div> 
+        
           <div class="col-lg-6">  
              <div class="form-group required">
               <label class="control-label">Employee Role</label>
-              <select class="form-control" name="employeerole">
+              <select class="form-control " name="employeerole">
                 <option value="employee">Employee</option> <option value="manager">Manager</option><option value="admin">Admin</option>
               </select>
             </div>
           </div>
-          <div class="col-lg-6"> 
-             <div class="form-group">
-              <label class="control-label">Working Team</label>
-              <select class="form-control" name="workingteam">
-                <?php 
-                  $query = mysqli_query($con,"select team_name from team_table");
-                  while($result = mysqli_fetch_array($query)) {
-                    $team_name = $result['team_name'];
-                    echo '<option value='.$team_name.'>'.$team_name.'</option>';
-                  }
-                 ?>
-              </select>
-            </div>
-          </div> 
-          <div class="col-lg-6">  
-             <div class="form-group">
-              <label class="control-label">Shift</label>
-              <select class="form-control" name="shift" >
-                <?php 
-                  $query = mysqli_query($con,"select shift_name from shift_table");
-                  while($result = mysqli_fetch_array($query)) {
-                    $shift_name = $result['shift_name'];
-                    echo '<option value='.$shift_name.'>'.$shift_name.'</option>';
-                  }
-                 ?>
-              </select>
-            </div>
-          </div>
+    
           <div class="col-lg-6">
             <div class="form-group required">
               <label class="control-label">Reportee</label>
@@ -448,7 +509,47 @@
                 ?>
               </select>
             </div>
-          </div> 
+          </div>
+
+          <div class="col-lg-6">
+            <div class="form-group required">
+              <label class="control-label">First Week Off</label>
+              <select class="form-control" name="firstweekoff" >
+                
+                <option value="sunday">Sunday</option>';
+                <option value="monday">Monday</option>';
+                <option value="tuesday">Tuesday</option>';
+                <option value="wednesday">Wednesday</option>';
+                <option value="thursday">Thursday</option>';
+                <option value="friday">Friday</option>';
+                <option value="saturday">Saturday</option>';
+                 
+              </select>
+            </div>
+          </div>
+
+           <div class="col-lg-6 hidden" id="secondwo">
+            <div class="form-group required ">
+              <label class="control-label">Second Week Off</label>
+              <select class="form-control" name="secondweekoff">
+                <option value="none">none</option>';
+                <option value="sunday">Sunday</option>';
+                <option value="monday">Monday</option>';
+                <option value="tuesday">Tuesday</option>';
+                <option value="wednesday">Wednesday</option>';
+                <option value="thursday">Thursday</option>';
+                <option value="friday">Friday</option>';
+                <option value="saturday">Saturday</option>';
+                 
+              </select>
+            </div>
+            </div>
+            <div class="col-lg-6 visible" id="addsecond">
+              <div class="form-group required">
+                <button type="button" class="btn-primary btn-xs " id="addwo">+</button> 
+                <label>add another </label>
+             </div>
+            </div>
       </fieldset>         
     </div>
     </div>
@@ -694,13 +795,42 @@
     */
    
     function showdialogshift() {
-        mscAlert({title: 'Sorry',subtitle: 'Shift not yet updated.',  // default: ''
+        mscAlert({title: 'CSV not found',subtitle: 'Please Update Roster.',  // default: ''
         okText: 'Close',    // default: OK
         });
 
       }
+    
     </script>
-
+    <script>
+    var autoid = function(event) {
+       var team = document.getElementById('team').value;
+       var xmlhttp;
+       if(window.XMLHttpRequest) {
+         xmlhttp = new XMLHttpRequest();
+        }
+      else {
+        xmlhttp = new ActiveXObjct("Microsoft.XMLHTTP");
+      }
+        
+       xmlhttp.onreadystatechange = function() {
+       if(xmlhttp.readyState===4 && xmlhttp.status==200) {
+         document.getElementById("empid").value = xmlhttp.responseText;
+        }
+     }
+    xmlhttp.open("POST","add_employee_page_autoid_ajax.php?team="+team,true);
+    xmlhttp.send();
+   };
+    </script>
+      <script type="text/javascript">      
+      $(document).ready(function(){
+        $("#addwo").on( 'click', function(){
+          $("#secondwo").removeClass("hidden").addClass("visible");
+          $("#addsecond").removeClass("visible").addClass("hidden");
+        });
+      });   
+    </script>
+   
 </body>
 
 </html>

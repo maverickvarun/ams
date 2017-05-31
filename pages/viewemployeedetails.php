@@ -10,8 +10,9 @@
   $firstname = $_SESSION['firstname'];
   $lastname = $_SESSION['lastname'];
   $flag = $_SESSION['flag'];
- $check_in_out = $_SESSION['check_in_out'];
+  $check_in_out = $_SESSION['check_in_out'];
   $last_swipe = $_SESSION['last_swipe'];
+  $workunderteam=$_SESSION['workunderteam'];
  date_default_timezone_set('Asia/Kolkata'); 
   $date = strtotime(date("Y-m-d"));
   $day = date('d', $date);
@@ -19,6 +20,30 @@
   $year = date('Y', $date);
   $firstDay = mktime(0,0,0,$month, 1, $year);
   $title = strftime('%B', $firstDay);
+
+    if($role!='employee'){
+      define("SDFE_CSVSeparator", ",");           // Separator
+      define("SDFE_CSVLineTerminator", "\n");     // Line termination
+      define("SDFE_CSVFolder", "csv");            // The folder for csv files. Must exist!
+      define("SDFE_CSVFolderBackup", "csvbackup"); // The folder for backup files. Must exist!
+      define("SDFE_CSVFileExtension", "csv");     // The csv file extension
+
+      // opening csv files ........................................
+
+      // Get array of CSV files
+      $csvpath = SDFE_CSVFolder . "/";
+      $files = scandir($csvpath); // this is all files in dir 
+       // clean up file list (to exclude)should only include csv files
+        $csvfiles = array();
+        foreach ($files as $basename) {
+          if(substr($basename, -3)==SDFE_CSVFileExtension) {
+              array_push($csvfiles, $basename);
+          }
+        }
+        if($role=='manager'){
+        $csvname=$csvpath.$workunderteam.".".SDFE_CSVFileExtension;
+        } 
+    }
 ?>            
 <!DOCTYPE html>
 <html lang="en">
@@ -157,53 +182,33 @@
                                        echo '<li><a href="modifyemployee.php">Modify Employee</a></li>';
                                    }
                          ?>
-                  <li class="active"><a href="viewsigninout.php" >View Attendance</a></li>
+                  <li ><a href="viewsigninout.php" >View Attendance</a></li>
                   <?php if($role!="employee"){ 
-                         echo '<li class="active"><a href="viewemployeedetails.php">View Employee Details</a>
-                         <ul class="nav nav-second-level">
-                          <li><div class="col-lg-12 filter_top"> 
-            <div class="form-group">
-            <label>View Others</label>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="choice_filter" id="shift_filter" value="shift">Shift
-                </label>
-              </div>';
-              if($role =='admin') {
-                echo'<div class="radio">
-                 <label>
-                   <input type="radio" name="choice_filter" id="team_filter" value="team">Team
-                  </label>
-                </div>';
-              } 
-              echo'<div class="radio">
-                <label>
-                  <input type="radio" name="choice_filter" id="id_filter" value="employee">Employee Id
-                </label>
-              </div>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="choice_filter" id="name_filter" value="name">Employee Name
-                </label>
-              </div>
-            </div> 
-          </div>
-
-          <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_shift">
-            <select class="form-control input-sm myselect" id="filter_by_shift" style="width:100%;">
-              <option value="">-filter by shift-</option>';
-             $query = mysqli_query($con,"SELECT DISTINCT shift from emp_table where employeerole != 'admin'");
-            while($result=mysqli_fetch_array($query)) {
-              echo'<option value="'.$result['shift'].'">'.$result['shift'].'</option>';
-            } 
-            echo'</select></div>
-            <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_team">
-            <select class = "form-control input-sm myselect" id="filter_by_team" style="width:100%;">
-            <option value="">-filter by team-</option>';
-            $query = mysqli_query($con,"SELECT DISTINCT workunderteam from emp_table where employeerole != 'admin' ");
-            while($result = mysqli_fetch_array($query)) {
-              echo '<option value="'.$result["workunderteam"].'">'. $result["workunderteam"].'</option>';
-            }
+                         echo '<li><a href="viewemployeedetails.php">View Employee Details<span class="fa arrow"></span></a>
+                           <ul class="nav nav-second-level">
+                           <li><div class="col-lg-12 filter_top"> 
+                           <div class="form-group">
+                         
+                            ';             
+              echo'<ul class="nav">
+                    <li ><a href="#">View Others<span class="fa arrow"></span></a>
+                      <ul class="nav nav-second-level">
+                        <div class="radio">
+                          <label>
+                            <input type="radio" name="choice_filter" id="id_filter" value="employee">Employee Id
+                          </label>
+                        </div>
+                        <div class="radio">
+                          <label>
+                            <input type="radio" name="choice_filter" id="name_filter" value="name">Employee Name
+                          </label>
+                        </div>
+                      </ul> 
+                    </li>
+                  </ul>
+                </div>   
+            
+            ';
           echo '</select></div>
           <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_choice_team">
             <select class = "form-control input-sm myselect" style="width:100%;" id="filter_by_choice_team" onchange="filtration_view_employee_details();">
@@ -231,6 +236,18 @@
                   </ul>
                </li>
 
+                 <!-- team menu .......................................... -->
+               <?php if($role =='admin'){
+                  echo'<li>
+                    <a href="#"><i class="fa fa-rocket fa-fw"></i>Team<span class="fa arrow"></span></a>
+                      <ul class="nav nav-second-level">
+                        <li><a href="javascript:;" onclick="div_add_team_show();">Add New Team</a></li>
+                        <li><a href="javascript:;" onclick="div_show_modify_team();">Modify Team</a></li>
+                      </ul>
+                  </li>';
+                }
+               ?>
+               
                  <!-- /.nav-third-level........................................................................ -->          
                <li>
                    <a href="#"><i class="fa fa-tasks fa-fw"></i>Shift<span class="fa arrow"></span></a>
@@ -240,27 +257,47 @@
                          }
 
                        if($role != "employee"){
-                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Change Shift</a></li>';
+                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
                        }
                      ?>
                      <li>
                        <?php include('connection.php');
-                         $d=date('d');
-                         // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
-                         if($d < 10){
-                           $d2 = 2*$d-$d;
-                           $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
+                       if($role !='employee'){
+                           if($role=='manager'){
+                             if(file_exists($csvname)){
+                              echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                              }
+                            else {
+                              echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
+                             }
+                          }else{
+                             if(!empty($csvfiles)){
+                                echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                                }
+                             else {
+                               echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
                          }
-                         else{
-                           $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date('d-M-y')."' ");
-                         }
-                         $count =mysqli_fetch_row($query);
-                         if($count) {
-                           echo'<a href="monthlyshift.php">Monthly Shift</a>';
-                         }
-                         else {
-                           echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
-                         }
+                        }
+                       }
+                       // else{
+                       //    $d=date('d');
+                       //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
+                       //   if($d < 10){
+                       //     $d2 = 2*$d-$d;
+                       //     $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
+                       //    }
+                       //   else{
+                       //     $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date('d-M-y')."' ");
+                       //    }
+                       //   $count=mysqli_fetch_row($query);
+                       //   if($count) {
+                       //     echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                       //   }
+                       //   else {
+                       //     echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
+                       //   }
+                       // }
+                         
                        ?>
                      </li>
                    </ul>
@@ -271,7 +308,7 @@
                <li>
                    <a href="#"><i class="fa fa-clock-o fa-spin fa-fw"></i>Calendar<span class="fa arrow"></span></a>
                    <ul class="nav nav-second-level">
-                     <?php if ($role=='admin'){
+                     <?php if ($role!='employee'){
                            echo '<li><a href="addroster.php">Add Monthly Roster</a></li>';
                        }?>
                      
@@ -342,73 +379,73 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label>Employee ID</label>
-                        <input class="form-control" id="empid" name="empid" value="'.$row['empid'].'" >
+                        <input class="form-control" id="empid" name="empid">
                   </div>
                 </div>
                 <div class="col-lg-6"> 
                   <div class="form-group">
                     <label>Biomatric Id</label>
-                        <input class="form-control" type="text"  id="biomatric_id"  name="biomatric_id" value="'.$row['biomatric_id'].'">
+                        <input class="form-control" type="text"  id="biomatric_id"  name="biomatric_id" >
                   </div>
                 </div>
                 <div class="col-lg-6"> 
                   <div class="form-group">
                     <label>Employee Name</label>
-                        <input class="form-control" type="text"  id="firstname"  name="firstname" value="'.$row['firstname']." ".$row['lastname'].'">
+                        <input class="form-control" type="text"  id="firstname"  name="firstname">
                   </div>
                 </div> 
                 <div class="col-lg-6">  
                    <div class="form-group">
                     <label>Date of Birth</label>
-                        <input class="form-control" type="text" id="dateofbirth"  name="dateofbirth" value="'.$row['dateofbirth'].'">
+                        <input class="form-control" type="text" id="dateofbirth"  name="dateofbirth" >
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label>Mobile Number</label>
-                        <input class="form-control"  value="'.$row['mobilenumber'].'">
+                        <input class="form-control"  >
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label>Emer. Contact No.</label>
-                        <input class="form-control"  value="'.$row['emercontactno'].'">
+                        <input class="form-control" >
                   </div>
                 </div> 
                 <div class="col-lg-6"> 
                   <div class="form-group">
                     <label>Email Id</label>
-                        <input class="form-control" type="text"   value="'.$row['emailid'].'">
+                        <input class="form-control" type="text"   >
                   </div>
                 </div> 
                 <div class="col-lg-6">  
                    <div class="form-group">
                     <label>Date Of Joining</label>
-                        <input class="form-control" type="text" value="'.$row['dateofjoining'].'">
+                        <input class="form-control" type="text" >
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label>Blood Group</label>
-                        <input class="form-control"  value="'.$row['bloodgroup'].'">
+                        <input class="form-control" >
                   </div>
                 </div> 
                 <div class="col-lg-6"> 
                   <div class="form-group">
                     <label>Permanent Address</label>
-                        <input class="form-control" type="text"   value="'.$row['permanentaddress'].'">
+                        <input class="form-control" type="text"  >
                   </div>
                 </div> 
                 <div class="col-lg-6">  
                    <div class="form-group">
                     <label>Temp. Address</label>
-                        <input class="form-control" type="text" value="'.$row['tempaddress'].'">
+                        <input class="form-control" type="text">
                   </div>
                 </div>
                 <div class="col-lg-6">  
                    <div class="form-group">
                     <label>Parents/Gardian</label>
-                        <input class="form-control" type="text" value="'.$row['parents'].'">
+                        <input class="form-control" type="text">
                   </div>
                 </div>
                   </fieldset></form>';
@@ -566,7 +603,7 @@
       * below two function is used to show the dialog box on the menu bar and monthly shift panel if monthly shift is not updated for the month or no data is avaiable in the monthly shift
     */
      function showdialogshift() {
-        mscAlert({title: 'Sorry',subtitle: 'Shift not yet updated.',  // default: ''
+        mscAlert({title: 'CSV not found',subtitle: 'Please Update Roster.', // default: ''
         okText: 'Close',    // default: OK
         });
 

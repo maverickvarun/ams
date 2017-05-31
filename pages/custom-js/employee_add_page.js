@@ -6,17 +6,6 @@ $('#emp_password').blur(function() {
 	}
 });
 
-// below function is used for confirmpassword field in add_employee page
-$('#confirm_password').blur(function() {
-	if($('#confir_mpassword').val() != $('#emp_password').val()) {
-		alert("password is not matched. please reenter your confirmpassword");
-		$("#password_msg").text('password is not confirm, re-enter');
-    $("#password_msg").css("color", "red");
-	}
-	else {
-		$('#password_msg').html('');
-	}
-});
 
 // below function is used for mobile number field in add_employee page
 $('#mobilenumber').blur(function() {

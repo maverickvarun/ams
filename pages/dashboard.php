@@ -9,8 +9,34 @@
   $flag = $_SESSION['flag'];
   $check_in_out = $_SESSION['check_in_out'];
   $last_swipe = $_SESSION['last_swipe'];
-  date_default_timezone_set('Asia/Kolkata');           
+  $workunderteam = $_SESSION['workunderteam'];
+  date_default_timezone_set('Asia/Kolkata');  
+ 
+  if($role!='employee'){
+      define("SDFE_CSVSeparator", ",");           // Separator
+      define("SDFE_CSVLineTerminator", "\n");     // Line termination
+      define("SDFE_CSVFolder", "csv");            // The folder for csv files. Must exist!
+      define("SDFE_CSVFolderBackup", "csvbackup"); // The folder for backup files. Must exist!
+      define("SDFE_CSVFileExtension", "csv");     // The csv file extension
+
+      // opening csv files ........................................
+
+      // Get array of CSV files
+      $csvpath = SDFE_CSVFolder . "/";
+      $files = scandir($csvpath); // this is all files in dir 
+       // clean up file list (to exclude)should only include csv files
+        $csvfiles = array();
+        foreach ($files as $basename) {
+          if(substr($basename, -3)==SDFE_CSVFileExtension) {
+              array_push($csvfiles, $basename);
+          }
+        }
+        if($role=='manager'){
+        $csvname=$csvpath.$workunderteam.".".SDFE_CSVFileExtension;
+        } 
+  }       
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -59,9 +85,7 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <style type="text/css">
-  
-    </style>
+
 
 </head>
 
@@ -140,106 +164,34 @@
                 
       </ul>
             <!-- /.navbar-top-links -->
-      <div class="navbar-default sidebar " role="navigation" >
+      <div class="navbar-default sidebar" role="navigation" >
          <div class="sidebar-nav navbar-collapse"  >
             <ul class="nav" id="side-menu">
-               <li class="active">
-                  <a href="dashboard.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
-                  <ul class="nav nav-second-level">
-                     <li>
-                        <div class="col-lg-12 "> 
-                           <div class="form-group">
-                              <label>By date</label>
+               <li>
+                  <a href="dashboard.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard<span class="fa arrow"></span></a>
+                  <ul class="nav">
+                  <?php if($role != "employee") { 
+                      echo'<li><a href="#">View Employee Calendar<span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                              <li><div class="col-lg-12 filter_top"> 
+                              <div class="form-group">
                               <div class="radio">
                                  <label>
-                                    <input type="radio" name="date" id="month_filter" value="">Select Month
-                                 </label>
-                              </div>
-                              <div class="radio">
-                                 <label>
-                                    <input type="radio" name="date" id="year_filter" value="">Select Year
-                                 </label>
-                              </div>
-                           </div> 
-                        </div>
-                        <div class="col-sm-12 hidden" id="li_previous_month">
-                           <select name="dataTables-example_length" aria-controls="dataTables-example" class="form-control input-sm myselect" id="previous_month" onchange="filteration_calendar_month();" style="width:100%;">
-                             <option value="<?php echo date('m')?>">Select month</option>
-                             <option value="01">January</option><option value="02">February</option> <option value="03">March</option>
-                             <option value="04">April</option><option value="05">May</option><option value="06">June</option>
-                             <option value="07">July</option><option value="08">August</option><option value="09">September</option>
-                             <option value="10">October</option><option value="11">November</option><option value="12">December</option>
-                           </select>
-                        </div>
-                     </li>
-                     <li>
-                        <div class="col-sm-12 hidden" id="li_previous_year">
-                          <select class="form-control input-sm myselect" id="previous_year" onchange="filteration_calendar_month();" style="width:100%;">
-                            <option value="<?php echo date('Y')?>">Select year</option>
-                            <?php $query=mysqli_query($con,"SELECT DISTINCT YEAR(date) from emp_checks");
-                             while($result=mysqli_fetch_array($query)) { 
-                              ?><option value='<?php echo $result[0];?>'><?php echo $result[0];?></option>      
-                            <?php }?>
-                          </select>
-                        </div>
-                     </li>
-                   <?php if($role != "employee") { 
-                     echo'<li>
-                           <div class="col-lg-12 filter_top"> 
-                             <div class="form-group">
-                               <label>View Others</label>
-                               <div class="radio">
-                                 <label>
-                                   <input type="radio" name="choice_filter" id="shift_filter" value="shift">Shift
-                                 </label>
-                               </div>';
-                               if($role =='admin') {
-                               echo'<div class="radio">
-                                 <label>
-                                   <input type="radio" name="choice_filter" id="team_filter" value="team">Team
-                                 </label>
-                               </div>';
-                               }
-                               echo'<div class="radio">
-                                 <label>
-                                   <input type="radio" name="choice_filter" id="id_filter" value="employee">Employee Id
+                                   <input type="radio" name="choice_filter" id="id_filter" value="employee">Search by Id
                                  </label>
                                </div>
                                <div class="radio">
                                  <label>
-                                   <input type="radio" name="choice_filter" id="name_filter" value="name">Employee Name
+                                   <input type="radio" name="choice_filter" id="name_filter" value="name">Search by Name
                                  </label>
                                </div>
-                             </div> 
-                           </div>';
-                           if($role == 'admin') { 
-                           echo'<div class="col-sm-6">
-                               <input type="button" class="form-control input-sm btn btn-success" id="filter_button_manager" value="manager" onclick="filter_manager();">
-                             </div>
-                             <div class="col-sm-6 filter_bottom">
-                               <input type="button" class="form-control input-sm btn btn-success" id="filter_button_employee" value="employee" onclick="filter_employee();">
-                             </div>';
-                           }
-                           echo'<div class="col-sm-12 filter_bottom hidden" id="li_filter_by_shift">
-                             <select class="form-control input-sm filtration-block-button myselect" id="filter_by_shift" style="width:100%;">
-                               <option value="">-filter by shift-</option>';
-                               $query = mysqli_query($con,"SELECT DISTINCT shift from emp_table where employeerole != 'admin'");
-                               while($result=mysqli_fetch_array($query)) {
-                                 echo'<option value="'.$result['shift'].'">'.$result['shift'].'</option>';
-                               } 
-                             echo'</select></div>
-                             <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_team">
-                             <select class = "form-control input-sm filtration-block-button myselect" id="filter_by_team" style="width:100%;">
-                             <option value="">-filter by team-</option>';
-                             $query = mysqli_query($con,"SELECT DISTINCT workunderteam from emp_table where employeerole != 'admin' ");
-                             while($result = mysqli_fetch_array($query)) {
-                               echo '<option value="'.$result["workunderteam"].'">'. $result["workunderteam"].'</option>';
-                             }
-                           echo '</select></div>
-                           <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_choice_team">
-                             <select class = "form-control input-sm filtration-block-button myselect" id="filter_by_choice_team" style="width:100%;" onchange="filteration_calendar_month();">
-                             </select>
-                           </div></li>';
+                              </div> 
+                              </div>
+                              <div class="col-sm-12 hidden filter_bottom" id="li_filter_by_choice_team">
+                                <select class = "form-control input-sm filtration-block-button myselect" id="filter_by_choice_team" style="width:100%;" onchange="filteration_calendar_month();">
+                                  </select>
+                              </div></li>
+                          </ul></li>';                     
                        }
                      ?>
                  </ul>        
@@ -280,6 +232,7 @@
                     <a href="#"><i class="fa fa-rocket fa-fw"></i>Team<span class="fa arrow"></span></a>
                       <ul class="nav nav-second-level">
                         <li><a href="javascript:;" onclick="div_add_team_show();">Add New Team</a></li>
+                        <li><a href="javascript:;" onclick="div_show_modify_team();">Modify Team</a></li>
                       </ul>
                   </li>';
                 }
@@ -296,22 +249,41 @@
                      ?>
                      <li>
                        <?php include('connection.php');
-                         $d=date('d');
-                         // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
-                         if($d < 10){
-                           $d2 = 2*$d-$d;
-                           $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
-                          }
-                         else{
-                           $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date('d-M-y')."' ");
-                          }
-                         $count=mysqli_fetch_row($query);
-                         if($count) {
-                           echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                       if($role !='employee'){
+                           if($role=='manager'){
+                             if(file_exists($csvname)){
+                              echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                              }
+                            else {
+                              echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
+                             }
+                          }else{
+                             if(!empty($csvfiles)){
+                                echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                                }
+                             else {
+                               echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
                          }
-                         else {
-                           echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
-                         }
+                        }
+                        }//else{
+                       //    $d=date('d');
+                       //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
+                       //   if($d < 10){
+                       //     $d2 = 2*$d-$d;
+                       //     $query = mysqli_query($con,"SELECT ".$user." from ".$workunderteam."_table  ");
+                       //    }
+                       //   else{
+                       //     $query = mysqli_query($con,"SELECT ".$user." from ".$workunderteam."_table ");
+                       //    }
+                       //   // $count=mysqli_fetch_row($query);
+                       //   // if($count) {
+                       //     echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                       //    // }
+                       //   // else {
+                       //   //   echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
+                       //   // }
+                       // }
+                         
                        ?>
                      </li>
                    </ul>
@@ -322,8 +294,8 @@
                <li>
                    <a href="#"><i class="fa fa-clock-o fa-spin fa-fw"></i>Calendar<span class="fa arrow"></span></a>
                    <ul class="nav nav-second-level">
-                     <?php if ($role=='admin'){
-                           echo '<li><a href="addroster.php">Add Monthly Roster</a></li>';
+                     <?php if ($role!='employee'){
+                           echo '<li><a href="addroster.php">Add Monthly Roaster</a></li>';
                        }?>
                      
                      <li>
@@ -428,7 +400,7 @@
    }
   $query=mysqli_query($con,"select leaves from emp_table where empid='".$user."'");
     while($row=mysqli_fetch_array($query)){
-            $leaves=$row['leaves'];
+           $leaves=$row['leaves'];
     }
     $total=$leaves;
 //<!-- requested leave panel...........................................................................................--> 
@@ -642,24 +614,9 @@ echo'<div class="col-lg-3 col-md-6">
 
 </div>
 
-<!-- filteration block on the page  -->
-<div class="row">
-  <div class="col-lg-12">
-    <div class="panel ">
-      
-        <div class="row">
-            <div class="col-sm-4 hidden" id='fi_previous_month'></div>
-            <div class="col-sm-4 hidden" id='fi_previous_year'></div>
-            <?php if($role != "employee") { 
-              echo'<div class="col-sm-3 hidden" id="fi_filter_by_choice_button"></div>';
-            }
-          ?>
-        </div>
-      
-    </div>
-  </div>
-</div>         
-
+       
+<div style="margin-top:20px;">
+  <hr/>
 <!-- calendar view .................................. ..................................................................................-->
     
 <?php
@@ -667,8 +624,8 @@ echo'<div class="col-lg-3 col-md-6">
 include('connection.php');
 /* Set the date */
 date_default_timezone_set('Asia/Kolkata');
-$date = strtotime(date("Y-m-d"));
-$day = date('d', $date);
+ $date = strtotime(date("Y-m-d"));
+ $day = date('d', $date);
 $month = date('m', $date);
 $year = date('Y', $date);
 $firstDay = mktime(0,0,0,$month, 1, $year);
@@ -684,11 +641,25 @@ for ($i = 0; $i < 7; $i++) {
 }
 $blank = date('w', strtotime("{$year}-{$month}-01"));
 ?>
+
+<div class="row" style="background:#eeeeee;border:1px solid #ddd;border-bottom:none;">
+  <div class="col-xs-3 date-picker-cols">
+    <?php if($role != "employee") { 
+        echo'<div class="hidden" id="fi_filter_by_choice_button" style="font-weight:bolder;margin-bottom:2px;margin-top:7px;margin-left:30px;font-size:18px;"></div>';
+    }
+    ?>
+  </div>
+  <div class="col-xs-2 col-xs-offset-1 date-picker-cols">
+    <input type="text" class="date-picker-month form-control" id="filtered_date_month" value="<?php echo $title;?>" onchange="filteration_calendar_month();" style="font-weight:bolder;margin-bottom:2px;margin-top:2px;text-align:center;">
+  </div>  
+  <div class="col-xs-2 date-picker-cols">
+    <input type="text" class="date-picker-year form-control" id="filtered_date_year" value="<?php echo$year;?>" onchange="filteration_calendar_month();"style="font-weight:bolder;margin-bottom:2px;margin-top:2px;text-align:center;">
+  </div>
+  
+</div>
 <div class="panel panel-default table-responsive">
   <table width="100%" class="table table-bordered table-hover common-table" id="calendar-view">
-    <tr> 
-      <th colspan="7" class="text-center" valign="middle" > <?php echo strtoupper($title); ?> <?php echo $year ?> </th>
-    </tr>
+   
     <tr>
         <?php foreach($weekDays as $key => $weekDay) : ?>
             <th class="text-center" ><?php echo strtoupper($weekDay); ?></th>
@@ -872,7 +843,7 @@ $blank = date('w', strtotime("{$year}-{$month}-01"));
         <?php endfor; ?>
     </tr>
 </table>
-
+</div>
 </div>
 <div class="validate_check_roles" style="display:none";><?php echo $_SESSION['role']; ?></div>
 
@@ -914,6 +885,31 @@ $blank = date('w', strtotime("{$year}-{$month}-01"));
     <script src="Timepicki/js/timepicki.js"></script>
 
     <script src="custom-js/select2.min.js"></script>
+     <script type="text/javascript">
+      // When the document is ready
+      $('.example1').datepicker({
+          autoclose: true,
+          minViewMode: 1,
+          format: 'MM yyyy'
+
+      }); 
+      $(function() {
+        $('.date-picker-month').datepicker( {
+            autoclose: true,
+            minViewMode: 1,
+            format: 'MM'
+            });
+
+      });
+     $(function() {
+        $('.date-picker-year').datepicker( {
+            autoclose: true,
+            minViewMode: 2,
+            format: 'yyyy'
+            });
+    });
+    </script>
+    
     <script type="text/javascript">
 
       $(".myselect").select2();
@@ -953,7 +949,7 @@ $blank = date('w', strtotime("{$year}-{$month}-01"));
     }
 
     function showdialogshift() {
-        mscAlert({title: 'Sorry',subtitle: 'Shift not yet updated.',  // default: ''
+        mscAlert({title:'CSV not found',subtitle: 'Please Update Roster.', // default: ''
         okText: 'Close',    // default: OK
         });
 
@@ -964,6 +960,7 @@ $blank = date('w', strtotime("{$year}-{$month}-01"));
          $('[data-toggle="tooltip"]').tooltip();
           placement : 'top'
       });
+   
     </script>
 </body>
 

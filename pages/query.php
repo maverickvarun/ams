@@ -1,5 +1,11 @@
 <?php 
 include('connection.php');
+/*$query2 = mysqli_query($con,"CREATE TABLE `team_table`(
+	team_id int(12) UNSIGNED AUTO_INCREMENT PRIMARY key,
+	team_name VARCHAR(50) NOT NULL)");
+if($query2){
+	echo 'success';
+}*/
 //changes for weekly off
 //ALTER TABLE `emp_table` ADD `first_week_off` VARCHAR(200) NOT NULL ;
 

@@ -1,0 +1,21 @@
+sr no ,type,class,date,day_of_week,Varun,Abhinav,Ankit,Anil,-,#NAME?
+1,a,a,01-Jan-17,wednesday,general shift,general shift,night shift,general shift,-,-
+2,b,b,02-Jan-17,Thursday,general shift,general shift,night shift,general shft,-,-
+01-Jan-17,wednesday,general shift,03-Jan-17,Friday,general shift,general shift,general shift,general shift,-,-
+02-Jan-17,Thursday,general shift,04-Jan-17,Saturday,general shift,general shift,general shift,general shift,-,-
+03-Jan-17,Friday,general shift,05-Jan-17,Sunday,Holiday,Holiday,Holiday,Holiday,-,-
+04-Jan-17,Saturday,general shift,06-Jan-17,Monday,general shift,general shift,general shift,general shift,-,-
+05-Jan-17,Sunday,Holiday,07-Jan-17,Tuesday,general shift,general shift,general shift,general shift,-,-
+06-Jan-17,Monday,general shift,08-Jan-17,wednesday,general shift,Holiday,general shift,general shift,-,-
+07-Jan-17,Tuesday,general shift,09-Jan-17,Thursday,general shift,general shift,general shift,general shift,-,-
+08-Jan-17,wednesday,general shift,10-Jan-17,Friday,general shift,general shift,general shift,general shift,-,-
+09-Jan-17,Thursday,general shift,11-Jan-17,Saturday,general shift,general shift,general shift,general shift,-,-
+10-Jan-17,Friday,general shift,12-Jan-17,Sunday,Holiday,Holiday,Holiday,Holiday,-,-
+11-Jan-17,Saturday,general shift,13-Jan-17,Monday,general shift,general shift,general shift,general shift,-,-
+12-Jan-17,Sunday,Holiday,14-Jan-17,Tuesday,general shift,general shift,general shift,general shift,-,-
+13-Jan-17,Monday,general shift,15-Jan-17,wednesday,general shift,general shift,general shift,general shift,-,-
+14-Jan-17,Tuesday,general shift,16-Jan-17,Thursday,general shift,general shift,general shift,general shift,-,-
+15-Jan-17,wednesday,general shift,17-Jan-17,Friday,general shift,general shift,general shift,general shift,-,-
+16-Jan-17,Thursday,general shift,18-Jan-17,Saturday,general shift,general shift,general shift,general shift,-,-
+17-Jan-17,Friday,general shift,19-Jan-17,Sunday,Holiday,Holiday,Holiday,Holiday,-,-
+18-Jan-17,Saturday,general shift,20-Jan-17,Monday,general shift,morning shift,morning shift,morning shift,-,-
