@@ -300,8 +300,8 @@
       <fieldset><legend>Personal Details:</legend>
           <div class="col-lg-6">
             <div class="form-group required">
-              <label class="control-label">Employee ID</label>
-                  <input class="form-control" placeholder="Enter employee id" id="empid" name="empid" value="<?php echo $_POST['empid'];?>">
+              <label class="control-label">Employee Id</label>
+                  <input class="form-control" placeholder="Enter Employee Id" id="empid" name="empid" value="<?php echo $_POST['empid'];?>">
             </div>
           </div>
           <div class="col-lg-6">  
@@ -657,9 +657,8 @@ if(isset($_POST['submit_preview'])) {
    $new_password =base64_encode($pass);
   $query = mysqli_query($con," INSERT INTO emp_table (empid,biomatric_id,firstname,lastname,gender,password,dateofbirth,mobilenumber,emercontactno,emailid,dateofjoining,bloodgroup,parents,permanentaddress,tempaddress,shift,status,flag,employeerole,workunderteam,reportedmanagerid,refecontactno,bankacdetails,bankacnumber,nameinbank,accounttype,ifsccode,leaves) values ('".$_POST['empid']."','".$_POST['bmi']."','".$_POST['firstname']."','".$_POST['last_name']."','".$_POST['gender']."','".$new_password."','".$_POST['dateofbirth']."','".$_POST['mobilenumber']."','".$_POST['ecn']."','".$_POST['emailid']."','".$_POST['dateofjoining']."','".$_POST['bloodgroup']."','".$_POST['parents']."','".$_POST['parmentaddress']."','".$_POST['tempaddress']."','".$_POST['shift']."',1,'".$_POST['flag']."','".$_POST['employeerole']."','".$_POST['workingteam']."','".$_POST['rmi']."','".$_POST['rcn']."','".$_POST['bankacdetails']."','".$_POST['ban']."','".$_POST['nib']."','".$_POST['accounttype']."','".$_POST['ifsc']."',21)");
  // $query1 = mysqli_query($con,"ALTER TABLE monthly_shift_table ADD $emp_id varchar(500) DEFAULT '' ");
-   $query2=mysqli_query($con,"INSERT INTO template_roster (emp_id,shift,firstweekoff,secondweekoff) values('".$_POST['empid']."','".$_POST['shift']."','".$_POST['firstweekoff']."','".$_POST['secondweekoff']."')");
-    $query3 = mysqli_query($con,"ALTER TABLE template_roster ADD $emp_id varchar(500) DEFAULT '' ");
-  if($query) {
+   $query2=mysqli_query($con,"INSERT INTO template_roster_table (emp_id,shift,firstweekoff,secondweekoff) values('".$_POST['empid']."','".$_POST['shift']."','".$_POST['firstweekoff']."','".$_POST['secondweekoff']."')");
+   if($query) {
     echo '<script type="text/javascript" >alert("success");
          window.location = "http://localhost/ams/pages/addemployee.php";
       </script>';    

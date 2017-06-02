@@ -36,7 +36,7 @@
     $ifsccode = $row['ifsccode'];
    
   }
-  $query1 = mysqli_query($con," select * from template_roster where emp_id='".$user."'");
+  $query1 = mysqli_query($con," select * from template_roster_table where emp_id='".$user."'");
   while($row1 = mysqli_fetch_array($query1)) {
     $firstweekoff=$row1['firstweekoff'];
     $secondweekoff=$row1['secondweekoff'];
@@ -216,12 +216,12 @@
                                       <ul class="nav-second-level-level">
                                        <div class="radio">
                                           <label>
-                                            <input type="radio" name="choice_filter" id="id_filter" value="employee">Employee Id
+                                            <input type="radio" name="choice_filter" id="id_filter" value="employee">Search By Id
                                           </label>
                                         </div>
                                         <div class="radio">
                                             <label>
-                                              <input type="radio" name="choice_filter" id="name_filter" value="name">Employee Name
+                                              <input type="radio" name="choice_filter" id="name_filter" value="name">Search By Name
                                             </label>
                                           </div>
                                         </ul>
@@ -283,8 +283,8 @@
                        }
                      ?>
                      <li>
-                       <?php include('connection.php');
-                        <?php include('connection.php');
+                     <?php
+                       
                        if($role !='employee'){
                            if($role=='manager'){
                              if(file_exists($csvname)){
@@ -395,8 +395,8 @@
       <fieldset><legend>Personal Details:</legend>
           <div class="col-lg-6">
             <div class="form-group required">
-              <label class="control-label">Employee ID</label>
-                 <input class="form-control" placeholder="Enter employee id" id="empid" name="empid"  >
+              <label class="control-label">Employee Id</label>
+                 <input class="form-control" placeholder="Enter Search By Id" id="empid" name="empid"  >
             </div>
           </div>
           <div class="col-lg-6">  
@@ -858,7 +858,13 @@ if(isset($_POST['submit_preview'])) {
   $query = mysqli_query($con,"UPDATE emp_table SET empid = '".$_POST['empid']."', biomatric_id='".$_POST['bmi']."',firstname = '".$_POST['firstname']."',lastname = '".$_POST['last_name']."', gender = '".$_POST['gender']."',dateofbirth= '".$_POST['dateofbirth']."',mobilenumber = '".$_POST['mobilenumber']."',emercontactno = '".$_POST['ecn']."',emailid = '".$_POST['emailid']."',dateofjoining = '".$_POST['dateofjoining']."',bloodgroup = '".$_POST['bloodgroup']."' ,parents = '".$_POST['parents']."',permanentaddress ='".$_POST['parmentaddress']."' ,tempaddress = '".$_POST['tempaddress']."',shift = '".$_POST['shift']."',status = '".$_POST['status']."' ,flag = '".$_POST['flag']."',employeerole = '".$_POST['employeerole']."',workunderteam = '".$_POST['workingteam']."',reportedmanagerid = '".$_POST['rmi']."',refecontactno = '".$_POST['rcn']."' ,bankacdetails = '".$_POST['bankacdetails']."',bankacnumber = '".$_POST['ban']."' ,nameinbank = '".$_POST['nib']."',accounttype = '".$_POST['accounttype']."',ifsccode = '".$_POST['ifsc']."' where id = '".$_POST['id']."'");
   $user = $_POST['empid'];
   $j = 0; 
-  $query1= mysqli_query($con,"UPDATE template_roster set firstweekoff='".$_POST['firstweekoff']."',secondweekoff='".$_POST['secondweekoff']."' where emp_id='".$_POST['empid']."'");
+  $q=mysqli_query($con,"SELECT emp_id from template_roster_table where emp_id='".$_POST['empid']."'");
+  $count=mysqli_num_rows($q);
+  if($count>0){
+  $query1= mysqli_query($con,"UPDATE template_roster_table set shift='".$_POST['shift']."', firstweekoff='".$_POST['firstweekoff']."',secondweekoff='".$_POST['secondweekoff']."' where emp_id='".$_POST['empid']."'");
+  }else{
+    $query2=mysqli_query($con,"INSERT INTO template_roster_table(emp_id,shift,firstweekoff,secondweekoff) values('".$_POST['empid']."','".$_POST['shift']."','".$_POST['firstweekoff']."','".$_POST['secondweekoff']."')");
+  }
   // Declaring Path for uploaded images.
   $target_path = "uploaded_images/";
   if (!file_exists($target_path.$user)) {

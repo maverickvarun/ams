@@ -1,12 +1,25 @@
-// below function is used for password field in add_employee page
-$('#emp_password').blur(function() {
-	var value = $('#emp_password').val();
-	if(value.length <= 0) {
-		alert('plz fillup the password field');x
-	}
-});
+$(document).ready(function(){
+//below function is used for password field in add_employee page
+ $('#emp_password').blur(function() {
+        var value = $('#emp_password').val();
+        if(value.length <= 0) {
+          alert('please fillup the password field');
+        }
+      });
 
+     $('#confirmpass').blur(function() {
+      var pwd = $('#emp_password').val();
+      var value = $('#confirmpass').val();
+      if(value.length <= 0) {
+        alert('please fillup the confirm password field');
+      }
+      else if(pwd!=value){
+       $('#confirmpass').val("");
+       alert('password not match');
 
+      }
+    });
+ 
 // below function is used for mobile number field in add_employee page
 $('#mobilenumber').blur(function() {
 	var value = $('#mobilenumber').val();
@@ -78,3 +91,4 @@ function validate() {
   }
   return false;
 }
+    });

@@ -288,12 +288,12 @@
                            //              }
                            //            echo'<div class="radio">
                            //              <label>
-                           //                <input type="radio" name="choice_filter" id="id_filter" value="employee">Employee Id
+                           //                <input type="radio" name="choice_filter" id="id_filter" value="employee">Search By Id
                            //              </label>
                            //            </div>
                            //            <div class="radio">
                            //              <label>
-                           //                <input type="radio" name="choice_filter" id="name_filter" value="name">Employee Name
+                           //                <input type="radio" name="choice_filter" id="name_filter" value="name">Search By Name
                            //              </label>
                            //            </div>
                            //          </div> 
@@ -416,45 +416,46 @@ if($role!='employee')
           $csv=$csv_name;
         }
         if (file_exists($filename)) {  
-        $fp = fopen($filename, "r");
-        $content = fread($fp, filesize($filename));
-        $lines = explode("\n", $content);
-        fclose($fp);
-     
+              $fp = fopen($filename, "r");
+              $content = fread($fp, filesize($filename));
+              $lines = explode("\n", $content);
+              fclose($fp);
+           
+                
+            //<!-- Edit CSV content -->
+            echo'<div class="col-lg-6">';                     
           
-      //<!-- Edit CSV content -->
-      echo'<div class="col-lg-6">';                     
-    
-      if(!isset($csv)) {
-          
-      }
-      else{
-          // CSV file is not empty, let's show the content
-          $row = explode(SDFE_CSVSeparator, $lines[0]);
-          $columns = sizeof($row);
+            if(!isset($csv)) {
+                
+            }
+            else{
+                // CSV file is not empty, let's show the content
+                $row = explode(SDFE_CSVSeparator, $lines[0]);
+                $columns = sizeof($row);
 
-            if($role=='admin'){
-             // listing csv files in dropdown...................................     
-             echo'<div class="dropdown col-lg-4">
-                    <button class="btn btn-primary dropdown-toggle btn-xs" type="button" data-toggle="dropdown">choose team wise roaster
-                      <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">';
-                      foreach ($csvfiles as $basename) {
-                       echo  makeCSVFileLink($basename, $csv);
-                       }
-               echo'
-              </ul>
-            </div> 
-           ';
+                  if($role=='admin'){
+                   // listing csv files in dropdown...................................     
+                   echo'<div class="dropdown col-lg-4">
+                          <button class="btn btn-primary dropdown-toggle btn-xs" type="button" data-toggle="dropdown">choose team wise roaster
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu">';
+                            foreach ($csvfiles as $basename) {
+                             echo  makeCSVFileLink($basename, $csv);
+                             }
+                     echo'
+                    </ul>
+                  </div> 
+                 ';
 
-          }
-         echo'<div class="col-lg-4"> '.$csv.'</div>';
-      }
+                }
+               echo'<div class="col-lg-4"> '.$csv.'</div>';
+            }
   } else{
    echo' <div class="alert alert-danger col-sm-4">
   <center><strong>File not found!</strong></center> 
 </div>';
+$lines=0;
   } 
 }
 else{
@@ -467,6 +468,7 @@ else{
  
   </div>
    <?php if($role !='employee'){
+
       echo'<div class="text-right col-xs-offset-8">
             <a href="#" id="addcol" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add new col</a>
             <a href="#" id="addrow" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add new row</a>
@@ -479,10 +481,12 @@ else{
                 <table class="table" id="csvtable">
                  <tbody>';
                     // Show content
+                   if (file_exists($files)) { 
                      for ($lineCnt=0; $lineCnt<sizeof($lines); $lineCnt++) {
                          $row = explode(SDFE_CSVSeparator, $lines[$lineCnt]);
                          echo makeTableRow($lineCnt, $row, $columns);
                      } 
+                  }
                           
              echo'</tbody>
                 </table>

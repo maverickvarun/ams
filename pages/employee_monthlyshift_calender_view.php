@@ -34,66 +34,74 @@ $blank = date('w', strtotime("{$year}-{$month}-01"));
 <div class=" page-header"><h1  class="text-center" valign="middle" > <?php echo strtoupper($title); ?> <?php echo $year ?> </h1></div>
 <div class="panel panel-default table-responsive">    
   <table width="100%" class="table table-bordered table-hover common-table" id="calendar-view">
-    
     <tr>
-              <?php foreach($weekDays as $key => $weekDay) : ?>
-                  <th class="text-center" ><?php echo strtoupper($weekDay); ?></th>
-              <?php endforeach ?>
+      <?php foreach($weekDays as $key => $weekDay) : ?>
+      <th class="text-center" ><?php echo strtoupper($weekDay); ?></th>
+        <?php endforeach ?>
     </tr>
     <tr>
-        <?php for($i = 0; $i < $blank; $i++): ?>
-            <td valign="middle"></td>
-            <?php endfor; ?>
-            <?php for($i = 1; $i <= $daysInMonth; $i++): ?>
-            <?php if($i == $day): ?>
-
-              <?php include('connection.php');
-                $q = mysqli_query($con,"SELECT ".$user." from ".$workunderteam."_table where date='".date('d-M-y')."'");
-                // if($q){
-                //  $count = mysqli_num_rows($q);                
-                //   }
-                  $query3=mysqli_query($con,"SELECT * from template_roster where emp_id= '".$user."' ");
-                  $result1=mysqli_fetch_array($query3);
-                 if($q) {
+      <?php for($i = 0; $i < $blank; $i++): ?>
+        <td valign="middle"></td>
+          <?php endfor; ?>
+          <?php for($i = 1; $i <= $daysInMonth; $i++): ?>
+          <?php if($i == $day): ?>
+          <?php include('connection.php');
+          $datefatch=date('d-M-y');
+          $q = mysqli_query($con,"SELECT ".$user." from ".$workunderteam."_roster_table where date='".$datefatch."'"); 
+            $count=0;
+          if($q){ 
+             $count=mysqli_num_rows($q);
+          }         
+          $query3=mysqli_query($con,"SELECT * from template_roster_table where emp_id='".$user."' ");
+                 $result1=mysqli_fetch_array($query3);
+                 if($count>0) {
                     while($row=mysqli_fetch_array($q)) {
+
                       echo "<td  class='bg-warning'><center style='color:gray;'> ".$i." "."<br/><span>".$row[0]."</span></center></td>";
                     }
-                }
-                else {
+                  }
+                 else {
                    // echo"<td class='bg-warning'><center style='color:gray;'> ".$i."<br/></center></td>";
-                   if($dayName==strtolower($result['firstweekoff'])||strtolower($dayName)==strtolower($result['secondweekoff'])){
+                   $date_fetch = date($i.'-M-y');
+                     $dayName = strtolower(date("l",strtotime($date_fetch)));
+                   if($dayName==strtolower($result1['firstweekoff'])||strtolower($dayName)==strtolower($result1['secondweekoff'])){
                          echo  "<td class='bg-warning'>".$i."<br/><span>"."WO"."</span></td>";
                       }  
                      else {
-                      echo  "<td class='bg-warning'>".$i."<br/><span>".$result['shift']."</span></td>";
+                      echo  "<td class='bg-warning'>".$i."<br/><span>".$result1['shift']."</span></td>";
                      }
+                  }
+                  ?>
+                <?php else: ?>
+                
+                <?php
+                if($i<10){
+                  $date_fetch = date('0'.$i.'-M-y');
+                 }else{
+                  $date_fetch = date($i.'-M-y');
                  }
-              ?>
-            <?php else: ?>
-            
-            <?php
-            // if($i<10){
-            // $date_fetch = date('0'.$i.'-M-y');
-            // }else{
-             $date_fetch = date($i.'-M-y');
-             $dayName = strtolower(date("l",strtotime($date_fetch)));
-            // }
-              $query = mysqli_query($con,"SELECT ".$user." from ".$workunderteam."_table where date='".$date_fetch."'");
-              // if($query){
-              //   $count = mysqli_num_rows($query);
-              // }
-               
-               $query4=mysqli_query($con,"SELECT * from template_roster where emp_id= '".$user."' ");
-                $result=mysqli_fetch_array($query4);
-              if($query) { 
-                while($row = mysqli_fetch_array($query)) { 
-                  echo "<td><center> ".$i." "."<br/> <span>".$row[0]."</span></center></td>";    
-                }                    
-              }
-              else{
+                  
+                  $dayName = strtolower(date("l",strtotime($date_fetch)));
+                  $query = mysqli_query($con,"SELECT ".$user." from ".$workunderteam."_roster_table where date='".$date_fetch."'");
+                  // if($query){
+                  //   $count = mysqli_num_rows($query);
+                  // }
+                   
+                 $query4=mysqli_query($con,"SELECT * from template_roster_table where emp_id= '".$user."' ");
+                  $result=mysqli_fetch_array($query4);
+                  $count1=0;
+                  if($query){
+                   $count1=mysqli_num_rows($query);
+                  }
+                  if($count1>0) { 
+                    while($row = mysqli_fetch_array($query)) { 
+                      echo "<td><center> ".$i." "."<br/> <span>".$row[0]."</span></center></td>";   
+                    }                    
+                  }
+                  else{
                   if($i <= date('d')) { 
                   //$query = mysqli_query($con,"INSERT INTO  emp_checks (emp_id, date, check_in,check_out,working_hrs,checks,remarks,status) VALUES ('".$biomatric_id."', '".date('Y-m-'.$i)."','','','0','A','Absent','0')");
-                      
+                     
                       if($dayName==strtolower($result['firstweekoff'])||strtolower($dayName)==strtolower($result['secondweekoff'])){
                          echo  "<td >".$i."<br/><span>"."WO"."</span></td>";
                       }
@@ -101,7 +109,7 @@ $blank = date('w', strtotime("{$year}-{$month}-01"));
                       echo  "<td >".$i."<br/><span>".$result['shift']."</span></td>";
                        } 
                    } else{  
-                      if($dayName==strtolower($result['first_week_off'])||strtolower($dayName)==strtolower($result['second_week_off'])){
+                      if($dayName==strtolower($result['firstweekoff'])||strtolower($dayName)==strtolower($result['secondweekoff'])){
                          echo  "<td >".$i."<br/><span>"."WO"."</span></td>";
                       }  
                      else {

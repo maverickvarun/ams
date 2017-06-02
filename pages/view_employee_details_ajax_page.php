@@ -21,7 +21,7 @@ echo'
                 <fieldset><legend>Personal Details:</legend>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label>Employee ID</label>
+                    <label>Employee Id</label>
                         <input class="form-control" id="empid" name="empid" value="'.$row['empid'].'" >
                   </div>
                 </div>
@@ -33,7 +33,7 @@ echo'
                 </div>
                 <div class="col-lg-6"> 
                   <div class="form-group">
-                    <label>Employee Name</label>
+                    <label>Search By Name</label>
                         <input class="form-control" type="text"  id="firstname"  name="firstname" value="'.$row['firstname']." ".$row['lastname'].'">
                   </div>
                 </div> 

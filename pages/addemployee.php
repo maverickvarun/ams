@@ -92,6 +92,7 @@
 </head>
 
 <body>
+
 <div id="wrapper">
   <!-- Navigation -->
    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0;margin-top:5px;">
@@ -333,7 +334,7 @@
           </div> 
           <div class="col-lg-6">
             <div class="form-group required">
-              <label class="control-label">Employee ID</label>
+              <label class="control-label">Employee Id</label>
                   <input class="form-control"  id="empid"  name="empid" required="required">
             </div>
           </div>
@@ -362,9 +363,9 @@
             </div>
           </div> 
           <div class="col-lg-6"> 
-            <div class="form-group">
+            <div class="form-group required">
               <label class="control-label">Confirm Password</label>
-                  <input class="form-control" type="password" id="confirmpassword" name="confirmpassword"  ><span id="password_msg"></span>
+                  <input class="form-control" type="password" id="confirmpass" name="confirmpassword"  required="true" ><span id="password_msg"></span>
             </div>
           </div> 
           <div class="col-lg-6">  
@@ -726,6 +727,7 @@
    <!-- /#wrapper -->
    <!-- jQuery -->
 <!-- jQuery -->
+    <script src="custom-js/employee_add_page.js"></script> 
     <script src="../vendor/jquery/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
@@ -757,7 +759,7 @@
 
     <script src="Timepicki/js/timepicki.js"></script>
 
-    <script src="custom-js/employee_add_page.js"></script>
+   
     <script src="custom-js/select2.min.js"></script>
     <script type="text/javascript">
 
@@ -829,6 +831,12 @@
           $("#addsecond").removeClass("visible").addClass("hidden");
         });
       });   
+    </script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+      //below function is used for password field in add_employee page
+     
+    });
     </script>
    
 </body>

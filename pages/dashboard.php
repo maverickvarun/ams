@@ -265,7 +265,7 @@
                                echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
                          }
                         }
-                        }//else{
+                        }else{
                        //    $d=date('d');
                        //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
                        //   if($d < 10){
@@ -277,12 +277,12 @@
                        //    }
                        //   // $count=mysqli_fetch_row($query);
                        //   // if($count) {
-                       //     echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                            echo'<a href="monthlyshift.php">Monthly Shift</a>';
                        //    // }
                        //   // else {
                        //   //   echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
                        //   // }
-                       // }
+                        }
                          
                        ?>
                      </li>

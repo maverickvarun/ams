@@ -374,12 +374,12 @@ $title = strftime('%B', $firstDay);
                        <ul class="nav nav-second-level">
                        <div class="radio">
                           <label>
-                            <input type="radio" name="choice_filter" id="id_filter" value="employee">Employee Id
+                            <input type="radio" name="choice_filter" id="id_filter" value="employee">Search By Id
                           </label>
                         </div>
                         <div class="radio">
                           <label>
-                            <input type="radio" name="choice_filter" id="name_filter" value="name">Employee Name
+                            <input type="radio" name="choice_filter" id="name_filter" value="name">Search By Name
                           </label>
                         </div>
                       </ul>

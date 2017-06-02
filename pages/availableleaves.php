@@ -213,12 +213,12 @@ $title = strftime('%B', $firstDay);
                            <li>
                               <div class="radio">
                                 <label>
-                                  <input type="radio" name="choice_filter" id="id_filter" value="employee">Employee Id
+                                  <input type="radio" name="choice_filter" id="id_filter" value="employee">Search By Id
                                 </label>
                             </div>
                             <div class="radio">
                               <label>
-                                <input type="radio" name="choice_filter" id="name_filter" value="name">Employee Name
+                                <input type="radio" name="choice_filter" id="name_filter" value="name">Search By Name
                               </label>
                             </div>
                            </li> ';
@@ -277,7 +277,7 @@ $title = strftime('%B', $firstDay);
                          }
                         }
                        }
-                       // else{
+                        else{
                        //    $d=date('d');
                        //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
                        //   if($d < 10){
@@ -289,12 +289,12 @@ $title = strftime('%B', $firstDay);
                        //    }
                        //   // $count=mysqli_fetch_row($query);
                        //   // if($count) {
-                       //     echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                            echo'<a href="monthlyshift.php">Monthly Shift</a>';
                        //   // }
                        //   // else {
                        //   //   echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
                        //   // }
-                       // }
+                        }
                          
                        ?>
                      </li>

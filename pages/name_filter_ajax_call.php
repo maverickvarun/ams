@@ -1,9 +1,15 @@
 <?php session_start();
 	$role = $_SESSION['role'];
 	$user = $_SESSION['user'];
+	$workunderteam=$_SESSION['workunderteam'];
 	include('connection.php');
-	$query = mysqli_query($con,"SELECT firstname,lastname,empid,status from emp_table ");
-	echo "<option value=''>-employee name-</option>";
+	if($role=='admin'){
+	 $query = $query = mysqli_query($con,"SELECT firstname,lastname,empid,status from emp_table ");
+	}
+	else{
+    $query = mysqli_query($con,"SELECT firstname,lastname,empid,status from emp_table  where reportedmanagerid='".$user."' ");
+	}
+	echo "<option value=''>-Search By Name-</option>";
 	if($query) {
 	 	while($result1=mysqli_fetch_array($query)) {
 	 		$fname=$result1['firstname'];

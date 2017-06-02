@@ -45,7 +45,7 @@ $query = mysqli_query($con," select * from emp_table where empid='".$user."'");
       $statusopt="Inactive";
     }
   }
-   $query1 = mysqli_query($con," select * from template_roster where emp_id='".$user."'");
+   $query1 = mysqli_query($con," select * from template_roster_table where emp_id='".$user."'");
   while($row1 = mysqli_fetch_array($query1)) {
     $firstweekoff=$row1['firstweekoff'];
     $secondweekoff=$row1['secondweekoff'];
@@ -61,8 +61,8 @@ $query = mysqli_query($con," select * from emp_table where empid='".$user."'");
             
           <div class="col-lg-6">
             <div class="form-group required">
-              <label class="control-label">Employee ID</label>
-                 <input class="form-control" placeholder="Enter employee id" id="empid" name="empid" value="'.$empid.'">
+              <label class="control-label">Search By Id</label>
+                 <input class="form-control" placeholder="Enter Search By Id" id="empid" name="empid" value="'.$empid.'">
             </div>
           </div>
           <div class="col-lg-6">  

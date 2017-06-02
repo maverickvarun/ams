@@ -1,6 +1,7 @@
 <?php session_start();
 	$role = $_SESSION['role'];
 	$user = $_SESSION['user'];
+	$workunderteam=$_SESSION['workunderteam'];
 	include('connection.php');
 	// below code is used for role wise filteration but not until used
 	// if($role =='admin') {
@@ -9,8 +10,13 @@
  //  else {
  //    $query = mysqli_query($con,"SELECT empid from emp_table where reportedmanagerid = '".$user."'");
  //  }
+	if($role=='admin'){
 	 $query = mysqli_query($con,"SELECT empid,workunderteam,status from emp_table ");
-	echo "<option value=''>-employee id-</option>";
+	}
+	else{
+     $query = mysqli_query($con,"SELECT firstname,lastname,empid,status from emp_table  where reportedmanagerid='".$user."' ");
+	}
+	echo "<option value=''>-Search By Id-</option>";
 	if($query) {
 		while($result=mysqli_fetch_array($query)) {
 			$team = $result['workunderteam'];

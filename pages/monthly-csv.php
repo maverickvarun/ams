@@ -36,10 +36,12 @@
    $message = array("responseText" => "Successfully Updated!");
  //table Name
 if($role=='manager'){
-    $tableName = $workunderteam."_table" ;    
+    $tableName = $workunderteam."_roster_table" ;    
 }else{
-    $tableName = $csvname."_table";
+    $tableName = $csvname."_roster_table";
 }
+
+
 
 
 //database name

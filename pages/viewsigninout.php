@@ -192,6 +192,9 @@ $title = strftime('%B', $firstDay);
                               </div> -->
                               <div class=" row" style="margin-top:5px">
                                 <div class="col-md-3 ">
+                                   <div class="col-sm-12 hidden filter_top" id="li_one_date_filter">
+                                  <input type="date" placeholder=" Single date" class="example1 form-control input-sm " id="onedate" onchange="filtration_checkin();">
+                                  </div>
                                   <label>From Field</label>
                                 </div>
                                <div class=" form-group  has-feedback col-md-9 ">
@@ -209,14 +212,8 @@ $title = strftime('%B', $firstDay);
                                 </div>                          
                            </div> 
                         </div>
-
-                      
-                     <!--  <div class="col-sm-12 filter_top " id="li_from_date_filter">
-                      <input type="date" placeholder="From Date" class="example1 form-control input-sm" id="fromdate" onchange="filtration_checkin();">
-                      </div>
-                      <div class="col-sm-12 filter_top  " id="li_to_date_filter">
-                      <input  type="date" placeholder="To Date"  class="example1 form-control input-sm" id="todate" onchange="filtration_checkin();">
-                     </div> -->
+                        
+                    
                       </li>
                     </ul>
                  <?php if($role != "employee") { 
@@ -228,17 +225,16 @@ $title = strftime('%B', $firstDay);
                             <ul class="nav-second-level-level">
                               <div class="radio">
                                 <label>
-                                  <input type="radio" name="choice_filter" id="id_filter" value="employee">Employee Id
+                                  <input type="radio" name="choice_filter" id="id_filter" value="employee">Search By Id
                                 </label>
                               </div>
                               <div class="radio">
                                 <label>
-                                  <input type="radio" name="choice_filter" id="name_filter" value="name">Employee Name
+                                  <input type="radio" name="choice_filter" id="name_filter" value="name">Search By Name
                                 </label>
                               </div>
                             </ul>
-                            ';                   
-                      echo '<div class="col-sm-12 filter_bottom hidden" id="li_filter_by_choice_team">
+                           <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_choice_team">
                                 <select class = "form-control input-sm myselect" style="width:100%;" id="filter_by_choice_team" onchange="filtration_checkin();">
                                 </select>
                               </div>
@@ -314,7 +310,7 @@ $title = strftime('%B', $firstDay);
                          }
                         }
                        }
-                       // else{
+                        else{
                        //    $d=date('d');
                        //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
                        //   if($d < 10){
@@ -326,12 +322,12 @@ $title = strftime('%B', $firstDay);
                        //    }
                        //   // $count=mysqli_fetch_row($query);
                        //   // if($count) {
-                       //     echo'<a href="monthlyshift.php">Monthly Shift</a>';
+                            echo'<a href="monthlyshift.php">Monthly Shift</a>';
                        //   // }
                        //   // else {
                        //   //   echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
                        //   // }
-                       // }
+                        }
                          
                        ?>
                      </li>
@@ -450,23 +446,23 @@ $title = strftime('%B', $firstDay);
           }
           $dayname = date('l',strtotime($row['date']));
            $query_holiday = mysqli_query($con,"SELECT * from holiday_table where Date ='".$row['date']."'");
-          if(mysqli_num_rows($query_holiday)){
-            while($result_holiday = mysqli_fetch_array($query_holiday)){
-              $_SESSION['pdf'] .= "<tr style='background:#f0f02e80;'>
-              <td>".$row['date']."</td><td>".$dayname." (".$result_holiday['Festival'].")</td>";
-            }
-          }
-          else{
-                $_SESSION['pdf'] .= "<tr><td>".$row['date']."</td><td>".$dayname."</td> ";
-           }
-          $_SESSION['pdf'] .= " <td>".$check_in."</td> <td>".$check_out.'</td>'; 
-          if($role != "employee") {
-            $_SESSION['pdf'] .= " <td>".$row['working_hrs'].'</td>';
-          }
-          $_SESSION['pdf'] .= " <td>".$row['particulars']."</td><td>".$row['remarks']."</td>";
-          if($role =="admin") {
-            $_SESSION['pdf'].="<td ><a href='javascript:;' onclick='div_edit_attendance_show($row[0],$row[1])' class='".$row[0]."'>Edit</a></td>";
-          }
+          // if(mysqli_num_rows($query_holiday)){
+          //   while($result_holiday = mysqli_fetch_array($query_holiday)){
+          //     $_SESSION['pdf'] .= "<tr style='background:#f0f02e80;'>
+          //     <td>".$row['date']."</td><td>".$dayname." (".$result_holiday['Festival'].")</td>";
+          //   }
+          // }
+          // else{
+          //       $_SESSION['pdf'] .= "<tr><td>".$row['date']."</td><td>".$dayname."</td> ";
+          //  }
+          // $_SESSION['pdf'] .= " <td>".$check_in."</td> <td>".$check_out.'</td>'; 
+          // if($role != "employee") {
+          //   $_SESSION['pdf'] .= " <td>".$row['working_hrs'].'</td>';
+          // }
+          // $_SESSION['pdf'] .= " <td>".$row['particulars']."</td><td>".$row['remarks']."</td>";
+          // if($role =="admin") {
+          //   $_SESSION['pdf'].="<td ><a href='javascript:;' onclick='div_edit_attendance_show($row[0],$row[1])' class='".$row[0]."'>Edit</a></td>";
+          // }
         }
         $_SESSION['pdf'].="</tr>";
         echo $_SESSION['pdf'];

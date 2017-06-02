@@ -33,6 +33,11 @@
     $choice_id = $_REQUEST['choice_id'];
     if($choice_id !='') {
       $user = $choice_id;
+      $q=mysqli_query($con,"SELECT biomatric_id from emp_table where empid='".$choice_id."'");
+      while($resultid=mysqli_fetch_array($q)){
+       
+      $user=$resultid['biomatric_id'];
+      }
     }
   }  
   else {
@@ -67,7 +72,9 @@
  
   
   if($query) {
+ 
       while($row = mysqli_fetch_array($query)) {
+
           if($row['check_in']!=''){
             $check_in = date('g:i A', strtotime($row['check_in']));
           }else {
@@ -100,6 +107,7 @@
             $_SESSION['pdf'].="<td ><a href='javascript:;' onclick='div_edit_attendance_show($row[0],$row[1])' class='".$row[0]."'>Edit</a></td>";
           }
         }
+
         $_SESSION['pdf'].="</tr>";
     echo $_SESSION['pdf'];
     echo '</tbody></table>';
