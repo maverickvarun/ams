@@ -13,10 +13,10 @@
   $check_in_out = $_SESSION['check_in_out'];
   $last_swipe = $_SESSION['last_swipe'];
   $workunderteam=$_SESSION['workunderteam'];
- date_default_timezone_set('Asia/Kolkata'); 
+ date_default_timezone_set('Asia/Kolkata');
   $date = strtotime(date("Y-m-d"));
   $day = date('d', $date);
-  $month = date('m', $date);  
+  $month = date('m', $date);
   $year = date('Y', $date);
   $firstDay = mktime(0,0,0,$month, 1, $year);
   $title = strftime('%B', $firstDay);
@@ -32,7 +32,7 @@
 
       // Get array of CSV files
       $csvpath = SDFE_CSVFolder . "/";
-      $files = scandir($csvpath); // this is all files in dir 
+      $files = scandir($csvpath); // this is all files in dir
        // clean up file list (to exclude)should only include csv files
         $csvfiles = array();
         foreach ($files as $basename) {
@@ -42,9 +42,9 @@
         }
         if($role=='manager'){
         $csvname=$csvpath.$workunderteam.".".SDFE_CSVFileExtension;
-        } 
+        }
     }
-?>            
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -86,7 +86,7 @@
 
     <link href="custom-css/select2.min.css" rel="stylesheet" />
 
-    
+
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -128,9 +128,9 @@
                 <!-- /.dropdown -->
          <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <?php include('connection.php'); 
+            <?php include('connection.php');
                if($flag == 'remote') {
-                  $date = date("Y-m-d"); 
+                  $date = date("Y-m-d");
                   $status = '';
                   // below query is used to hide the checking button if user checkout then button is disabled.....
                   $query5 = mysqli_query($con,"SELECT status from emp_checks where emp_id = '".$biomatric_id."' and date = '".$date."'");
@@ -147,7 +147,7 @@
             </a>
          <!-- /.dropdown-tasks -->
          </li>
-      
+
          <!-- /.dropdown -->
          <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -168,13 +168,13 @@
             </ul>
            <!-- /.dropdown-user -->
          </li>          <!-- /.dropdown -->
-                
+
       </ul>
             <!-- /.navbar-top-links -->
       <div class="navbar-default sidebar " role="navigation"  >
          <div class="sidebar-nav navbar-collapse" >
             <ul class="nav" id="side-menu">
-               <li><a href="dashboard.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>  
+               <li><a href="dashboard.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
                <li class="active"><a href="#"><i class="fa fa-male fa-fw"></i>Employee<span class="fa arrow"></span></a>
                  <ul class="nav nav-second-level">
                          <?php if ($role=='admin'){
@@ -183,41 +183,25 @@
                                    }
                          ?>
                   <li ><a href="viewsigninout.php" >View Attendance</a></li>
-                  <?php if($role!="employee"){ 
+                  <?php if($role!="employee"){
                          echo '<li><a href="viewemployeedetails.php">View Employee Details<span class="fa arrow"></span></a>
-                           <ul class="nav nav-second-level">
-                           <li><div class="col-lg-12 filter_top"> 
-                           <div class="form-group">
-                         
-                            ';             
-              echo'<ul class="nav">
-                    <li ><a href="#">View Others<span class="fa arrow"></span></a>
-                      <ul class="nav nav-second-level">
-                        <div class="radio">
-                          <label>
-                            <input type="radio" name="choice_filter" id="id_filter" value="employee">Search By Id
-                          </label>
-                        </div>
-                        <div class="radio">
-                          <label>
-                            <input type="radio" name="choice_filter" id="name_filter" value="name">Search By Name
-                          </label>
-                        </div>
-                      </ul> 
-                    </li>
-                  </ul>
-                </div>   
-            
-            ';
-          echo '</select></div>
-          <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_choice_team">
-            <select class = "form-control input-sm myselect" style="width:100%;" id="filter_by_choice_team" onchange="filtration_view_employee_details();">
-            </select>
-          </div></li>
-                     
-        </ul> </li>';
+                         <ul class="nav nav-second-level">
+                           <li><div class="navbar-form" role="search">
+                                 <div class="input-group">
+                                   <input class="form-control searchbox" placeholder="Search Name, Id" id="search_term" type="text" list="filter_by_choice_team" onchange="filtration_view_employee_details();">
+
+                                   <div class="input-group-btn" >
+                                     <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-arrow-right"></i></button>
+                                   </div>
+                                 </div>
+                                 <input class="form-control hidden" type="text" id="selectedemp">
+                               </div>
+                             </li>
+                           <datalist id="filter_by_choice_team" style="width:100%">
+                           </datalist>
+                         </ul></li>';
         }
-        
+
       ?>
     </ul>
                </li>
@@ -227,10 +211,10 @@
                   <ul class="nav nav-second-level">
                    <?php if($role != "admin"){
                      echo '<li><a href="javascript:;" onclick="div_leave_request_show();">Leave Request</a></li>';
-                      } 
+                      }
                         if($role != "employee") {
                          echo'<li><a href="leavedetails.php">Leave Details</a></li>';
-                        } 
+                        }
                      ?>
                       <li><a href="availableleaves.php">Available Leaves</a></li>
                   </ul>
@@ -247,17 +231,14 @@
                   </li>';
                 }
                ?>
-               
-                 <!-- /.nav-third-level........................................................................ -->          
+
+                 <!-- /.nav-third-level........................................................................ -->
                <li>
                    <a href="#"><i class="fa fa-tasks fa-fw"></i>Shift<span class="fa arrow"></span></a>
                    <ul class="nav nav-second-level">
                      <?php if ($role=='admin'){
                             echo '<li><a href="javascript:;" onclick="div_show_add_new_shift();">Add Shift</a></li>';
-                         }
-
-                       if($role != "employee"){
-                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
+                            echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
                        }
                      ?>
                      <li>
@@ -281,7 +262,7 @@
                        }
                        // else{
                        //    $d=date('d');
-                       //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
+                       //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed
                        //   if($d < 10){
                        //     $d2 = 2*$d-$d;
                        //     $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
@@ -297,7 +278,7 @@
                        //     echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
                        //   }
                        // }
-                         
+
                        ?>
                      </li>
                    </ul>
@@ -311,7 +292,7 @@
                      <?php if ($role!='employee'){
                            echo '<li><a href="addroster.php">Add Monthly Roster</a></li>';
                        }?>
-                     
+
                      <li>
                          <a href="holiday.php">Holiday</a>
                      </li>
@@ -325,7 +306,7 @@
               }
               ?>
 
-           <!-- /.nav-sixth-level....................................................................... -->        
+           <!-- /.nav-sixth-level....................................................................... -->
            <li>
                <a href="manual.php"><i class="fa fa-bar-chart-o fa-fw"></i>Manual & FAQ</a>
            </li>
@@ -337,39 +318,39 @@
          </ul>
          </div>
          <!-- /.sidebar-collapse -->
-         </div> 
+         </div>
           <!-- /.navbar-static-side -->
-         </nav> 
+         </nav>
 <div id="page-wrapper">
   <div class="row">
     <div class="col-lg-6"> <h2 >View Employee Details</h2></div>
   </div>
 <!-- /.row -->
 
-<!--  filteration block is started here .....................................................-->   
+<!--  filteration block is started here .....................................................-->
   <div class="row">
   <div class="col-lg-12">
     <div class="panel">
       <div class="row">
-          <div class="col-sm-3 hidden" id="fi_filter_by_choice_button"></div>
+          <div class="col-sm-4 hidden" id="fi_filter_by_choice_button"></div>
         </div>
       </div>
-    
+
   </div>
 </div>
-    <!--  filteration block is closed here-->   
+    <!--  filteration block is closed here-->
 
 
     <!--
             below code is for the personal details panel of employeee...........
   -->
-<div id="view_details">  
+<div id="view_details">
 <div class="row" >
       <div class="col-lg-6">
         <div class="panel panel-default">
           <div class="panel-body">
 
-              <?php 
+              <?php
                 include('connection.php');
                 $query = mysqli_query($con,"select empid,biomatric_id,firstname,lastname,dateofbirth,emercontactno,mobilenumber,emailid,dateofjoining,bloodgroup,permanentaddress,tempaddress,parents from emp_table where empid = '".$user."' ");
                 while($row = mysqli_fetch_array($query)) {
@@ -382,19 +363,19 @@
                         <input class="form-control" id="empid" name="empid">
                   </div>
                 </div>
-                <div class="col-lg-6"> 
+                <div class="col-lg-6">
                   <div class="form-group">
                     <label>Biomatric Id</label>
                         <input class="form-control" type="text"  id="biomatric_id"  name="biomatric_id" >
                   </div>
                 </div>
-                <div class="col-lg-6"> 
+                <div class="col-lg-6">
                   <div class="form-group">
                     <label>Search By Name</label>
                         <input class="form-control" type="text"  id="firstname"  name="firstname">
                   </div>
-                </div> 
-                <div class="col-lg-6">  
+                </div>
+                <div class="col-lg-6">
                    <div class="form-group">
                     <label>Date of Birth</label>
                         <input class="form-control" type="text" id="dateofbirth"  name="dateofbirth" >
@@ -411,14 +392,14 @@
                     <label>Emer. Contact No.</label>
                         <input class="form-control" >
                   </div>
-                </div> 
-                <div class="col-lg-6"> 
+                </div>
+                <div class="col-lg-6">
                   <div class="form-group">
                     <label>Email Id</label>
                         <input class="form-control" type="text"   >
                   </div>
-                </div> 
-                <div class="col-lg-6">  
+                </div>
+                <div class="col-lg-6">
                    <div class="form-group">
                     <label>Date Of Joining</label>
                         <input class="form-control" type="text" >
@@ -429,20 +410,20 @@
                     <label>Blood Group</label>
                         <input class="form-control" >
                   </div>
-                </div> 
-                <div class="col-lg-6"> 
+                </div>
+                <div class="col-lg-6">
                   <div class="form-group">
                     <label>Permanent Address</label>
                         <input class="form-control" type="text"  >
                   </div>
-                </div> 
-                <div class="col-lg-6">  
+                </div>
+                <div class="col-lg-6">
                    <div class="form-group">
                     <label>Temp. Address</label>
                         <input class="form-control" type="text">
                   </div>
                 </div>
-                <div class="col-lg-6">  
+                <div class="col-lg-6">
                    <div class="form-group">
                     <label>Parents/Gardian</label>
                         <input class="form-control" type="text">
@@ -451,10 +432,10 @@
                   </fieldset></form>';
                 }
                   ?>
-        
-      </div> 
+
+      </div>
     </div>
-  </div> 
+  </div>
 <!--
             below code is for the bank details panel of employeee...........
   -->
@@ -463,7 +444,7 @@
         <div class="panel panel-default">
           <div class="panel-body">
             <div class="row">
-             <?php 
+             <?php
                 include('connection.php');
                 $query = mysqli_query($con,"select bankacdetails,bankacnumber,nameinbank,accounttype,ifsccode from emp_table where empid = '".$user."' ");
                 while($row = mysqli_fetch_array($query)) {
@@ -475,14 +456,14 @@
                     <label>Name Of Bank</label>
                         <input class="form-control" value="'.$row['bankacdetails'].'">
                   </div>
-                </div> 
-                <div class="col-lg-6"> 
+                </div>
+                <div class="col-lg-6">
                   <div class="form-group">
                     <label>Account Number</label>
                         <input class="form-control" type="text"  value="'.$row['bankacnumber'].'">
                   </div>
-                </div> 
-                <div class="col-lg-6">  
+                </div>
+                <div class="col-lg-6">
                    <div class="form-group">
                     <label>Name In Bank</label>
                         <input class="form-control" type="text" value="'.$row['nameinbank'].'"  >
@@ -493,22 +474,22 @@
                     <label>Account Type</label>
                         <input class="form-control"  value="'.$row['accounttype'].'" >
                   </div>
-                </div> 
-                <div class="col-lg-6"> 
+                </div>
+                <div class="col-lg-6">
                   <div class="form-group">
                     <label>IFSC Code</label>
                         <input class="form-control" type="text"   value="'.$row['ifsccode'].'" >
                   </div>
-                </div> 
-                
+                </div>
+
                 </fieldset></form>';
                 }
                   ?>
-    
-      </div> 
+
+      </div>
     </div>
-  </div> 
-</div>     
+  </div>
+</div>
 <!--
             below code is for the document details panel of employeee...........
   -->
@@ -517,7 +498,7 @@
         <div class="panel panel-default">
           <div class="panel-body">
             <div class="row">
-             <?php 
+             <?php
               echo'
               <form class="form-horizontal"  role="form" enctype="multipart/form-data" >
               <fieldset><legend>Document Details:</legend>';
@@ -537,13 +518,13 @@
               }
 
              echo' </fieldset></form>';
-            ?> 
+            ?>
            </div>
-      </div> 
+      </div>
     </div>
-  </div> 
-</div>  
-</div> 
+  </div>
+</div>
+</div>
    <div class="validate_check_roles" style="display:none";><?php echo $_SESSION["role"]; ?></div>
 </div>
 </div>
@@ -571,7 +552,7 @@
     <!-- jQuery datepicker-->
 
     <script src="custom-js/bootstrap-datepicker.js"></script>
-    
+
     <script src="custom-js/filteration-button.js"></script>
 
     <script type="text/javascript" src="custom-js/filtration_method.js"></script>
@@ -587,8 +568,8 @@
       $(".myselect").select2();
 
 </script>
-     
-    
+
+
      <script>
       $('#timepicker1').timepicki();
       $('#custom-time').click(function() {
@@ -613,7 +594,3 @@
 </body>
 
 </html>
-
-
-
-

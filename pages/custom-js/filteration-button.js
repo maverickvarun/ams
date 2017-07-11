@@ -1,4 +1,4 @@
-// filteration on the basis of changes in the filteration block on side bar after clicking on the option in filteration block 
+// filteration on the basis of changes in the filteration block on side bar after clicking on the option in filteration block
  // started here........................................
 $('#id_filter').click(function() {
   $('#li_filter_by_choice_team').removeClass('hidden').addClass('visible');
@@ -6,58 +6,69 @@ $('#id_filter').click(function() {
 $('#name_filter').click(function() {
   $('#li_filter_by_choice_team').removeClass('hidden').addClass('visible');
 });
-
-$('#filter_by_choice_team').change(function () {
-  var selectedText = $("#filter_by_choice_team option:selected").html();
-  var selectedId = $("#filter_by_choice_team").val();
-  if(selectedId==selectedText){
-    document.getElementById('fi_filter_by_choice_button').innerHTML = selectedText;
+$('#search_term').on("input",function () {
+   var opt = $('option[value="'+$(this).val()+'"]');
+    var selectedText = opt.attr('value');
+    var selectedId = opt.attr('id');
+    if(selectedId!=undefined){
+    $("#selectedemp").val(selectedId);
+  }
+});
+$('#search_term').on("change",function () {
+  var opt = $('option[value="'+$(this).val()+'"]');
+  var selectedText = opt.attr('value');
+  var selectedId = opt.attr('id');
+  if(selectedId!=undefined){
+  $("#selectedemp").val(selectedId);
+}
+  if(selectedId==undefined){
+  //  document.getElementById('fi_filter_by_choice_button').innerHTML = "Selected Id : "+selectedText;
   }
   else{
-  document.getElementById('fi_filter_by_choice_button').innerHTML = selectedText+" ("+selectedId+")";
+  document.getElementById('fi_filter_by_choice_button').innerHTML = "Selected Employee : "+selectedText;
 }
   //$("#li_filter_by_choice_team").removeClass('visible').addClass('hidden');|
   $("#fi_filter_by_choice_button").removeClass('hidden').addClass('visible');
 });
 
 
-$('#single_date').click(function() {
-  $('#li_one_date_filter').removeClass('hidden').addClass('visible');
-  $('#li_from_date_filter').removeClass('visible').addClass('hidden');
-  $('#li_to_date_filter').removeClass('visible').addClass('hidden');
-});
-$('#multiple_dates').click(function() {
-  $('#li_one_date_filter').removeClass('visible').addClass('hidden');
-  $('#li_from_date_filter').removeClass('hidden').addClass('visible');
-  $('#li_to_date_filter').removeClass('hidden').addClass('visible');
-});
+// $('#single_date').click(function() {
+//   $('#li_one_date_filter').removeClass('hidden').addClass('visible');
+//   $('#li_from_date_filter').removeClass('visible').addClass('hidden');
+//   $('#li_to_date_filter').removeClass('visible').addClass('hidden');
+// });
+// $('#multiple_dates').click(function() {
+//   $('#li_one_date_filter').removeClass('visible').addClass('hidden');
+//   $('#li_from_date_filter').removeClass('hidden').addClass('visible');
+//   $('#li_to_date_filter').removeClass('hidden').addClass('visible');
+// });
 
-$('#onedate').change(function () {
-  $('#fi_fromdate').removeClass('visible', 'fa fa-times').addClass('hidden');
-  $('#fi_todate').removeClass('visible', 'fa fa-times').addClass('hidden');
-  document.getElementById('fromdate').value='';
-  document.getElementById('todate').value='';
-  var one_value=document.getElementById('onedate').value;
-  document.getElementById('fi_onedate').innerHTML =' Single date -'+ one_value;
-   $("#fi_onedate").removeClass('hidden').addClass("fa fa-times",'visible');
-   $("#li_one_date_filter").removeClass('visible').addClass('hidden');
-   
-});
+// $('#onedate').change(function () {
+//   $('#fi_fromdate').removeClass('visible', 'fa fa-times').addClass('hidden');
+//   $('#fi_todate').removeClass('visible', 'fa fa-times').addClass('hidden');
+//   document.getElementById('fromdate').value='';
+//   document.getElementById('todate').value='';
+//   var one_value=document.getElementById('onedate').value;
+//   document.getElementById('fi_onedate').innerHTML =' Single date -'+ one_value;
+//    $("#fi_onedate").removeClass('hidden').addClass("fa fa-times",'visible');
+//    $("#li_one_date_filter").removeClass('visible').addClass('hidden');
+
+// });
 
 $('#fromdate').change(function () {
-  $("#fi_onedate").removeClass("fa fa-times",'visible').addClass('hidden');
-  document.getElementById('onedate').value='';
+ // $("#fi_onedate").removeClass("fa fa-times",'visible').addClass('hidden');
+ // document.getElementById('onedate').value='';
   var from_value=document.getElementById('fromdate').value;
-  document.getElementById('fi_fromdate').innerHTML =' From date -'+ from_value;
+  document.getElementById('fi_fromdate').innerHTML =' From date : '+ from_value;
   $("#li_from_date_filter").removeClass('visible').addClass('hidden');
-  $("#fi_fromdate").removeClass('hidden').addClass("fa fa-times",'visible');
+  $("#fi_fromdate").removeClass('hidden').addClass('visible');
 });
 
 $('#todate').change(function () {
   var to_value=document.getElementById('todate').value;
-  document.getElementById('fi_todate').innerHTML =' To date -'+ to_value;
+  document.getElementById('fi_todate').innerHTML =' To date : '+ to_value;
   $("#li_to_date_filter").removeClass('visible').addClass('hidden');
-  $("#fi_todate").removeClass('hidden').addClass("fa fa-times",'visible');
+  $("#fi_todate").removeClass('hidden').addClass('visible');
 });
 
 
@@ -96,7 +107,7 @@ $('#todate').change(function () {
 //   if(value =='employee') {
 //    $("#filter_list_by_manager_button").removeClass("visible").addClass("hidden");
 //   }
-  
+
 //   $('#onedate').value="";
 //   $('#fromdate').value="";
 //   $('#todate').value="";
@@ -119,5 +130,3 @@ $('#todate').change(function () {
 //   $("#filter_list_by_id").prop('selectedIndex',0);
 //   $("#filter_list_by_name").prop('selectedIndex',0);
 // });
-
-

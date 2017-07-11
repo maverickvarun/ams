@@ -26,7 +26,7 @@
   /**
   * below code is used for filteration on From date to To date ........................................
   */
-  $onedate = $_REQUEST['one_date'];
+
   $fromdate = $_REQUEST['from_date'];
   $todate = $_REQUEST['to_date'];
   if($role !='employee') {
@@ -35,44 +35,44 @@
       $user = $choice_id;
       $q=mysqli_query($con,"SELECT biomatric_id from emp_table where empid='".$choice_id."'");
       while($resultid=mysqli_fetch_array($q)){
-       
+
       $user=$resultid['biomatric_id'];
       }
     }
-  }  
+  }
   else {
     $user = $biomatric_id;
   }
   if($role !='employee') {
-    if($onedate =='' and $fromdate =='' and $todate =='' and $choice_id =='') {
+    if($fromdate =='' and $todate =='' and $choice_id =='') {
      $query = mysqli_query($con,"select * from emp_checks WHERE date BETWEEN '".date('Y-m-'.'01')."' AND '".date('Y-m-d')."' and emp_id = '".$user."' ORDER BY date DESC");
     }
   }
   else {
-    if($onedate =='' and $fromdate =='' and $todate =='' ) {
+    if($fromdate =='' and $todate =='' ) {
      $query = mysqli_query($con,"select * from emp_checks WHERE date BETWEEN '".date('Y-m-'.'01')."' AND '".date('Y-m-d')."' and emp_id = '".$user."' ORDER BY date DESC");
     }
   }
-  
-  if($onedate !='') {
-    $query = mysqli_query($con,"select * from emp_checks WHERE date = '".$onedate."' and emp_id = '".$user."'");
-  }
-  if($onedate =='') {
-    $query = mysqli_query($con,"select * from emp_checks WHERE date BETWEEN '".date('Y-m-'.'01')."' AND '".date('Y-m-d')."' and emp_id = '".$user."' ORDER BY date DESC");
-  }
-  if($fromdate !='' and $onedate =='') {
+
+  // if($onedate !='') {
+  //   $query = mysqli_query($con,"select * from emp_checks WHERE date = '".$onedate."' and emp_id = '".$user."'");
+  // }
+  // if($onedate =='') {
+  //   $query = mysqli_query($con,"select * from emp_checks WHERE date BETWEEN '".date('Y-m-'.'01')."' AND '".date('Y-m-d')."' and emp_id = '".$user."' ORDER BY date DESC");
+  // }
+  if($fromdate !='') {
     $query = mysqli_query($con,"select * from emp_checks where date BETWEEN '".$fromdate."' and '".date('Y-m-d')."'and emp_id ='".$user."' ORDER by date ASC");
   }
   if($todate !='' and $fromdate =='') {
    $query = mysqli_query($con,"select * from emp_checks WHERE date BETWEEN '".date('Y-m-d')."' AND '".$todate."' and emp_id = '".$user."' ORDER BY date ASC");
   }
-  else if($todate !='' and $fromdate !='' and $onedate =='') {
+  else if($todate !='' and $fromdate !='') {
     $query = mysqli_query($con,"select * from emp_checks WHERE date BETWEEN '".$fromdate."' AND '".$todate."' and emp_id = '".$user."' ORDER BY date ASC");
   }
- 
-  
+
+
   if($query) {
- 
+
       while($row = mysqli_fetch_array($query)) {
 
           if($row['check_in']!=''){
@@ -96,9 +96,9 @@
           else{
                 $_SESSION['pdf'] .= "<tr><td>".$dayname."</td> ";
            }
-          
-           
-          $_SESSION['pdf'] .= "<td>".$row['date']."</td> <td>".$check_in."</td> <td>".$check_out.'</td>'; 
+
+
+          $_SESSION['pdf'] .= "<td>".$row['date']."</td> <td>".$check_in."</td> <td>".$check_out.'</td>';
           if($role != "employee") {
             $_SESSION['pdf'] .= " <td>".$row['working_hrs'].'</td>';
           }

@@ -46,7 +46,7 @@
 	border-radius: 0 !important;
 	padding: 2px;
 	/* color: #337ab7; */
-	
+
 	margin-left: 2px;
 	box-shadow:0px 2px 2px 3px inset;
 }
@@ -59,7 +59,7 @@
 }
 
 .filtration-block-button {
-		min-width: 170px;	
+		min-width: 170px;
 }
 
 .my-validation {
@@ -156,7 +156,7 @@
 			border: none;background: #5cb85c;
 			padding: 2px;border-radius: 4px;
 		}
-    
+
 }
 
 @media(min-width:10px) {
@@ -186,10 +186,10 @@
 			padding: 2px;border-radius: 4px;
 		}
 
-    
+
 }
 
-    
+
 .common-table {
   text-align: center;
 }
@@ -205,7 +205,7 @@ font-weight: bolder;
 {
 	margin:0 auto;border:none;width:100px;
 	box-shadow: 0px 0px 7px gray;margin-top:4px;width:100%;max-width: 500px;
-	
+
 }
 .change-password-form table td
 {
@@ -224,7 +224,7 @@ font-weight: bolder;
 	box-shadow: 0px 0px 7px #337ab7;
 	height: 35px;
 	text-align: center;
-	
+
 }
 .combobox-field {
 	width: 100%;
@@ -326,10 +326,42 @@ background-color: #d8c9c9;
 .input-sm
 {
 padding-right:  0px!important;
-padding-left: 25px!important;
+padding-left: 0px!important;
+
 
 }
 #addwo{
 	margin-top: 30px;
-	
+
+}
+.csvlink{
+	line-height: 0;
+
+}
+#fromto{
+	margin-top:10px;
+}
+.from {
+	margin-top:5px;
+}
+.to {
+	margin-top:5px;
+}
+#imaginary_container{
+    margin-top:20%; /* Don't copy this */
+}
+/*.stylish-input-group .input-group-addon{
+    background: white !important;
+}
+.stylish-input-group .form-control{
+	border-right:0;
+	box-shadow:0 0 0;
+	border-color:#ccc;
+}
+.stylish-input-group button{
+    border:0;
+    background:transparent;
+}*/
+#addon{
+	padding: 6px 0px !important;
 }

@@ -222,10 +222,7 @@ $title = strftime('%B', $firstDay);
                    <ul class="nav nav-second-level">
                      <?php if ($role=='admin'){
                             echo '<li><a href="javascript:;" onclick="div_show_add_new_shift();">Add Shift</a></li>';
-                         }
-
-                       if($role != "employee"){
-                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
+                            echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
                        }
                      ?>
                      <li>

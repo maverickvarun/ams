@@ -2,10 +2,40 @@
 * filtration for selecting previous month in filtration block above calendar view.
 */
 
+$('.searchbox').keyup(function () {
+    $('#filter_by_choice_team').removeClass('hidden').addClass('visible');
+    var text = $('.searchbox').val();
+    $.ajax({
+      url:'name_filter_ajax_call.php',
+      method:'post',
+      data:{'text': text},
+      dataType:'text',
+      success:function(output) {
+        document.getElementById('filter_by_choice_team').innerHTML =output;
+      }
+    });
+  });
+// onInput function is used for the perform the onclick event on the datalist of search box id and name----
+function input_method(){
+   var val = document.getElementById("search_term").innerHTML;
+   alert(val);
+}
+
+
 function filteration_calendar_month() {
   var role = $('.validate_check_roles').html();
   if(role != 'employee')  {
-    var id = document.getElementById('filter_by_choice_team').value;
+
+    var val = document.getElementById("search_term").value;
+    var id= document.getElementById("selectedemp").value;
+  // var opts = document.getElementById("filter_by_choice_team").childNodes;
+  // for ( var i= 0; i<opts.length;i++){
+  //   if(opts[i].value === val){
+  //     var id = opts[i].value;
+  //     break;
+  //   }
+  // }
+
     var val = document.getElementById('filtered_date_month').value;
     var py = document.getElementById('filtered_date_year').value;
     var pm;
@@ -22,7 +52,7 @@ function filteration_calendar_month() {
       case "October":pm = "10";break;
        case "November":pm = "11";break;
       case "December":pm="12";break;
-      default:var d = new Date(); 
+      default:var d = new Date();
         pm=d.getMonth()+1;
         if(pm<10){
           pm = '0'+pm;
@@ -47,7 +77,7 @@ function filteration_calendar_month() {
       case "October":pm = "10";break;
        case "November":pm = "11";break;
       case "December":pm="12";break;
-      default:var d = new Date(); 
+      default:var d = new Date();
         pm=d.getMonth()+1;
         if(pm<10){
           pm = '0'+pm;
@@ -84,9 +114,9 @@ function filteration_calendar_month() {
   xmlhttp.send();
 }
   function autoId(){
-              
+
               var team = document.getElementById('team').value;
-        
+
               var xmlhttp;
               if(window.XMLHttpRequest) {
                 xmlhttp = new XMLHttpRequest();
@@ -94,7 +124,7 @@ function filteration_calendar_month() {
               else {
                 xmlhttp = new ActiveXObjct("Microsoft.XMLHTTP");
               }
-        
+
             xmlhttp.onreadystatechange = function() {
              if(xmlhttp.readyState===4 && xmlhttp.status==200) {
                  document.getElementById("empid").value = xmlhttp.responseText;
@@ -102,11 +132,10 @@ function filteration_calendar_month() {
              }
            xmlhttp.open("POST","autoid_Ajax.php?team="+team,true);
            xmlhttp.send();
-           
+
       }
 function get_data_biomatric_csv(){
   var month = document.getElementById('choose_month_csv').value;
-  alert(month);
    $.ajax({
       url: 'get_data_csv.php',
       method: "post",
@@ -121,27 +150,27 @@ function get_data_biomatric_csv(){
  * started here filteration block click event for reseting the current applied filteration..............................
 */
 
-$('#fi_onedate').click(function() {
-   document.getElementById('onedate').value='';
-  $('#fi_onedate').removeClass('fa fa-times').addClass('hidden');
-  $('#li_one_date_filter').removeClass('hidden').addClass('visible');
-  filtration_checkin();
- });
+// $('#fi_onedate').click(function() {
+//    document.getElementById('onedate').value='';
+//   $('#fi_onedate').removeClass('fa fa-times').addClass('hidden');
+//   $('#li_one_date_filter').removeClass('hidden').addClass('visible');
+//   filtration_checkin();
+//  });
 
-$('#fi_fromdate').click(function() {
-  document.getElementById('fromdate').value='';
-   $('#li_from_date_filter').removeClass('hidden').addClass('visible');
-  $('#fi_fromdate').removeClass('fa fa-times').addClass('hidden');
-  filtration_checkin();
-});
+// $('#fi_fromdate').click(function() {
+//   document.getElementById('fromdate').value='';
+//    $('#li_from_date_filter').removeClass('hidden').addClass('visible');
+//   $('#fi_fromdate').removeClass('fa fa-times').addClass('hidden');
+//   filtration_checkin();
+// });
 
-$('#fi_todate').click(function() {
-  document.getElementById('todate').value='';
-  $('#li_to_date_filter').removeClass('hidden').addClass('visible');
-  $('#fi_todate').removeClass('fa fa-times').addClass('hidden');
-  filtration_checkin();
- 
-});
+// $('#fi_todate').click(function() {
+//   document.getElementById('todate').value='';
+//   $('#li_to_date_filter').removeClass('hidden').addClass('visible');
+//   $('#fi_todate').removeClass('fa fa-times').addClass('hidden');
+//   filtration_checkin();
+
+// });
 
 // $('#fi_filter_by_choice_button').click(function() {
 //   document.getElementById('filter_by_choice_team').value='';
@@ -173,19 +202,22 @@ $('#fi_todate').click(function() {
 */
 
 function filtration_checkin() {
+
+
   var role = $('.validate_check_roles').html();
   if(role != 'employee')  {
     var str = document.getElementById('todate').value;
     var str1 = document.getElementById('fromdate').value;
-    var onedate = document.getElementById('onedate').value;
-    var choice_id = document.getElementById('filter_by_choice_team').value;
+    var choice_id = document.getElementById('selectedemp').value;
   }
   else {
     var str = document.getElementById('todate').value;
     var str1 = document.getElementById('fromdate').value;
-    var onedate = document.getElementById('onedate').value;
+    // var onedate = document.getElementById('onedate').value;
   }
+
   var xmlhttp;
+  if(str1!=''){
   if(window.XMLHttpRequest) {
     xmlhttp = new XMLHttpRequest();
   }
@@ -198,15 +230,16 @@ function filtration_checkin() {
     }
   }
   if(role != 'employee') {
-      xmlhttp.open("POST","vciopage.php?one_date="+onedate+"&to_date="+str+"&from_date="+str1+"&choice_id="+choice_id,true);
+      xmlhttp.open("POST","vciopage.php?to_date="+str+"&from_date="+str1+"&choice_id="+choice_id,true);
     }
   else {
-    xmlhttp.open("POST","vciopage.php?one_date="+onedate+"&to_date="+str+"&from_date="+str1,true);
+    xmlhttp.open("POST","vciopage.php?to_date="+str+"&from_date="+str1,true);
   }
   xmlhttp.send();
 }
+}
 /**
-* filtration for the monthly shift on the basis of from date to To date...................... 
+* filtration for the monthly shift on the basis of from date to To date......................
 */
 function filtration_monthlyshift()
 {
@@ -242,6 +275,27 @@ function filtration_monthlyshift()
   }
   xmlhttp.send();
 }
+/**
+* filtration for the monthly shift on the basis of from date to To date......................
+*/
+
+   function filtration_employee_shift()
+{
+  // var role = $('.validate_check_roles').html();
+
+  // if(role != 'employee')  {
+    var id = document.getElementById('selectedemp').value;
+     $.ajax({
+      url: 'employee_monthlyshift_calender_view.php',
+      method: "post",
+      data: {'id':id},
+      dataType:'text',
+      success: function(result){
+        document.getElementById("shiftcalview").innerHTML=result;
+      }
+    });
+// }
+}
 
 
 // filtration for the available leaves on the basis of from date and to date filteration.............................
@@ -251,7 +305,7 @@ function filtration_leavehistory() {
     var str = document.getElementById('todate').value;
     var str1 = document.getElementById('fromdate').value;
     var onedate = document.getElementById('onedate').value;
-    var choice_id = document.getElementById('filter_by_choice_team').value;
+    var choice_id = document.getElementById('selectedemp').value;
   }
   else {
     var str = document.getElementById('todate').value;
@@ -299,7 +353,7 @@ function filtration_notifications() {
     document.getElementById('onedate').value = "";
     var id = document.getElementById('filter_list_by_id').value;
     var ids = document.getElementById('filter_list_by_manager_name').value;
-    if(ids.length > 0) { 
+    if(ids.length > 0) {
       id = ids;
     }
     var name = document.getElementById('filter_list_by_name').value;
@@ -333,8 +387,8 @@ function filtration_notifications() {
   if(role == 'admin') {
       xmlhttp.open("POST","notifications_ajax_call.php?to_date="+str+"&from_date="+str1+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);
     }
-  else if(role == 'manager'){ 
-      xmlhttp.open("POST","notifications_ajax_call.php?to_date="+str+"&from_date="+str1+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);  
+  else if(role == 'manager'){
+      xmlhttp.open("POST","notifications_ajax_call.php?to_date="+str+"&from_date="+str1+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);
     }
   else {
     xmlhttp.open("POST","notifications_ajax_call.php?to_date="+str+"&from_date="+str1,true);
@@ -352,11 +406,11 @@ function filtration_one_notifications()
     var id = document.getElementById('filter_list_by_id').value;
     var name = document.getElementById('filter_list_by_name').value;
     var ids = document.getElementById('filter_list_by_manager_name').value;
-    if(ids.length > 0) { 
+    if(ids.length > 0) {
       id = ids;
     }
     var choice_id = document.getElementById('filter_by_choice_team').value;
-  
+
   }
   else if(role =='employee'){
     var odate=document.getElementById('onedate').value;
@@ -371,7 +425,7 @@ function filtration_one_notifications()
     var name = document.getElementById('filter_list_by_name').value;
     var choice_id = document.getElementById('filter_by_choice_team').value;
   }
-  
+
   var xmlhttp;
     if(window.XMLHttpRequest)
   {
@@ -391,8 +445,8 @@ function filtration_one_notifications()
   if(role == 'admin') {
      xmlhttp.open("POST","notifications_ajax_call.php?one_date="+odate+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);
     }
-  else if(role == 'manager'){ 
-      xmlhttp.open("POST","notifications_ajax_call.php?one_date="+odate+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);;  
+  else if(role == 'manager'){
+      xmlhttp.open("POST","notifications_ajax_call.php?one_date="+odate+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);;
     }
   else {
     xmlhttp.open("POST","notifications_ajax_call.php?one_date="+odate,true);
@@ -439,7 +493,7 @@ function filtration_leave_details() {
 
 
 /**
-* filtration for the monthly shift on the basis of one date...................... 
+* filtration for the monthly shift on the basis of one date......................
 */
 function filtration_one_monthlyshift() {
   var role = $('.validate_check_roles').html();
@@ -450,7 +504,7 @@ function filtration_one_monthlyshift() {
     var id = document.getElementById('filter_list_by_id').value;
     var name = document.getElementById('filter_list_by_name').value;
     var ids = document.getElementById('filter_list_by_manager_name').value;
-    if(ids.length > 0) { 
+    if(ids.length > 0) {
       id = ids;
     }
     var choice_id = document.getElementById('filter_by_choice_team').value;
@@ -483,8 +537,8 @@ function filtration_one_monthlyshift() {
    if(role == 'admin') {
      xmlhttp.open("POST","m_s_page.php?one_date="+odate+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);
     }
-  else if(role == 'manager'){ 
-      xmlhttp.open("POST","m_s_page.php?one_date="+odate+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);;  
+  else if(role == 'manager'){
+      xmlhttp.open("POST","m_s_page.php?one_date="+odate+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);;
     }
   else {
     xmlhttp.open("POST","m_s_page.php?one_date="+odate,true);
@@ -494,7 +548,8 @@ function filtration_one_monthlyshift() {
 
 
 function filtration_view_employee_details() {
-  var id = document.getElementById('filter_by_choice_team').value;
+  var id = document.getElementById('selectedemp').value;
+  alert(id);
   var xmlhttp;
     if(window.XMLHttpRequest) {
       xmlhttp = new XMLHttpRequest();
@@ -512,7 +567,7 @@ function filtration_view_employee_details() {
 }
 
 /**
-* function is used for updating the monthly shift csv in the database 
+* function is used for updating the monthly shift csv in the database
 */
 
 function load_monthly_csv() {
@@ -531,7 +586,9 @@ function load_monthly_csv() {
 * below filtration  function for modify employee page
 */
 function filteration_modify_employee() {
-  var emp_id = document.getElementById('filter_by_choice_team').value;
+  var emp_id = document.getElementById("selectedemp").value;
+if(emp_id!=" "){
+
   $.ajax({
     url: 'modify_employee_ajax.php',
     method: "post",
@@ -541,6 +598,7 @@ function filteration_modify_employee() {
       document.getElementById("modify_employee_div").innerHTML=result;
     }
   });
+}
 }
 
 
@@ -556,7 +614,7 @@ function filtration_report() {
     var id = document.getElementById('filter_list_by_id').value;
     var ids = document.getElementById('filter_list_by_manager_name').value;
 
-    if(ids.length > 0) { 
+    if(ids.length > 0) {
       id = ids;
     }
     var name = document.getElementById('filter_list_by_name').value;
@@ -591,8 +649,8 @@ function filtration_report() {
   if(role == 'admin') {
       xmlhttp.open("POST","report_ajax_call_page.php?to_date="+str+"&from_date="+str1+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);
   }
-  else if(role == 'manager'){ 
-      xmlhttp.open("POST","report_ajax_call_page.php?to_date="+str+"&from_date="+str1+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);  
+  else if(role == 'manager'){
+      xmlhttp.open("POST","report_ajax_call_page.php?to_date="+str+"&from_date="+str1+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);
   }
   else {
     xmlhttp.open("POST","report_ajax_call_page.php?to_date="+str+"&from_date="+str1,true);
@@ -613,7 +671,7 @@ function filtration_one_report()
     var id = document.getElementById('filter_list_by_id').value;
     var name = document.getElementById('filter_list_by_name').value;
     var ids = document.getElementById('filter_list_by_manager_name').value;
-    if(ids.length > 0) { 
+    if(ids.length > 0) {
       id = ids;
     }
     var choice_id = document.getElementById('filter_by_choice_team').value;
@@ -650,8 +708,8 @@ function filtration_one_report()
    if(role == 'admin') {
      xmlhttp.open("POST","report_ajax_call_page.php?one_date="+odate+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);
     }
-  else if(role == 'manager'){ 
-      xmlhttp.open("POST","report_ajax_call_page.php?one_date="+odate+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);;  
+  else if(role == 'manager'){
+      xmlhttp.open("POST","report_ajax_call_page.php?one_date="+odate+"&emp-id="+id+"&emp-name="+name+"&choice-id="+choice_id,true);;
     }
   else {
     xmlhttp.open("POST","report_ajax_call_page.php?one_date="+odate,true);
@@ -727,12 +785,12 @@ $('#name_filter').click(function () {
 // });
   // if(role == 'admin') {
   //   var value2 = document.getElementById('filter_by_team').value;
-  //   my_choice_team(value,value2);  
+  //   my_choice_team(value,value2);
   // }
   // else {
-  //  my_choice_shift(value);   
+  //  my_choice_shift(value);
   // }
-  
+
 
 // function my_choice_team(shift,team) {
 //   $.ajax({
@@ -878,4 +936,3 @@ $('#name_filter').click(function () {
 //       }
 //   });
 // }
-

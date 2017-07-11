@@ -10,7 +10,7 @@
   $workunderteam = $_SESSION['workunderteam'];
   $check_in_out = $_SESSION['check_in_out'];
   $last_swipe = $_SESSION['last_swipe'];
-  date_default_timezone_set('Asia/Kolkata'); 
+  date_default_timezone_set('Asia/Kolkata');
   $date = strtotime(date("Y-m-d"));
   $day = date('d', $date);
   $month = date('m', $date);
@@ -29,16 +29,16 @@
 
       // Get array of CSV files
       $csvpath = SDFE_CSVFolder . "/";
-      $files = scandir($csvpath); // this is all files in dir 
+      $files = scandir($csvpath); // this is all files in dir
        // clean up file list (to exclude)should only include csv files
         $csvfiles = array();
         foreach ($files as $basename) {
           if(substr($basename, -3)==SDFE_CSVFileExtension) {
               array_push($csvfiles, $basename);
           }
-        } 
-  }  
-?>  
+        }
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -80,7 +80,7 @@
 
     <link href="custom-css/select2.min.css" rel="stylesheet" />
 
-    <link href="custom-css/datatables.css" rel="stylesheet" />
+
 
 
 
@@ -129,9 +129,9 @@
                 <!-- /.dropdown -->
          <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <?php include('connection.php'); 
+            <?php include('connection.php');
                if($flag == 'remote') {
-                  $date = date("Y-m-d"); 
+                  $date = date("Y-m-d");
                   $status = '';
                   // below query is used to hide the checking button if user checkout then button is disabled.....
                   $query5 = mysqli_query($con,"SELECT status from emp_checks where emp_id = '".$biomatric_id."' and date = '".$date."'");
@@ -148,7 +148,7 @@
             </a>
          <!-- /.dropdown-tasks -->
          </li>
-      
+
          <!-- /.dropdown -->
          <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -169,13 +169,13 @@
             </ul>
            <!-- /.dropdown-user -->
          </li>          <!-- /.dropdown -->
-                
+
       </ul>
             <!-- /.navbar-top-links -->
       <div class="navbar-default sidebar " role="navigation"  >
          <div class="sidebar-nav navbar-collapse" >
             <ul class="nav" id="side-menu">
-               <li><a href="dashboard.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>  
+               <li><a href="dashboard.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
                <li><a href="#"><i class="fa fa-male fa-fw"></i>Employee<span class="fa arrow"></span></a>
                  <ul class="nav nav-second-level">
                          <?php if ($role=='admin'){
@@ -184,10 +184,10 @@
                                    }
                          ?>
                   <li class="active"><a href="viewsigninout.php" >View Attendance</a></li>
-                     
-                     <?php if($role!="employee"){ 
+
+                     <?php if($role!="employee"){
                          echo '<li><a href="viewemployeedetails.php">View Employee Details</a></li>';
-                        
+
                        }
                      ?>
                   </ul>
@@ -198,10 +198,10 @@
                   <ul class="nav nav-second-level">
                    <?php if($role != "admin"){
                      echo '<li><a href="javascript:;" onclick="div_leave_request_show();">Leave Request</a></li>';
-                      } 
+                      }
                         if($role != "employee") {
                          echo'<li><a href="leavedetails.php">Leave Details</a></li>';
-                        } 
+                        }
                      ?>
                     <li ><a href="availableleaves.php">Available Leaves</a></li>
               </ul>
@@ -218,113 +218,42 @@
                   </li>';
                 }
                ?>
-               
-            <!-- /.nav-third-level........................................................................ -->          
+
+            <!-- /.nav-third-level........................................................................ -->
                <li class="active">
                    <a href="#"><i class="fa fa-tasks fa-fw"></i>Shift<span class="fa arrow"></span></a>
                    <ul class="nav nav-second-level">
-                     <?php 
+                     <?php
 
-                       if($role != "employee"){
+                       if($role == "admin"){
                            echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
                        }
                      ?>
                      <li class="active">
-                       <?php include('connection.php');
-                         $d=date('d');
-                         // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
-                         if($d < 10){
-                           $d2 = 2*$d-$d;
-                          // $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
-                         }
-                         else{
-                        //   $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date('d-M-y')."' ");
-                         }
-                      // echo   $count =mysqli_fetch_row($query);
-                      //    if(!empty($csvfiles)){
-                          echo'<a href="monthlyshift.php">Monthly Shift</a>';
-                           // <ul class="nav nav-second-level">
-                           //    <li>
-                           //      <div class="col-lg-12 "> 
-                           //         <div class="form-group">
-                           //            <label>By date</label>
-                           //            <div class="radio">
-                           //                <label>
-                           //                  <input type="radio" name="date" id="single_date" value="single date">Single Date
-                           //                </label>
-                           //            </div>
-                           //            <div class="radio">
-                           //                <label>
-                           //                  <input type="radio" name="date" id="multiple_dates" value="multiple dates">Multiple Dates
-                           //                </label>
-                           //            </div>
-                           //         </div> 
-                           //      </div>
-                           //      <div class="col-sm-12 hidden filter_top" id="li_one_date_filter">
-                           //        <input type="date" placeholder=" Single date" class="example1 form-control input-sm " id="onedate" onchange="filtration_checkin();">
-                           //      </div>
-                           //      <div class="col-sm-12 filter_top hidden" id="li_from_date_filter">
-                           //      <input type="date" placeholder="From Date" class="example1 form-control input-sm" id="fromdate" onchange="filtration_checkin();">
-                           //      </div>
-                           //      <div class="col-sm-12 filter_top hidden " id="li_to_date_filter">
-                           //      <input  type="date" placeholder="To Date"  class="example1 form-control input-sm" id="todate" onchange="filtration_checkin();">
-                           //     </div>
-                           //     </li>';
-                           //     if($role != "employee") { 
-                           //      echo'<li><div class="col-lg-12 filter_top"> 
-                           //            <div class="form-group">
-                           //            <label>View Others</label>
-                           //              <div class="radio">
-                           //                <label>
-                           //                  <input type="radio" name="choice_filter" id="shift_filter" value="shift">Shift
-                           //                </label>
-                           //              </div>';
-                           //              if($role =='admin') {
-                           //                echo'<div class="radio">
-                           //                 <label>
-                           //                   <input type="radio" name="choice_filter" id="team_filter" value="team">Team
-                           //                  </label>
-                           //                </div>';
-                           //              }
-                           //            echo'<div class="radio">
-                           //              <label>
-                           //                <input type="radio" name="choice_filter" id="id_filter" value="employee">Search By Id
-                           //              </label>
-                           //            </div>
-                           //            <div class="radio">
-                           //              <label>
-                           //                <input type="radio" name="choice_filter" id="name_filter" value="name">Search By Name
-                           //              </label>
-                           //            </div>
-                           //          </div> 
-                           //        </div>
-                           
-                         //        <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_shift">
-                         //          <select class="form-control input-sm myselect" style="width:100%;"  id="filter_by_shift">
-                         //            <option value="">-filter by shift-</option>';
-                         //           $query = mysqli_query($con,"SELECT DISTINCT shift from emp_table where employeerole != 'admin'");
-                         //          while($result=mysqli_fetch_array($query)) {
-                         //            echo'<option value="'.$result['shift'].'">'.$result['shift'].'</option>';
-                         //          } 
-                         //          echo'</select></div>
-                         //          <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_team">
-                         //          <select class = "form-control input-sm myselect" style="width:100%;"  id="filter_by_team" >
-                         //          <option value="">-filter by team-</option>';
-                         //          $query = mysqli_query($con,"SELECT DISTINCT workunderteam from emp_table where employeerole != 'admin' ");
-                         //          while($result = mysqli_fetch_array($query)) {
-                         //            echo '<option value="'.$result["workunderteam"].'">'. $result["workunderteam"].'</option>';
-                         //          }
-                         //          echo '</select></div>
-                         //          <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_choice_team">
-                         //            <select class = "form-control input-sm myselect" style="width:100%;"  id="filter_by_choice_team" onchange="filtration_monthlyshift();">
-                         //            </select>
-                         //          </div></li></ul>';
-                         //      }
-                         // }
-                         // else {
-                           //echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
-                         // }
-                       ?>
+                      <?php
+                       echo'<a href="monthlyshift.php">Monthly Shift</a>';
+
+                           if($role != "employee") {
+                           echo'
+                           <ul class="nav nav-second-level">
+                             <li><div class="navbar-form" role="search">
+                                   <div class="input-group">
+                                     <input class="form-control searchbox" placeholder="Search Name, Id" id="search_term" type="text" list="filter_by_choice_team" onchange="filtration_employee_shift();">
+
+                                     <div class="input-group-btn" >
+                                       <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-arrow-right"></i></button>
+                                     </div>
+                                   </div>
+                                   <input class="form-control hidden" type="text" id="selectedemp">
+
+                                 </div>
+                               </li>
+                             <datalist id="filter_by_choice_team" style="width:100%">
+                             </datalist>
+                           </ul>
+                          ';
+                      }
+                      ?>
                      </li>
                    </ul>
                </li>
@@ -337,7 +266,7 @@
                      <?php if ($role!='employee'){
                            echo '<li><a href="addroster.php">Add Monthly Roster</a></li>';
                        }?>
-                     
+
                      <li>
                          <a href="holiday.php">Holiday</a>
                      </li>
@@ -351,7 +280,7 @@
               }
               ?>
 
-           <!-- /.nav-sixth-level....................................................................... -->        
+           <!-- /.nav-sixth-level....................................................................... -->
            <li>
                <a href="manual.php"><i class="fa fa-bar-chart-o fa-fw"></i>Manual & FAQ</a>
            </li>
@@ -363,38 +292,36 @@
          </ul>
          </div>
          <!-- /.sidebar-collapse -->
-         </div> 
+         </div>
           <!-- /.navbar-static-side -->
-         </nav> 
+         </nav>
 <div id="page-wrapper">
- <div class="row">
+  <div class="row">
       <div class="col-lg-4"> <h2 >Monthly Shift</h2></div>
-      <div class="col-lg-4">  
+      <div class="col-lg-4">
         <h6><a href="monthlyshift.php"><i class="fa fa-calendar" ></i></a> <?php echo $title."-".$year;?></h6>
       </div>
       <div class="col-lg-4">
       <a href="pdf/actionpdf.php" class="pdfbutton"><input type="button" value=" Download as PDF"></a>
       </div>
     </div>
-<!-- /.row -->
-<!-- code of filteration block of this page started here ......................................-->
-<!--  <div class="row">
-  <div class="col-lg-12">
-    <div class="panel ">
-      
-        <div class="row">
-          <div class="col-sm-4 hidden" id="fi_onedate"></div>
-          <div class="col-sm-4 hidden" id="fi_fromdate"></div>
-          <div class="col-sm-4 hidden" id="fi_todate"></div>
-        <?php if($role != "employee") { 
-      //        echo'<div class="col-sm-3 hidden" id="fi_filter_by_choice_button"></div>';
-            }
-          ?>
+<!--
+     <div class="row hidden">
+        <div class="col-lg-12">
+          <div class="panel ">
+
+              <div class="row">
+                <div class="col-sm-4 hidden" id="fi_onedate"></div>
+                <div class="col-sm-4 hidden" id="fi_fromdate"></div>
+
+                <div class="col-sm-4 hidden" id="fi_todate"></div>
+              
+              </div>
+
+          </div>
         </div>
-      
-    </div>
-  </div>
-</div> -->
+      </div> -->
+ <div id="shiftcalview">
 <?php
 //............................for handling csv files..........................
 if($role!='employee')
@@ -402,7 +329,7 @@ if($role!='employee')
   // Set first csv file as default csv file to display in edit mode
        if(sizeof($csvfiles)>0) {
         $csv = $csvfiles[0];
-    
+
         // Override default csv file if a csv file is provided
         if(isset($_GET["file"])) {
           $csv = $_GET["file"];
@@ -415,18 +342,18 @@ if($role!='employee')
           $filename = SDFE_CSVFolder . "/". $csv_name;
           $csv=$csv_name;
         }
-        if (file_exists($filename)) {  
+        if (file_exists($filename)) {
               $fp = fopen($filename, "r");
               $content = fread($fp, filesize($filename));
               $lines = explode("\n", $content);
               fclose($fp);
-           
-                
+
+
             //<!-- Edit CSV content -->
-            echo'<div class="col-lg-6">';                     
-          
+            echo'<div class="col-lg-6">';
+
             if(!isset($csv)) {
-                
+
             }
             else{
                 // CSV file is not empty, let's show the content
@@ -434,38 +361,39 @@ if($role!='employee')
                 $columns = sizeof($row);
 
                   if($role=='admin'){
-                   // listing csv files in dropdown...................................     
+                   // listing csv files in dropdown...................................
                    echo'<div class="dropdown col-lg-4">
                           <button class="btn btn-primary dropdown-toggle btn-xs" type="button" data-toggle="dropdown">choose team wise roaster
                             <span class="caret"></span>
                           </button>
-                          <ul class="dropdown-menu">';
+                          <ul class="dropdown-menu " style="padding:0">';
                             foreach ($csvfiles as $basename) {
                              echo  makeCSVFileLink($basename, $csv);
                              }
                      echo'
                     </ul>
-                  </div> 
+                  </div>
                  ';
 
                 }
-               echo'<div class="col-lg-4"> '.$csv.'</div>';
+                $csvstartname= explode(".", $csv);
+               echo'<div class="col-lg-4"> '.$csvstartname[0].' monthly shift'.'</div>';
             }
   } else{
    echo' <div class="alert alert-danger col-sm-4">
-  <center><strong>File not found!</strong></center> 
+  <center><strong>File not found!</strong></center>
 </div>';
 $lines=0;
-  } 
+  }
 }
 else{
    echo' <div class="alert alert-danger col-sm-4">
-  <center><strong>File not found!</strong></center> 
+  <center><strong>File not found!</strong></center>
 </div>';
-  } 
+  }
 }
   ?>
- 
+
   </div>
    <?php if($role !='employee'){
 
@@ -481,13 +409,13 @@ else{
                 <table class="table" id="csvtable">
                  <tbody>';
                     // Show content
-                   if (file_exists($files)) { 
+
                      for ($lineCnt=0; $lineCnt<sizeof($lines); $lineCnt++) {
                          $row = explode(SDFE_CSVSeparator, $lines[$lineCnt]);
                          echo makeTableRow($lineCnt, $row, $columns);
-                     } 
-                  }
-                          
+                     }
+
+
              echo'</tbody>
                 </table>
               </form>
@@ -495,13 +423,14 @@ else{
          </div>';
     }
     else{
-        echo'<div  class="panel-default col-xs-offset-2" id="calview">';
+        echo'<div  class="panel-default" id="calview">';
         include('employee_monthlyshift_calender_view.php');
         echo'</div>';
     }
 
 ?>
-<div class="validate_check_roles" style="display:none";><?php echo $_SESSION["role"]; ?></div>                
+</div>
+<div class="validate_check_roles" style="display:none";><?php echo $_SESSION["role"]; ?></div>
 </div> <!-- page  wrapper div is closed here........................................-->
 </div><!-- /#wrapper.....................................................................................-->
 
@@ -512,7 +441,6 @@ else{
     <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
-
     <script src="../vendor/metisMenu/metisMenu.min.js"></script>
 
     <!-- Morris Charts JavaScript -->
@@ -527,32 +455,28 @@ else{
     <!-- jQuery datepicker-->
 
     <script src="custom-js/bootstrap-datepicker.js"></script>
-    
+
     <script src="custom-js/filteration-button.js"></script>
 
     <script type="text/javascript" src="custom-js/filtration_method.js"></script>
 
     <script type="text/javascript" src="custom-js/check_in_button.js"></script>
 
-    <script type="text/javascript" src="custom-js/datatables_min.js"></script>
-
-    <script type="text/javascript" src="custom-js/bootstrap_datatables_min.js"></script>
-
     <script src="custom-js/popup.js"></script>
 
     <script src="Timepicki/js/timepicki.js"></script>
+
     <script src="custom-js/select2.min.js"></script>
 
     <script type="text/javascript">
-      $(".myselect").select2();
-    </script>
-
+     $(".myselect").select2();
+  </script>
     <script type="text/javascript">
       // When the document is ready
       $(document).ready(function () {
         $('.example1').datepicker({
           format: "yyyy-mm-dd"
-        });  
+        });
       });
     </script>
     <script>
@@ -562,7 +486,7 @@ else{
       });
       $('#current-time').click(function() {
         $('#timepicker1').hide();
-      }); 
+      });
     </script>
      <script type="text/javascript">
     /**
@@ -578,18 +502,18 @@ else{
      </script>
      <!-- display and managing content of csv -->
   <script>
-    var csvfile = "<?php echo $csv;?>"; 
+    var csvfile = "<?php echo $csv;?>";
     // Add row
     var addedcol=0;
-    var addedrow=0; 
+    var addedrow=0;
     // Add row
-   $("#addrow").click(function(e) { 
+   $("#addrow").click(function(e) {
         e.preventDefault();
         // get linenumber of last row
          addedrow=addedrow+1;
          var lastline = parseInt($("#csvtable tbody tr:last").attr("id").split("-")[1]);
          var linenum = $("#csvtable tbody").find("tr:last td").length;
-        $("#csvtable tbody ").append(makeTableRow(lastline+1, linenum, true));       
+        $("#csvtable tbody ").append(makeTableRow(lastline+1, linenum, true));
     });
     $("#addcol").click(function(e){
       e.preventDefault();
@@ -598,20 +522,20 @@ else{
       var cols = $("#csvtable tbody").find("tr:first td").length;
       $("#csvtable thead tr").append("<td ><input class=\"form-control" + "\" type=\"text\" value=\"\"></td>");
       for( var cnt=0;cnt<=linenum;cnt++)
-      {      
-      $("#csvtable tbody #row-"+cnt).append(makeTableColumn(cnt,cols,true));       
-      }     
+      {
+      $("#csvtable tbody #row-"+cnt).append(makeTableColumn(cnt,cols,true));
+      }
     });
     // Cancel (reload page)
-    // $("#cancel").click(function(e) { 
+    // $("#cancel").click(function(e) {
     //     e.preventDefault();
     //     location.reload(true);
     // });
 
-    // Save
-    $("#save").click(function(e) { 
+    // Save csv...................................
+    $("#save").click(function(e) {
         e.preventDefault();
-        
+
         var csvlines = {};
 
         var columncnt = 0;
@@ -621,9 +545,9 @@ else{
             var linenum = this.id.split("-")[1];
             var thisline = {};
             columncnt = 0;
-            
+
             $("input[rel=input-"+ linenum + "]").each(function() {
-                thisline['col-'+columncnt] = $(this).val(); 
+                thisline['col-'+columncnt] = $(this).val();
                 columncnt++;
             });
 
@@ -643,10 +567,10 @@ else{
             data: JSON.stringify(csvdata),
             cache: false,
             success: function(response) {
-                makeMessage("<h4>" + response.responseText + "</h4>Siden vil blive genindlæst om et øjeblik!", "success", "message");
+                makeMessage("<h4>" + response.responseText + "</h4>CSV updated Successfully!", "success", "message");
                 // reload page in 3 sec
-                setTimeout(function(){location.reload();}, 2500);
-                
+              //  setTimeout(function(){location.reload();}, 2500);
+
             },
             error: function(response) {
                 makeMessage("<h4>Ups</h4>" + response.status + " " + response.statusText, "danger", "message");
@@ -669,13 +593,13 @@ else{
                 makeMessage("<h2>" + response.responseText + "</h2>tables are upadated", "success", "message");
                 // reload page in 3 sec
                 setTimeout(function(){location.reload();}, 2500);
-                
+
             },
             error: function(response) {
                 makeMessage("<h4>Ups</h4>" + response.status + " " + response.statusText, "danger", "message");
                  setTimeout(function(){location.reload();}, 2500);
             }
-        });          
+        });
     });
 
 
@@ -697,16 +621,16 @@ else{
         return h;
     }
     function makeTableColumn(rowcnt,colnum,isenabled)
-    {      
+    {
      var r;
             //r="<td ><input class=\"form-control" + " rel=\"input-" + rowcnt + "\"" +(is) type=\"text\" value=\"\"></td>";
             r = "<td ><input class=\"form-control input-col-rest" + "\" rel=\"input-" + rowcnt + "\"" + " type=\"text\" value=\"\"></td>";
       return r ;
     }
 
+
  </script>
-  </body>
-</html>
+
 <?php
 function makeTableRow($lineCnt, $row, $columns) {
    $flag=0;
@@ -725,16 +649,140 @@ function makeTableRow($lineCnt, $row, $columns) {
 }
 function makeCSVFileLink($basename, $activebasename) {
     // Include CSV files only (defined by extension)
+      $linkname=explode(".", $basename);
     if(substr($basename, -3)==SDFE_CSVFileExtension) {
         $h = "<a href=\"?file=" . $basename . "\" ";
-        $h .= "class=\"list-group-item" . ($basename==$activebasename ? " active" : "") . "\">";
-        $h .= $basename . "</a>";
+        $h .= "class=\"list-group-item csvlink" . ($basename==$activebasename ? " active" : "") . "\">";
+        $h .= $linkname[0] . "</a>";
     }
     return $h;
 }
 
-?>
+// updating employee data in table...............
+if(isset($_POST['submit'])) {
+  $q1=mysqli_query($con,'SELECT workunderteam from emp_table where empid="'.$_POST['userid'].'"');
+  while($r1=mysqli_fetch_array($q1)){
+    $team=$r1[0];
+  }
+  $q2=mysqli_query($con,'SELECT * from '.$team.'_roster_table ');
+  $numrows=mysqli_num_rows($q2);
 
+  $userid=$_POST['userid'];
+  $table=$team."_roster_table";
+
+  $q4= mysqli_query($con,"SELECT ".$userid." from ".$table."");
+  if($q4){
+
+  }else{
+
+  //$q3=mysqli_query($con,"ALTER TABLE ".$table." ADD ".$userid." varchar(50) ");
+      $q3=mysqli_query($con,"ALTER TABLE ".$table." ADD COLUMN ".$userid." VARCHAR(55) ");
+      if($q3){
+
+     }else{
+       echo'<script type="text/javascript">
+         alert("alter not working);
+      </script>';
+     }
+  }
+  for($i=1;$i<=$numrows;$i++){
+   if($i<10){
+      $date_fetch = date('0'.$i.'-M-y');
+     }else{
+      $date_fetch = date($i.'-M-y');
+    }
+// include('connection.php');
+  $value=$_POST['input'.$i];
+  $q=mysqli_query($con,"UPDATE ".$table." SET ".$userid." = '".$value."' WHERE  date= '".$date_fetch."' ");
+     if($q){
+    $response=1;
+     }
+     else{
+     $response=0;
+      }
+   }
+           if($response==0){
+             echo'<script type="text/javascript">
+               alert("faild to update");
+            </script>';
+           }
+           else{
+             echo'<script type="text/javascript">
+               alert("successfully updated");
+            </script>';
+           }
+   //updating csv data......................................
+$db_record = $table;
+$columnname=$table."Id";
+
+//removing auto generated columns
+mysqli_query($con,"ALTER TABLE ".$table." DROP COLUMN ".$columnname." ");
+
+// optional where query
+$where = 'WHERE 1 ORDER BY 1';
+// filename for export
+$filename=explode('_', $db_record);
+$csv_filename = $team.'.csv';
+// create empty variable to be filled with export data
+$csv_export ="";
+
+// query to get data from database
+$query = mysqli_query($con,"SELECT * FROM ".$db_record." ".$where);
+$field = mysqli_num_fields($query);
+
+// create line with field names
+$q=mysqli_query($con,"SELECT COLUMN_NAME
+FROM Information_schema.columns
+WHERE Table_name LIKE '".$team."_roster_table';");
+$i=0;
+while($result=mysqli_fetch_array($q)){
+ $csv_export.= $result[0];
+if($i<$field-1){
+	$csv_export.=SDFE_CSVSeparator;
+}
+$i++;
+}
+// newline (seems to work both on Linux & Windows servers)
+
+ echo $csv_export.= SDFE_CSVLineTerminator;
+ // loop through database query and fill export variable
+ $count=mysqli_num_rows($query);
+ $counter=0;
+ while($row = mysqli_fetch_array($query)) {
+   // create line with field values
+  for($i = 0; $i < $field; $i++) {
+    $csv_export.= $row[$i];
+    if($i<$field-1){
+    	$csv_export.=SDFE_CSVSeparator;
+    }
+  }
+  if($counter<$count-1){
+   $csv_export.=SDFE_CSVLineTerminator;
+  }
+ $counter++	;
+ }
+
+ // write line content
+         $csvfile=$csv_filename;
+         $csvfileorg = SDFE_CSVFolder . "/" . $csvfile;
+         $csvfilebackup = SDFE_CSVFolderBackup . "/" . $csvfile;
+         if($csvfileorg){
+         	copy($csvfileorg, $csvfilebackup);
+         }
+
+         // Delete existing data in current CSV file and Write new content
+        $newcsvfile = fopen($csvfileorg, "w") or die("Unable to open file!");
+        fwrite($newcsvfile, $csv_export);
+        fclose($newcsvfile);
+
+        echo "<script>
+                     window.history.go(-1);
+             </script>";
+
+       }
+
+
+?>
 
 </body>
 </html>

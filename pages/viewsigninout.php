@@ -10,13 +10,13 @@
   $check_in_out = $_SESSION['check_in_out'];
   $last_swipe = $_SESSION['last_swipe'];
   $workunderteam = $_SESSION['workunderteam'];
- date_default_timezone_set('Asia/Kolkata'); 
-$date = strtotime(date("Y-m-d"));
-$day = date('d', $date);
-$month = date('m', $date);
-$year = date('Y', $date);
-$firstDay = mktime(0,0,0,$month, 1, $year);
-$title = strftime('%B', $firstDay);
+  date_default_timezone_set('Asia/Kolkata');
+  $date = strtotime(date("Y-m-d"));
+  $day = date('d', $date);
+  $month = date('m', $date);
+  $year = date('Y', $date);
+  $firstDay = mktime(0,0,0,$month, 1, $year);
+  $title = strftime('%B', $firstDay);
 
  if($role!='employee'){
       define("SDFE_CSVSeparator", ",");           // Separator
@@ -24,12 +24,10 @@ $title = strftime('%B', $firstDay);
       define("SDFE_CSVFolder", "csv");            // The folder for csv files. Must exist!
       define("SDFE_CSVFolderBackup", "csvbackup"); // The folder for backup files. Must exist!
       define("SDFE_CSVFileExtension", "csv");     // The csv file extension
-
       // opening csv files ........................................
-
       // Get array of CSV files
       $csvpath = SDFE_CSVFolder . "/";
-      $files = scandir($csvpath); // this is all files in dir 
+      $files = scandir($csvpath); // this is all files in dir
        // clean up file list (to exclude)should only include csv files
         $csvfiles = array();
         foreach ($files as $basename) {
@@ -39,14 +37,12 @@ $title = strftime('%B', $firstDay);
         }
         if($role=='manager'){
         $csvname=$csvpath.$workunderteam.".".SDFE_CSVFileExtension;
-        } 
-  }       
-?>  
+        }
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -83,8 +79,6 @@ $title = strftime('%B', $firstDay);
 
     <link href="custom-css/select2.min.css" rel="stylesheet" />
 
-    
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -93,7 +87,6 @@ $title = strftime('%B', $firstDay);
     <![endif]-->
 
 </head>
-
 <body>
 <div id="wrapper">
   <!-- Navigation -->
@@ -108,9 +101,11 @@ $title = strftime('%B', $firstDay);
          <a class="navbar-brand" href="dashboard.php"><img src="dls_logo.png"></a>
       </div>
       <!-- /.navbar-header -->
+
       <ul class="nav navbar-top-links navbar-left">
          <li style="margin-top:10px;"><?php echo'&nbsp;Welcome '.$firstname.' '.$lastname.' ('.$role.')';?></li>
       </ul>
+
       <ul class="nav navbar-top-links navbar-right">
          <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -125,9 +120,9 @@ $title = strftime('%B', $firstDay);
                 <!-- /.dropdown -->
          <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <?php include('connection.php'); 
+            <?php include('connection.php');
                if($flag == 'remote') {
-                  $date = date("Y-m-d"); 
+                  $date = date("Y-m-d");
                   $status = '';
                   // below query is used to hide the checking button if user checkout then button is disabled.....
                   $query5 = mysqli_query($con,"SELECT status from emp_checks where emp_id = '".$biomatric_id."' and date = '".$date."'");
@@ -144,7 +139,7 @@ $title = strftime('%B', $firstDay);
             </a>
          <!-- /.dropdown-tasks -->
          </li>
-      
+
          <!-- /.dropdown -->
          <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -165,91 +160,86 @@ $title = strftime('%B', $firstDay);
             </ul>
            <!-- /.dropdown-user -->
          </li>          <!-- /.dropdown -->
-                
+
       </ul>
-            <!-- /.navbar-top-links -->
+      <!-- /.navbar-top-links -->
+
+
       <div class="navbar-default sidebar " role="navigation">
          <div class="sidebar-nav navbar-collapse" >
             <ul class="nav" id="side-menu">
-               <li><a href="dashboard.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>  
-               <li class="active"><a href="#"><i class="fa fa-male fa-fw"></i>Employee<span class="fa arrow"></span></a>
-                 <ul class="nav nav-second-level">
-                         <?php if ($role=='admin'){
-                                       echo '<li><a href="addemployee.php">Add Employee</a></li>';
-                                       echo '<li><a href="modifyemployee.php">Modify Employee</a></li>';
-                                   }
-                         ?>
+              <li><a href="dashboard.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+              <li class="active"><a href="#"><i class="fa fa-male fa-fw"></i>Employee<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                  <?php if ($role=='admin'){
+                      echo '<li><a href="addemployee.php">Add Employee</a></li>';
+                      echo '<li><a href="modifyemployee.php">Modify Employee</a></li>';
+                  }?>
                   <li ><a href="viewsigninout.php" >View Attendance<span class="fa arrow"></span></a>
+
+                    <?php if($role != "employee") {
+                    echo'
                     <ul class="nav nav-second-level">
-                     <li>
-                        <div class="col-lg-12 "> 
-                           <div class="form-group">
-                             <!--  <label>By date</label>
-                              <div class="radio">
-                                  <label>
-                                    <input type="radio" name="date" id="single_date" value="single date">Single Date
-                                  </label>
-                              </div> -->
-                              <div class=" row" style="margin-top:5px">
-                                <div class="col-md-3 ">
-                                   <div class="col-sm-12 hidden filter_top" id="li_one_date_filter">
-                                  <input type="date" placeholder=" Single date" class="example1 form-control input-sm " id="onedate" onchange="filtration_checkin();">
-                                  </div>
-                                  <label>From Field</label>
-                                </div>
-                               <div class=" form-group  has-feedback col-md-9 ">
-                                  <input class="input-sm form-control  example1 "  type="text" style="margin-left:15px"id="fromdate" onchange="filtration_checkin();">          
-                                   <i class="fa fa-calendar form-control-feedback" style="margin-right:70px" ></i>                               
-                                </div> 
-                              </div>  
-                              <div class=" row">
-                                <div class="col-md-3 ">
-                                  <label>To Field</label>
-                                </div>
-                                <div class=" form-group  has-feedback col-md-9 ">
-                                  <input class="input-sm form-control  example1 "  type="text" style="margin-left:15px" id="todate" onchange="filtration_checkin();">          
-                                   <i class="fa fa-calendar form-control-feedback" style="margin-right:70px" ></i>                               
-                                </div>                          
-                           </div> 
+                      <li><div class="navbar-form" role="search">
+                            <div class="input-group ">
+                              <input class="form-control searchbox" placeholder="Search Name, Id" id="search_term" type="text" list="filter_by_choice_team" onchange="filtration_checkin();">
+
+                              <div class="input-group-btn" >
+                                <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-arrow-right"></i></button>
+                              </div>
+                            </div>
+                            <input class="form-control hidden" type="text" id="selectedemp">
+                          </div>
+                          <datalist id="filter_by_choice_team" style="width:100%">
+                          </datalist>
+                           ';
+                        }  ?>
+                    <?php if($role=='employee'){
+                      echo'<ul class="nav">';
+                    }?>
+
+                    <div class="form-group"  id="fromto">
+                      <div class=" row" >
+                        <div class="col-md-3 from">
+                        From
                         </div>
-                        
-                    
-                      </li>
-                    </ul>
-                 <?php if($role != "employee") { 
-                
-                       
-                        echo'
-                        <ul class="nav">
-                          <li><a href="#">View Others<span class="fa arrow"></span></a>
-                            <ul class="nav-second-level-level">
-                              <div class="radio">
-                                <label>
-                                  <input type="radio" name="choice_filter" id="id_filter" value="employee">Search By Id
-                                </label>
-                              </div>
-                              <div class="radio">
-                                <label>
-                                  <input type="radio" name="choice_filter" id="name_filter" value="name">Search By Name
-                                </label>
-                              </div>
-                            </ul>
-                           <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_choice_team">
-                                <select class = "form-control input-sm myselect" style="width:100%;" id="filter_by_choice_team" onchange="filtration_checkin();">
-                                </select>
-                              </div>
-                          </li>      
-                        </ul> 
-                  </li>';
-                }
-              ?>
-                 
-                     
-                     <?php if($role!="employee"){ 
-                         echo '<li><a href="viewemployeedetails.php">View Employee Details</a></li>';
-                        
-                       }
-                     ?>
+                        <div class="input-group col-md-8 ">
+                          <input class="input-sm form-control  example1 "  type="text" id="fromdate" onchange="filtration_checkin();">
+                          <span class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div style="margin-top:5px" class=" row">
+                        <div class="col-md-3 to">
+                        To
+                        </div>
+                        <div class="input-group col-md-8 ">
+                          <input  class="input-sm form-control  example1 "  type="text" id="todate" onchange="filtration_checkin();">
+                          <span class="input-group-addon">
+                          <i class="fa fa-calendar"></i>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <?php if($role=='employee'){
+                    echo'</ul>';
+                  }
+                    ?>
+                   <?php if($role != "employee") {
+                    echo'
+                    </li>
+                   </ul>   ';
+                   }?>
+
+                        </li>
+
+
+                  <?php if($role!="employee"){
+                    echo '<li><a href="viewemployeedetails.php">View Employee Details</a></li>';
+                    }
+                  ?>
                   </ul>
                </li>
 
@@ -258,10 +248,10 @@ $title = strftime('%B', $firstDay);
                   <ul class="nav nav-second-level">
                    <?php if($role != "admin"){
                      echo '<li><a href="javascript:;" onclick="div_leave_request_show();">Leave Request</a></li>';
-                      } 
+                      }
                         if($role != "employee") {
                          echo'<li><a href="leavedetails.php">Leave Details</a></li>';
-                        } 
+                        }
                      ?>
                       <li><a href="availableleaves.php">Available Leaves</a></li>
                   </ul>
@@ -279,16 +269,13 @@ $title = strftime('%B', $firstDay);
                 }
                ?>
 
-                 <!-- /.nav-third-level........................................................................ -->          
+                 <!-- /.nav-third-level........................................................................ -->
                <li>
                    <a href="#"><i class="fa fa-tasks fa-fw"></i>Shift<span class="fa arrow"></span></a>
                    <ul class="nav nav-second-level">
                      <?php if ($role=='admin'){
                             echo '<li><a href="javascript:;" onclick="div_show_add_new_shift();">Add Shift</a></li>';
-                         }
-
-                       if($role != "employee"){
-                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
+                            echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
                        }
                      ?>
                      <li>
@@ -312,7 +299,7 @@ $title = strftime('%B', $firstDay);
                        }
                         else{
                        //    $d=date('d');
-                       //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
+                       //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed
                        //   if($d < 10){
                        //     $d2 = 2*$d-$d;
                        //     $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
@@ -328,7 +315,7 @@ $title = strftime('%B', $firstDay);
                        //   //   echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
                        //   // }
                         }
-                         
+
                        ?>
                      </li>
                    </ul>
@@ -342,7 +329,7 @@ $title = strftime('%B', $firstDay);
                      <?php if ($role!='employee'){
                            echo '<li><a href="addroster.php">Add Monthly Roster</a></li>';
                        }?>
-                     
+
                      <li>
                          <a href="holiday.php">Holiday</a>
                      </li>
@@ -356,7 +343,7 @@ $title = strftime('%B', $firstDay);
               }
               ?>
 
-           <!-- /.nav-sixth-level....................................................................... -->        
+           <!-- /.nav-sixth-level....................................................................... -->
            <li>
                <a href="manual.php"><i class="fa fa-bar-chart-o fa-fw"></i>Manual & FAQ</a>
            </li>
@@ -368,13 +355,13 @@ $title = strftime('%B', $firstDay);
          </ul>
          </div>
          <!-- /.sidebar-collapse -->
-         </div> 
+         </div>
           <!-- /.navbar-static-side -->
-         </nav> 
+         </nav>
 <div id="page-wrapper">
  <div class="row">
       <div class="col-lg-4"> <h2 >View Attendance</h2></div>
-      <div class="col-lg-4">  
+      <div class="col-lg-4">
         <h6><a href="viewsigninout.php"><i class="fa fa-calendar" ></i></a> <?php echo $title."-".$year;?></h6>
       </div>
       <div class="col-lg-4">
@@ -387,17 +374,18 @@ $title = strftime('%B', $firstDay);
  <div class="row">
   <div class="col-lg-12">
     <div class="panel ">
-      
+
         <div class="row">
           <div class="col-sm-4 hidden" id="fi_onedate"></div>
           <div class="col-sm-4 hidden" id="fi_fromdate"></div>
+
           <div class="col-sm-4 hidden" id="fi_todate"></div>
-          <?php if($role != "employee") { 
-              echo'<div class="col-sm-3 hidden" id="fi_filter_by_choice_button"></div>';
+          <?php if($role != "employee") {
+              echo'<div class="col-sm-4 hidden" id="fi_filter_by_choice_button"></div>';
             }
           ?>
         </div>
-      
+
     </div>
   </div>
 </div>
@@ -405,9 +393,9 @@ $title = strftime('%B', $firstDay);
  <div class="row">
       <div class="col-lg-12">
         <div class="panel panel-default">
-          
-            
-<?php 
+
+
+<?php
     /**
     * // code is used for the fetching the data from the database
     */
@@ -455,7 +443,7 @@ $title = strftime('%B', $firstDay);
           // else{
           //       $_SESSION['pdf'] .= "<tr><td>".$row['date']."</td><td>".$dayname."</td> ";
           //  }
-          // $_SESSION['pdf'] .= " <td>".$check_in."</td> <td>".$check_out.'</td>'; 
+          // $_SESSION['pdf'] .= " <td>".$check_in."</td> <td>".$check_out.'</td>';
           // if($role != "employee") {
           //   $_SESSION['pdf'] .= " <td>".$row['working_hrs'].'</td>';
           // }
@@ -466,106 +454,76 @@ $title = strftime('%B', $firstDay);
         }
         $_SESSION['pdf'].="</tr>";
         echo $_SESSION['pdf'];
-        echo '</tbody></table>'; 
-?>          
+        echo '</tbody></table>';
+?>
 </div>
 </div>
 </div>
-
-
-
-
-
- 
 <div class="validate_check_roles" style="display:none";><?php echo $_SESSION['role']; ?></div>
-
- </div>
+</div>
  <!-- /# page  wrapper -->
 </div>
    <!-- /#wrapper -->
    <!-- jQuery -->
-<!-- jQuery -->
-    <script src="../vendor/jquery/jquery.min.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- Metis Menu Plugin JavaScript -->
-    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
-
-    <!-- Morris Charts JavaScript -->
-    <script src="../vendor/raphael/raphael.min.js"></script>
-
-    <script src="../vendor/morrisjs/morris.min.js"></script>
-
-    <script src="../data/morris-data.js"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script src="../dist/js/sb-admin-2.js"></script>
-    <!-- jQuery datepicker-->
-
-    <script src="custom-js/bootstrap-datepicker.js"></script>
-
+  <script src="../vendor/jquery/jquery.min.js"></script>
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+  <!-- Metis Menu Plugin JavaScript -->
+  <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+  <!-- Morris Charts JavaScript -->
+  <script src="../vendor/raphael/raphael.min.js"></script>
+  <script src="../vendor/morrisjs/morris.min.js"></script>
+  <script src="../data/morris-data.js"></script>
+  <!-- Custom Theme JavaScript -->
+  <script src="../dist/js/sb-admin-2.js"></script>
+  <!-- jQuery datepicker-->
+  <script src="custom-js/bootstrap-datepicker.js"></script>
   <script type="text/javascript" src="custom-js/tableExport.js"></script>
-
   <script type="text/javascript" src="custom-js/jquery.base64.js"></script>
-
-  
-   
-    <script src="custom-js/filteration-button.js"></script>
-
-    
-<script type="text/javascript" src="custom-js/filtration_method.js"></script>
-
-    <script type="text/javascript" src="custom-js/check_in_button.js"></script>
-
-    <script src="custom-js/popup.js"></script>
-
-    <script src="Timepicki/js/timepicki.js"></script>
-    <script src="custom-js/select2.min.js"></script>
-    <script type="text/javascript">
-
-      $(".myselect").select2();
-
-</script>
-    
-    <script type="text/javascript">
-      // When the document is ready
-      $(document).ready(function () {
-        $('.example1').datepicker({
-          format: "yyyy-mm-dd"
-        });  
+  <script src="custom-js/filteration-button.js"></script>
+  <script type="text/javascript" src="custom-js/filtration_method.js"></script>
+  <script type="text/javascript" src="custom-js/check_in_button.js"></script>
+  <script src="custom-js/popup.js"></script>
+  <script src="Timepicki/js/timepicki.js"></script>
+  <script src="custom-js/select2.min.js"></script>
+  <script type="text/javascript">
+    $(".myselect").select2();
+  </script>
+  <script type="text/javascript">
+    // When the document is ready
+    $(document).ready(function () {
+      $('.example1').datepicker({
+        format: "yyyy-mm-dd"
       });
-    </script>
-    
-     <script>
-      $('#timepicker1').timepicki();
-      $('#custom-time').click(function() {
-        $('#timepicker1').show();
-      });
-      $('#current-time').click(function() {
-        $('#timepicker1').hide();
-      });
-    </script>
-    <script type="text/javascript">
-    /**
-      * below two function is used to show the dialog box on the menu bar and monthly shift panel if monthly shift is not updated for the month or no data is avaiable in the monthly shift
-    */
-  
-
+    });
+  </script>
+  <script>
+    $('#timepicker1').timepicki();
+    $('#custom-time').click(function() {
+      $('#timepicker1').show();
+    });
+    $('#current-time').click(function() {
+      $('#timepicker1').hide();
+    });
+  </script>
+  <script type="text/javascript">
+     /**
+       * below two function is used to show the dialog box on the menu bar and monthly shift panel if monthly shift is not updated for the month or no data is avaiable in the monthly shift
+      */
     function showdialogshift() {
-       mscAlert({title: 'CSV not found',subtitle: 'Please Update Roster.',// default: ''
-        okText: 'Close',    // default: OK
-        });
+      mscAlert({title: 'CSV not found',subtitle: 'Please Update Roster.',// default: ''
+       okText: 'Close',    // default: OK
+      });
+    }
+  </script>
+  <?php
+  if($role!="employee"){
+    echo'<script>
+     $( document ).ready(function() {
 
-      }
-
-
-    </script>
-    
-   
-
+       });
+    </script>';
+  }
+  ?>
 </body>
-
 </html>
-

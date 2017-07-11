@@ -10,7 +10,7 @@ $firstname = $_SESSION['firstname'];
  $check_in_out = $_SESSION['check_in_out'];
  $last_swipe = $_SESSION['last_swipe'];
  $workunderteam=$_SESSION['workunderteam'];
- date_default_timezone_set('Asia/Kolkata'); 
+ date_default_timezone_set('Asia/Kolkata');
 $date = strtotime(date("Y-m-d"));
 $day = date('d', $date);
 $month = date('m', $date);
@@ -45,10 +45,10 @@ $title = strftime('%B', $firstDay);
       while($row = mysqli_fetch_array($query1)){
           $l = $row[0];
       }
-      $d = $l-$d3; 
+      $d = $l-$d3;
       $query3 = mysqli_query($con," UPDATE emp_table SET leaves ='".$d."' where empid='".$empid."'");
       $query1 = mysqli_query($con,"INSERT INTO  leave_history_table (req_id,empid,empname, `date`, fromdate,todate,leavetype,description,status,approvedby) VALUES ('".$req_id."', '".$empid."', '".$empname."','".$date."','".$fromdate."','".$todate."','".$leavetype."','".$description."','approved','".$user."')");
-     
+
 // below getDatesFromRange function is used to get the range fromdate to todate and all dates and stored in array type $dates variable.
       $dates = getDatesFromRange($fromdate, $todate);
       $num = count($dates);
@@ -74,7 +74,7 @@ $title = strftime('%B', $firstDay);
       }
       $query2 = mysqli_query($con,"DELETE FROM `leave_request_table` WHERE req_id = '".$req_id."' ");
       header('Location:leavedetails.php');
-    }    
+    }
   }
   /**
     *below code is used for the deny button on the pending leaves option
@@ -97,7 +97,7 @@ $title = strftime('%B', $firstDay);
 
       $query2 = mysqli_query($con,"DELETE FROM `leave_request_table` WHERE req_id = '".$req_id."' ");
       header('Location:leavedetails.php');
-    }    
+    }
   }
   /**
     *below code is used for the deny button on the approved leaves option
@@ -121,7 +121,7 @@ $title = strftime('%B', $firstDay);
       while($row = mysqli_fetch_array($query1)){
           $l = $row[0];
       }
-      $d = $l+$d3; 
+      $d = $l+$d3;
       $query3 = mysqli_query($con," UPDATE emp_table SET ".$leavetype."='".$d."' where empid='".$empid."'");
       $dates = getDatesFromRange($fromdate, $todate);
       $num = count($dates);
@@ -160,7 +160,7 @@ $title = strftime('%B', $firstDay);
       while($row = mysqli_fetch_array($query1)){
           $l = $row[0];
       }
-      $d = $l-$d3; 
+      $d = $l-$d3;
       $query3 = mysqli_query($con," UPDATE emp_table SET ".$leavetype."='".$d."' where empid='".$empid."'");
       // below getDatesFromRange function is used to get the range fromdate to todate and all dates and stored in array type $dates variable.
         $dates = getDatesFromRange($fromdate, $todate);
@@ -198,7 +198,7 @@ $title = strftime('%B', $firstDay);
 
       // Get array of CSV files
       $csvpath = SDFE_CSVFolder . "/";
-      $files = scandir($csvpath); // this is all files in dir 
+      $files = scandir($csvpath); // this is all files in dir
        // clean up file list (to exclude)should only include csv files
         $csvfiles = array();
         foreach ($files as $basename) {
@@ -208,9 +208,9 @@ $title = strftime('%B', $firstDay);
         }
         if($role=='manager'){
         $csvname=$csvpath.$workunderteam.".".SDFE_CSVFileExtension;
-        } 
-  }     
-?>    
+        }
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -251,7 +251,7 @@ $title = strftime('%B', $firstDay);
    <link rel="stylesheet" href="custom-css/popup.css">
     <link href="custom-css/select2.min.css" rel="stylesheet" />
 
-    
+
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -293,9 +293,9 @@ $title = strftime('%B', $firstDay);
                 <!-- /.dropdown -->
          <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <?php include('connection.php'); 
+            <?php include('connection.php');
                if($flag == 'remote') {
-                  $date = date("Y-m-d"); 
+                  $date = date("Y-m-d");
                   $status = '';
                   // below query is used to hide the checking button if user checkout then button is disabled.....
                   $query5 = mysqli_query($con,"SELECT status from emp_checks where emp_id = '".$biomatric_id."' and date = '".$date."'");
@@ -312,7 +312,7 @@ $title = strftime('%B', $firstDay);
             </a>
          <!-- /.dropdown-tasks -->
          </li>
-      
+
          <!-- /.dropdown -->
          <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -333,13 +333,13 @@ $title = strftime('%B', $firstDay);
             </ul>
            <!-- /.dropdown-user -->
          </li>          <!-- /.dropdown -->
-                
+
       </ul>
             <!-- /.navbar-top-links -->
       <div class="navbar-default sidebar " role="navigation" >
          <div class="sidebar-nav navbar-collapse" >
             <ul class="nav" id="side-menu">
-               <li><a href="dashboard.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>  
+               <li><a href="dashboard.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
                <li><a href="#"><i class="fa fa-male fa-fw"></i>Employee<span class="fa arrow"></span></a>
                  <ul class="nav nav-second-level">
                          <?php if ($role=='admin'){
@@ -348,10 +348,10 @@ $title = strftime('%B', $firstDay);
                                    }
                          ?>
                   <li class="active"><a href="viewsigninout.php" >View Attendance</a></li>
-                     
-                     <?php if($role!="employee"){ 
+
+                     <?php if($role!="employee"){
                          echo '<li><a href="viewemployeedetails.php">View Employee Details</a></li>';
-                        
+
                        }
                      ?>
                   </ul>
@@ -362,40 +362,26 @@ $title = strftime('%B', $firstDay);
                   <ul class="nav nav-second-level">
                    <?php if($role != "admin"){
                      echo '<li><a href="javascript:;" onclick="div_leave_request_show();">Leave Request</a></li>';
-                      } 
+                      }
                     if($role != "employee") {
                       echo'<li class="active"><a href="leavedetails.php">Leave Details</a>
                       <ul class="nav nav-second-level">
-                     
-                      <li><div class="col-lg-12 filter_top"> 
-                      <div class="form-group">
-                     <ul class="nav">
-                      <li ><a href="#">View Others<span class="fa arrow"></span></a>
-                       <ul class="nav nav-second-level">
-                       <div class="radio">
-                          <label>
-                            <input type="radio" name="choice_filter" id="id_filter" value="employee">Search By Id
-                          </label>
-                        </div>
-                        <div class="radio">
-                          <label>
-                            <input type="radio" name="choice_filter" id="name_filter" value="name">Search By Name
-                          </label>
-                        </div>
-                      </ul>
-                     </li>
-                    </ul>  
-                    </div>
+                        <li><div class="navbar-form" role="search">
+                              <div class="input-group">
+                                <input class="form-control searchbox" placeholder="Search Name, Id" id="search_term" type="text" list="filter_by_choice_team" onchange="filtration_checkin();">
 
-                 ';
-                    echo '</select></div>
-                    <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_choice_team">
-                      <select class = "form-control input-sm myselect" style="width:100%;" id="filter_by_choice_team" onchange="filtration_checkin();">
-                      </select>
-                    </div></li>
-              
-                 </ul></li>';
-                        } 
+                                <div class="input-group-btn" >
+                                  <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-arrow-right"></i></button>
+                                </div>
+                              </div>
+                              <input class="form-control hidden" type="text" id="selectedemp">
+
+                            </div>
+                          </li>
+                        <datalist id="filter_by_choice_team" style="width:100%">
+                        </datalist>
+                      </ul></li>';
+                        }
                      ?>
                       <li><a href="availableleaves.php">Available Leaves</a></li>
                   </ul>
@@ -412,16 +398,13 @@ $title = strftime('%B', $firstDay);
                   </li>';
                 }
                ?>
-                 <!-- /.nav-third-level........................................................................ -->          
+                 <!-- /.nav-third-level........................................................................ -->
                <li>
                    <a href="#"><i class="fa fa-tasks fa-fw"></i>Shift<span class="fa arrow"></span></a>
                    <ul class="nav nav-second-level">
                      <?php if ($role=='admin'){
                             echo '<li><a href="javascript:;" onclick="div_show_add_new_shift();">Add Shift</a></li>';
-                         }
-
-                       if($role != "employee"){
-                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
+                            echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
                        }
                      ?>
                      <li>
@@ -445,7 +428,7 @@ $title = strftime('%B', $firstDay);
                        }
                        // else{
                        //    $d=date('d');
-                       //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
+                       //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed
                        //   if($d < 10){
                        //     $d2 = 2*$d-$d;
                        //     $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
@@ -461,7 +444,7 @@ $title = strftime('%B', $firstDay);
                        //     echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
                        //   }
                        // }
-                         
+
                        ?>
                      </li>
                    </ul>
@@ -475,7 +458,7 @@ $title = strftime('%B', $firstDay);
                      <?php if ($role!='employee'){
                            echo '<li><a href="addroster.php">Add Monthly Roster</a></li>';
                        }?>
-                     
+
                      <li>
                          <a href="holiday.php">Holiday</a>
                      </li>
@@ -489,7 +472,7 @@ $title = strftime('%B', $firstDay);
               }
               ?>
 
-           <!-- /.nav-sixth-level....................................................................... -->        
+           <!-- /.nav-sixth-level....................................................................... -->
            <li>
                <a href="manual.php"><i class="fa fa-bar-chart-o fa-fw"></i>Manual & FAQ</a>
            </li>
@@ -501,13 +484,13 @@ $title = strftime('%B', $firstDay);
          </ul>
          </div>
          <!-- /.sidebar-collapse -->
-         </div> 
+         </div>
           <!-- /.navbar-static-side -->
-         </nav> 
+         </nav>
 <div id="page-wrapper">
  <div class="row">
       <div class="col-lg-4"> <h2 >Leave Details </h2></div>
-      <div class="col-lg-4">  
+      <div class="col-lg-4">
         <h3><a href="leavedetails.php"><i class="fa fa-calendar" ></i></a> <?php echo $title."-".$year;?></h3>
       </div>
       <div class="col-lg-4">
@@ -519,17 +502,17 @@ $title = strftime('%B', $firstDay);
  <div class="row">
   <div class="col-lg-12">
     <div class="panel ">
-      
+
         <div class="row">
           <div class="col-sm-4 hidden" id="fi_onedate"></div>
           <div class="col-sm-4 hidden" id="fi_fromdate"></div>
           <div class="col-sm-4 hidden" id="fi_todate"></div>
-          <?php if($role != "employee") { 
-              echo'<div class="col-sm-3 hidden" id="fi_filter_by_choice_button"></div>';
+          <?php if($role != "employee") {
+              echo'<div class="col-sm-4 hidden" id="fi_filter_by_choice_button"></div>';
             }
           ?>
         </div>
-      
+
     </div>
   </div>
 </div>
@@ -561,7 +544,7 @@ $title = strftime('%B', $firstDay);
   </div>
 </div>
 
-<?php 
+<?php
     /**
     * // code is used for the fetching the data from the database
     */
@@ -579,12 +562,12 @@ $title = strftime('%B', $firstDay);
       include('connection.php');
       $query = mysqli_query($con,"select * from leave_request_table where submit_to='".$user."'  ORDER BY date DESC ");
         while($row = mysqli_fetch_row($query)) {
-         $_SESSION['pdf'] .= "<form action='leavedetails.php' method='GET'><tr><td><input type='hidden' value='".$row[0]."' name='req_id'/><input type='submit' class='btn-xs leave-grant-deny-button' name='grant-leave' value='grant' style='background:#f0ad4e;'><input type='submit' class='btn-xs leave-grant-deny-button' name='deny-leave' value='deny' style='background:#f0ad4e;'></td><td>".$row[1]."</td> <td>".$row[3]."</td> <td>".$row[4]."</td> <td>".$row[5].'</td>'; 
+         $_SESSION['pdf'] .= "<form action='leavedetails.php' method='GET'><tr><td><input type='hidden' value='".$row[0]."' name='req_id'/><input type='submit' class='btn-xs leave-grant-deny-button' name='grant-leave' value='grant' style='background:#f0ad4e;'><input type='submit' class='btn-xs leave-grant-deny-button' name='deny-leave' value='deny' style='background:#f0ad4e;'></td><td>".$row[1]."</td> <td>".$row[3]."</td> <td>".$row[4]."</td> <td>".$row[5].'</td>';
            $_SESSION['pdf'] .= " <td>".$row[6]."</td>"." <td>".$row[7]."</td> </tr></form>";
         }
         echo $_SESSION['pdf'];
-        echo '</tbody></table></div></div>'; 
-?>           
+        echo '</tbody></table></div></div>';
+?>
 
 <div class="validate_check_roles" style="display:none";><?php echo $_SESSION["role"]; ?></div>
 </div>
@@ -612,7 +595,7 @@ $title = strftime('%B', $firstDay);
     <!-- jQuery datepicker-->
 
     <script src="custom-js/bootstrap-datepicker.js"></script>
-    
+
     <script src="custom-js/filteration-button.js"></script>
 
     <script type="text/javascript" src="custom-js/filtration_method.js"></script>
@@ -639,19 +622,19 @@ $title = strftime('%B', $firstDay);
     $('#approved_leaves').css("border","0px solid black");
     $('#pending_leaves').css("border","0px solid black");
   });
-  
+
 
   </script>
-    
+
     <script type="text/javascript">
       // When the document is ready
       $(document).ready(function () {
         $('.example1').datepicker({
           format: "yyyy-mm-dd"
-        });  
+        });
       });
     </script>
-    
+
      <script>
       $('#timepicker1').timepicki();
       $('#custom-time').click(function() {
@@ -677,15 +660,15 @@ $title = strftime('%B', $firstDay);
 
 </html>
 
-<?php 
+<?php
 function getDatesFromRange($start, $end, $format = 'Y-m-d') {
     $array = array();
     $interval = new DateInterval('P1D');
     $realEnd = new DateTime($end);
     $realEnd->add($interval);
     $period = new DatePeriod(new DateTime($start), $interval, $realEnd);
-    foreach($period as $date) { 
-        $array[] = $date->format($format); 
+    foreach($period as $date) {
+        $array[] = $date->format($format);
     }
     return $array;
   }

@@ -40,21 +40,21 @@
     <div class="col-md-4 col-md-offset-4">
       <section class="login-form">
         <form method="post" action='index.php' method='post' name="loginform" onsubmit="return(validate())"role="login">
-          <img src="dls_logo.png" class="img-responsive" alt="DLS Logo"> 
+          <img src="dls_logo.png" class="img-responsive" alt="DLS Logo">
             <input placeholder="Enter the Login ID" name="login_id" id="login_id" required class="form-control input-lg"  /><i class=""></i>
-        
+
           <input type="password" placeholder="Password" name="login_password"  id="login_password" class="form-control input-lg" required="" />
            <div class="control-group">
                 <span><a class="inline_block" href="forget.php">Forget Password? Click here</a></span>
           </div>
-          
+
           <button type="submit" id="login_submit" name="login_submit"  class="btn btn-lg btn-primary btn-block" onclick="return onlogin()">Login</button>
-                    
+
         </form>
        <div class="form-links" id="msg"></div>
-      </section>  
+      </section>
       </div>
-      
+
   </div>
 </div>
 
@@ -85,7 +85,7 @@ if(isset($_POST['login_submit'])) {
   $password = base64_encode($_POST['login_password']);
   date_default_timezone_set('Asia/Kolkata');
   $date = date("Y-m-d");
-  $qur = mysqli_query($con, "select empid,biomatric_id,firstname,lastname,reportedmanagerid,password,flag,employeerole,workunderteam from emp_table where empid='".$login_id."' and password='".$password."'");
+  $qur = mysqli_query($con, "select empid,biomatric_id,firstname,lastname,reportedmanagerid,password,flag,employeerole,workunderteam,status from emp_table where empid='".$login_id."' and password='".$password."'");
   $result = mysqli_num_rows($qur);
   if($result == 1) {
     while($row = mysqli_fetch_array($qur)) {
@@ -98,9 +98,10 @@ if(isset($_POST['login_submit'])) {
       $role=$row['employeerole'];
       $workunderteam = $row['workunderteam'];
       $reportedmanagerid = $row['reportedmanagerid'];
+      $status=$row['status'];
     }
     if(isset($id) && isset($pass)) {
-      if($id == $login_id && $pass == $password) {
+      if($id == $login_id && $pass == $password && $status==1) {
         $_SESSION['user'] = $id;
         $_SESSION['biomatric_id'] = $biomatric_id;
         $_SESSION['role'] = $role;
@@ -123,7 +124,7 @@ if(isset($_POST['login_submit'])) {
         </script>";
       }
   }
-  else {     
+  else {
      echo "<script type='text/javascript'>
                 document.getElementById('msg').innerHTML='Login Id or Password is Incorrect.';
         </script>";
@@ -137,9 +138,9 @@ if(isset($_POST['login_submit'])) {
       if($status == '1') {
         $_SESSION['check_in_out'] = 'Sign Out';
         $_SESSION['last_swipe'] = 'Latest Sign In';
-        
+
       }
-      
+
   }
 }
 ?>

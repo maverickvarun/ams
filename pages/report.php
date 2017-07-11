@@ -221,10 +221,7 @@ $workunderteam=$_SESSION['workunderteam'];
                    <ul class="nav nav-second-level">
                      <?php if ($role=='admin'){
                             echo '<li><a href="javascript:;" onclick="div_show_add_new_shift();">Add Shift</a></li>';
-                         }
-
-                       if($role != "employee"){
-                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
+                            echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
                        }
                      ?>
                      <li>
@@ -297,7 +294,7 @@ $workunderteam=$_SESSION['workunderteam'];
                      
                         ';
                           echo'<ul class="nav">
-                            <li ><a href="#">View Others<span class="fa arrow"></span></a>
+                            <li ><a href="#">View Employee<span class="fa arrow"></span></a>
                               <ul class="nav nav-second-level">
                                 <div class="radio">
                                   <label>

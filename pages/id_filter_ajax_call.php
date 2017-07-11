@@ -11,10 +11,10 @@
  //    $query = mysqli_query($con,"SELECT empid from emp_table where reportedmanagerid = '".$user."'");
  //  }
 	if($role=='admin'){
-	 $query = mysqli_query($con,"SELECT empid,workunderteam,status from emp_table ");
+	 $query = mysqli_query($con,"SELECT empid,workunderteam,status from emp_table  ORDER BY empid ASC");
 	}
 	else{
-     $query = mysqli_query($con,"SELECT firstname,lastname,empid,status from emp_table  where reportedmanagerid='".$user."' ");
+     $query = mysqli_query($con,"SELECT firstname,lastname,empid,status from emp_table  where reportedmanagerid='".$user."' ORDER BY empid ASC ");
 	}
 	echo "<option value=''>-Search By Id-</option>";
 	if($query) {

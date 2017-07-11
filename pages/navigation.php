@@ -73,10 +73,7 @@
                    <ul class="nav nav-second-level">
                      <?php if ($role=='admin'){
                             echo '<li><a href="javascript:;" onclick="div_show_add_new_shift();">Add Shift</a></li>';
-                         }
-
-                       if($role != "employee"){
-                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
+                            echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
                        }
                      ?>
                      <li class="active">
@@ -123,7 +120,7 @@
                                if($role != "employee") { 
                                 echo'<li><div class="col-lg-12 filter_top"> 
                                       <div class="form-group">
-                                      <label>View Others</label>
+                                      <label>View Employee</label>
                                         <div class="radio">
                                           <label>
                                             <input type="radio" name="choice_filter" id="shift_filter" value="shift">Shift

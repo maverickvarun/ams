@@ -223,10 +223,7 @@ $workunderteam=$_SESSION['workunderteam'];
                    <ul class="nav nav-second-level">
                      <?php if ($role=='admin'){
                             echo '<li><a href="javascript:;" onclick="div_show_add_new_shift();">Add Shift</a></li>';
-                         }
-
-                       if($role != "employee"){
-                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
+                            echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
                        }
                      ?>
                      <li>
@@ -315,19 +312,40 @@ $workunderteam=$_SESSION['workunderteam'];
 <!-- /.row -->
 <!-- code of filteration block of this page started here ......................................-->
  <div class="row" >
+      
+           
+
       <div class="col-lg-6">
         <div class="panel panel-default">
           <div class="panel-body">
             <div class="row">
-              <form class="form-horizontal" method="post" action="monthly-csv.php" role="form" enctype="multipart/form-data" >
+               <form class="form-horizontal" method="post" action="monthly-csv.php" role="form" enctype="multipart/form-data" >
                 <div class="col-lg-12">
                   <div class="form-group">
-                    <label>Browse for uploading new monthly shift file </label>
-                        <input  type="file" name="csv_file" id="browse_csv_file"  accept=".csv" >
-                        <input type="submit" name="btn_submit" id="uploading" value="Upload Monthly Shift" class="btn btn-outline btn-primary btn-lg btn-success">
-                  </div>
+                 <?php 
+                 if($role=="admin"){
+                   echo' <div class="col-lg-4" id="secondwo">
+                    <div class="form-group required ">
+                    <label class="control-label">Select team</label>
+                     <select class="form-control input-sm myselect" name="teamname" required>';
+                    
+                        $query = mysqli_query($con,"select team_name from team_table");
+                         echo '<option value="">-Select team-</option>';
+                        while($result = mysqli_fetch_array($query)) {
+                          $team_name = $result['team_name'];
+                          echo '<option value='.$team_name.'>'.$team_name.'</option>';
+                        }
+                      
+                   echo' </select>
+                    </div>
+                    </div>';
+                  }
+                     ?>
+                    <label class="control-label">Browse for uploading new monthly shift file </label>
+                    <input  type="file" name="csv_file" id="browse_csv_file"  accept=".csv" >
+                 </div>   
                 </div>
-                
+                 <input type="submit" name="btn_submit" id="uploading" value="Upload Monthly Shift" class="btn btn-outline btn-primary btn-lg btn-success">  
               </form>
            </div>
       </div> 

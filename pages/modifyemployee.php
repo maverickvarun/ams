@@ -34,7 +34,7 @@
     $nameinbank = $row['nameinbank'];
     $accounttype = $row['accounttype'];
     $ifsccode = $row['ifsccode'];
-   
+
   }
   $query1 = mysqli_query($con," select * from template_roster_table where emp_id='".$user."'");
   while($row1 = mysqli_fetch_array($query1)) {
@@ -49,7 +49,7 @@
   $flag = $_SESSION['flag'];
   $check_in_out = $_SESSION['check_in_out'];
   $last_swipe = $_SESSION['last_swipe'];
-  date_default_timezone_set('Asia/Kolkata'); 
+  date_default_timezone_set('Asia/Kolkata');
 
    if($role!='employee'){
       define("SDFE_CSVSeparator", ",");           // Separator
@@ -62,7 +62,7 @@
 
       // Get array of CSV files
       $csvpath = SDFE_CSVFolder . "/";
-      $files = scandir($csvpath); // this is all files in dir 
+      $files = scandir($csvpath); // this is all files in dir
        // clean up file list (to exclude)should only include csv files
         $csvfiles = array();
         foreach ($files as $basename) {
@@ -72,10 +72,10 @@
         }
         if($role=='manager'){
         $csvname=$csvpath.$workunderteam.".".SDFE_CSVFileExtension;
-        } 
-  }         
+        }
+  }
 ?>
- 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -117,7 +117,7 @@
 
     <link href="custom-css/select2.min.css" rel="stylesheet" />
 
-    
+
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -159,9 +159,9 @@
                 <!-- /.dropdown -->
          <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <?php include('connection.php'); 
+            <?php include('connection.php');
                if($flag == 'remote') {
-                  $date = date("Y-m-d"); 
+                  $date = date("Y-m-d");
                   $status = '';
                   // below query is used to hide the checking button if user checkout then button is disabled.....
                   $query5 = mysqli_query($con,"SELECT status from emp_checks where emp_id = '".$biomatric_id."' and date = '".$date."'");
@@ -178,7 +178,7 @@
             </a>
          <!-- /.dropdown-tasks -->
          </li>
-      
+
          <!-- /.dropdown -->
          <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -199,46 +199,41 @@
             </ul>
            <!-- /.dropdown-user -->
          </li>          <!-- /.dropdown -->
-                
+
       </ul>
             <!-- /.navbar-top-links -->
       <div class="navbar-default sidebar " role="navigation" >
          <div class="sidebar-nav navbar-collapse" >
             <ul class="nav" id="side-menu">
-               <li><a href="dashboard.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>  
+               <li><a href="dashboard.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
              <li class="active"><a href="#"><i class="fa fa-male fa-fw"></i>Employee<span class="fa arrow"></span></a>
                  <ul class="nav nav-second-level">
                          <?php if ($role=='admin'){
                             echo '<li><a href="addemployee.php">Add Employee</a></li>';
                             echo '<li><a href="modifyemployee.php">Modify Employee<span class="fa arrow"></span></a>
-                                  <ul class="nav">
-                                    <li><a href="#">Modify Others<span class="fa arrow"></span></a>
-                                      <ul class="nav-second-level-level">
-                                       <div class="radio">
-                                          <label>
-                                            <input type="radio" name="choice_filter" id="id_filter" value="employee">Search By Id
-                                          </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                              <input type="radio" name="choice_filter" id="name_filter" value="name">Search By Name
-                                            </label>
-                                          </div>
-                                        </ul>
-                                    </li>
-                                    <li> 
-                                      <div class="col-sm-12 filter_bottom hidden" id="li_filter_by_choice_team">
-                                          <select class = "form-control input-sm myselect" id="filter_by_choice_team" onchange="filteration_modify_employee();" style="width:100%;">
-                                          </select>
+                            <ul class="nav nav-second-level">
+                              <li><div class="navbar-form" role="search">
+                                    <div class="input-group ">
+                                      <input class="form-control searchbox" placeholder="Search Name, Id" id="search_term" type="text" list="filter_by_choice_team" onchange="filteration_modify_employee();">
+
+                                      <div class="input-group-btn" >
+                                        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-arrow-right"></i></button>
                                       </div>
-                                    </li>
-                                  </ul> 
+                                    </div>
+                                    <input class="form-control hidden" type="text" id="selectedemp">
+
+                                  </div>
+                                </li>
+                              <datalist id="filter_by_choice_team" style="width:100%">
+                              </datalist>
+                            </ul>
+
                               </li>';
                            }
                          ?>
                      <li><a href="viewsigninout.php" >View Attendance</a></li>
-                     
-                     <?php if($role!="employee"){ 
+
+                     <?php if($role!="employee"){
                          echo '<li><a href="viewemployeedetails.php">View Employee Details</a></li>';
                         }
                      ?>
@@ -250,10 +245,10 @@
                   <ul class="nav nav-second-level">
                    <?php if($role != "admin"){
                      echo '<li><a href="javascript:;" onclick="div_leave_request_show();">Leave Request</a></li>';
-                      } 
+                      }
                         if($role != "employee") {
                          echo'<li><a href="leavedetails.php">Leave Details</a></li>';
-                        } 
+                        }
                      ?>
                       <li><a href="availableleaves.php">Available Leaves</a></li>
                   </ul>
@@ -270,21 +265,18 @@
                   </li>';
                 }
                ?>
-                 <!-- /.nav-third-level........................................................................ -->          
+                 <!-- /.nav-third-level........................................................................ -->
                <li>
                    <a href="#"><i class="fa fa-tasks fa-fw"></i>Shift<span class="fa arrow"></span></a>
                    <ul class="nav nav-second-level">
                      <?php if ($role=='admin'){
                             echo '<li><a href="javascript:;" onclick="div_show_add_new_shift();">Add Shift</a></li>';
-                         }
-
-                       if($role != "employee"){
-                           echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
+                            echo'<li><a href="javascript:;" onclick="div_show_change_shift();">Modify Shift</a></li>';
                        }
                      ?>
                      <li>
                      <?php
-                       
+
                        if($role !='employee'){
                            if($role=='manager'){
                              if(file_exists($csvname)){
@@ -304,7 +296,7 @@
                         }
                        //  else{
                        //    $d=date('d');
-                       //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed 
+                       //   // below if is used for date 1 to 9 and else is used for date is greater than 9 else query is executed
                        //   if($d < 10){
                        //     $d2 = 2*$d-$d;
                        //     $query = mysqli_query($con,"SELECT ".$user." from monthly_shift_table WHERE date='".date($d2.'-M-y')."' ");
@@ -320,7 +312,7 @@
                        //     echo'<a href="javascript:void(0)" onclick="showdialogshift()">Monthly Shift</a>';
                        //   }
                        // }
-                         
+
                        ?>
                      </li>
                    </ul>
@@ -334,7 +326,7 @@
                      <?php if ($role=='admin'){
                            echo '<li><a href="addroster.php">Add Monthly Roster</a></li>';
                        }?>
-                     
+
                      <li>
                          <a href="holiday.php">Holiday</a>
                      </li>
@@ -348,7 +340,7 @@
               }
               ?>
 
-           <!-- /.nav-sixth-level....................................................................... -->        
+           <!-- /.nav-sixth-level....................................................................... -->
            <li>
                <a href="manual.php"><i class="fa fa-bar-chart-o fa-fw"></i>Manual & FAQ</a>
            </li>
@@ -360,9 +352,9 @@
          </ul>
          </div>
          <!-- /.sidebar-collapse -->
-         </div> 
+         </div>
           <!-- /.navbar-static-side -->
-         </nav> 
+         </nav>
 <div id="page-wrapper">
   <div class="row">
       <div class="col-lg-12">
@@ -378,12 +370,12 @@
   <div class="col-lg-12">
     <div class="panel ">
       <div class="row">
-          <div class="col-sm-3 hidden" id="fi_filter_by_choice_button"></div>
+          <div class="col-sm-4 hidden" id="fi_filter_by_choice_button"></div>
         </div>
       </div>
     </div>
-</div>   
-<!-- 
+</div>
+<!--
     / filtration block is close here
  -->
   <!-- /.row -->
@@ -399,25 +391,25 @@
                  <input class="form-control" placeholder="Enter Search By Id" id="empid" name="empid"  >
             </div>
           </div>
-          <div class="col-lg-6">  
+          <div class="col-lg-6">
              <div class="form-group">
               <label class="control-label">Biomatric Id</label>
                 <input class="form-control" type="number"  id="bmi"  name="bmi" >
             </div>
-          </div> 
-          <div class="col-lg-6"> 
+          </div>
+          <div class="col-lg-6">
             <div class="form-group required">
               <label class="control-label">First Name</label>
                 <input class="form-control" type="text"  id="firstname"  name="firstname" >
             </div>
-          </div> 
-          <div class="col-lg-6">  
+          </div>
+          <div class="col-lg-6">
              <div class="form-group">
               <label class="control-label">Last Name</label>
                 <input class="form-control" type="text" id="last_name" name="last_name"  >
             </div>
           </div>
-          <div class="col-lg-6">  
+          <div class="col-lg-6">
              <div class="form-group required">
               <label class="control-label">Email ID</label>
                 <input class="form-control" type="text"  name="emailid" id="email">
@@ -428,26 +420,26 @@
               <label class="control-label">Mobile Number</label>
                 <input class="form-control" type="text" id="mobilenumber"  name="mobilenumber">
             </div>
-          </div> 
-          <div class="col-lg-6"> 
+          </div>
+          <div class="col-lg-6">
             <div class="form-group">
               <label class="control-label">Emergency Contact No.</label>
                 <input class="form-control" type="text" id="ecn"  name="ecn">
             </div>
           </div>
-          <div class="col-lg-6">  
+          <div class="col-lg-6">
              <div class="form-group">
               <label class="control-label">Reference Cont No.</label>
                 <input class="form-control" type="text"id="rcn" name="rcn"  >
             </div>
-          </div> 
-          <div class="col-lg-6">  
+          </div>
+          <div class="col-lg-6">
              <div class="form-group">
               <label class="control-label">Gender</label>
                 <input class="form-control" type="text" name="gender" >
             </div>
           </div>
-          <div class="col-lg-6">  
+          <div class="col-lg-6">
              <div class="form-group">
               <label class="control-label">Check IN</label>
                 <select class="form-control" name="flag">
@@ -461,12 +453,12 @@
               <label class="control-label">Date of Birth</label>
                 <input class="example1 form-control" type="text" id="dateofbirth" name="dateofbirth"  >
             </div>
-          </div> 
-          <div class="col-lg-6"> 
+          </div>
+          <div class="col-lg-6">
             <div class="form-group">
               <label class="control-label">Blood Group</label>
               <select class="form-control" name="bloodgroup" id="bloodgroup"
-                  onChange="idx = this.selectedIndex;val = this.options[idx].value;if (val=='Other') { 
+                  onChange="idx = this.selectedIndex;val = this.options[idx].value;if (val=='Other') {
                 var opt = prompt('Specify option, please','');
                   if (opt) {
                     this.options[this.selectedIndex]=new Option(opt,opt);
@@ -474,53 +466,53 @@
                     this.selectedIndex=idx;
                   }
                 }" >
-              
+
                 <option value="A+">A+</option> <option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option><option value="O+">O+</option>
                 <option value="O-">O-</option><option value="AB+">AB+</option><option value="AB-">AB-</option><option value="HH">HH</option>
                 <option value="Other">Other</option></select>
               </div>
-          </div> 
+          </div>
           <div class="col-lg-6">
             <div class="form-group">
               <label class="control-label">Date of Joining</label>
                 <input class="example1 form-control" type="text" id="dateofjoining" name="dateofjoining" >
             </div>
-          </div> 
-          <div class="col-lg-6"> 
+          </div>
+          <div class="col-lg-6">
             <div class="form-group">
               <label class="control-label">Parents/Guardians</label>
                 <input class="form-control" type="text" id="parents" name="parents" value="<?php echo $parents; ?>">
             </div>
-          </div> 
+          </div>
           <div class="col-lg-6">
             <div class="form-group">
               <label class="control-label">Parment Address</label>
                 <input class="form-control" type="text"  id="parmentaddress" name="parmentaddress" value="<?php echo $permanentaddress; ?>">
             </div>
-          </div> 
-          <div class="col-lg-6"> 
+          </div>
+          <div class="col-lg-6">
             <div class="form-group">
               <label class="control-label">Temporary Address</label>
                 <input class="form-control" type="text" id="tempaddress" name="tempaddress"  value="<?php echo $tempaddress; ?>">
             </div>
-          </div> 
-          <div class="col-lg-6">  
+          </div>
+          <div class="col-lg-6">
              <div class="form-group required">
               <label class="control-label">Employee Role</label>
               <select class="form-control" id="employeerole" name="employeerole">
-               
+
                 <option value="employee">Employee</option> <option value="manager">Manager</option><option value="admin">Admin</option>
               </select>
-              
+
             </div>
           </div>
-          
-          <div class="col-lg-6"> 
+
+          <div class="col-lg-6">
              <div class="form-group">
               <label class="control-label">Working Team</label>
               <select class="form-control" id="workingteam" name="workingteam">
-             
-                <?php 
+
+                <?php
                   $query = mysqli_query($con,"select team_name from team_table");
                   while($result = mysqli_fetch_array($query)) {
                     $team_name = $result['team_name'];
@@ -528,15 +520,15 @@
                   }
                  ?>
               </select>
-              
+
             </div>
-          </div> 
-          <div class="col-lg-6">  
+          </div>
+          <div class="col-lg-6">
              <div class="form-group">
               <label class="control-label">Shift</label>
               <select class="form-control" name="shift" id="shift" >
-                
-                <?php 
+
+                <?php
                   $query = mysqli_query($con,"select shift_name from shift_table");
                   while($result = mysqli_fetch_array($query)) {
                     $shift_name = $result['shift_name'];
@@ -551,8 +543,8 @@
               <label class="control-label">Reportee</label>
               <input class="form-control" type="text"  id="rmi" name="rmi" value="<?php echo $reportedmanagerid; ?>">
             </div>
-          </div> 
-             <div class="col-lg-6"> 
+          </div>
+             <div class="col-lg-6">
            <div class="form-group">
               <label class="control-label">Status</label>
               <select class="form-control myselect " id="team" name="status" >
@@ -560,7 +552,7 @@
                    echo '<option value="0">Inactive</option>';
                </select>
             </div>
-          </div> 
+          </div>
          <!--  <div class="col-lg-6">
             <div class="form-group required">
               <label class="control-label">First Week Off</label>
@@ -573,7 +565,7 @@
                 <option value="thursday">Thursday</option>
                 <option value="friday">Friday</option>
                 <option value="saturday">Saturday</option>
-                 
+
               </select>
             </div>
           </div>
@@ -590,15 +582,15 @@
                 <option value="thursday">Thursday</option>
                 <option value="friday">Friday</option>
                 <option value="saturday">Saturday</option>
-                 
+
               </select>
             </div>
             </div> -->
 
-      </fieldset>         
+      </fieldset>
     </div>
     </div>
-  </div> 
+  </div>
 <!-- /col-lg-6
    below code is for the bank details panel of employeee...........
   -->
@@ -611,12 +603,12 @@
           <label class="control-label">Name in Bank</label>
             <input class="form-control" type="text" id="nib" name="nib" value="<?php echo $nameinbank; ?>">
         </div>
-      </div> 
-      <div class="col-lg-6"> 
+      </div>
+      <div class="col-lg-6">
         <div class="form-group">
           <label class="control-label">Bank A/C Details</label>
           <select class="form-control" name="bankacdetails" id="bankacdetails"
-      onChange="idx = this.selectedIndex;val = this.options[idx].value;if (val=='Other') { 
+      onChange="idx = this.selectedIndex;val = this.options[idx].value;if (val=='Other') {
                 var opt = prompt('Specify option, please','');
                   if (opt) {
                     this.options[this.selectedIndex]=new Option(opt,opt);
@@ -624,7 +616,7 @@
                     this.selectedIndex=idx;
                   }
                 }">
-           
+
             <option value="state bank of india">State Bank Of India</option>
             <option value="punjab nataional bank">Punjab National Bank</option>
             <option value="hdfc">HDFC</option>
@@ -632,11 +624,11 @@
           </select>
          </div>
       </div>
-      <div class="col-lg-6">  
+      <div class="col-lg-6">
        <div class="form-group">
         <label class="control-label">Account Type</label>
         <select class="form-control" name="accounttype"id="accounttype"
-          onChange="idx = this.selectedIndex;val = this.options[idx].value;if (val=='Other') { 
+          onChange="idx = this.selectedIndex;val = this.options[idx].value;if (val=='Other') {
           var opt = prompt('Specify option, please','');
             if (opt) {
               this.options[this.selectedIndex]=new Option(opt,opt);
@@ -644,7 +636,7 @@
               this.selectedIndex=idx;
             }
           }">
-        
+
           <option value="saving account">Saving Account</option>
           <option value="current account">Current Account</option>
           <option value="Other">Other</option>
@@ -656,17 +648,17 @@
           <label class="control-label">Bank A/C Number</label>
             <input class="form-control" type="text" id="ban"  name="ban" value="<?php echo $bankacnumber; ?>" >
         </div>
-      </div> 
-      <div class="col-lg-6"> 
+      </div>
+      <div class="col-lg-6">
          <div class="form-group">
           <label class="control-label">IFSC Code</label>
             <input class="form-control" type="text" id="ifsc"  name="ifsc" value="<?php echo $ifsccode; ?>">
         </div>
-      </div> 
+      </div>
     </fieldset>
     </div>
-    </div> 
-  </div>     
+    </div>
+  </div>
 <!-- /col-lg-6
             below code is for the document details panel of employeee...........
   -->
@@ -681,7 +673,7 @@
                   <input type="file" id="emp_snap" name="file[]" accept="image/*" onchange="loadFile(event)">
               </div>
             </div>
-            <div class="col-lg-5"> 
+            <div class="col-lg-5">
               <div class="form-group">
                 <label class="control-label">Documentation Modification</label>
                 <div class="radio">
@@ -693,7 +685,7 @@
                   </label>
                 </div>
               </div>
-            </div> 
+            </div>
             <div class="col-lg-7">
               <div class="form-group visible" id="matric_snap_div">
                   <label class="control-label">Matric Snap</label>
@@ -705,18 +697,18 @@
                 <label>Intermediate Snap</label>
                 <input type="file" id="intermediate_snap" name="file[]" accept="image/*" onchange="loadFile(event)">
               </div>
-            </div> 
-            <div class="col-lg-7"> 
+            </div>
+            <div class="col-lg-7">
               <div class="form-group  visible" id="graduation_snap_div">
                 <label class="control-label">Graduation Snap</label>
                     <input type="file" id="graduation_snap" name="file[]" accept="image/*" onchange="loadFile(event)">
               </div>
-            </div> 
-            <div class="col-lg-5">  
+            </div>
+            <div class="col-lg-5">
                <div class="form-group  visible" id="post_graduation_snap_div">
                 <label class="control-label">Post Graduation Snap</label>
                     <input type="file" id="post_graduation_snap" name="file[]" accept="image/*" onchange="loadFile(event)">
-              </div>  
+              </div>
             </div>
 
             <div class="col-lg-7">
@@ -724,26 +716,26 @@
                 <label class="control-label">Address proof  Snap</label>
                   <input type="file" id="address_proof_snap" name="file[]" accept="image/*" onchange="loadFile(event)">
               </div>
-            </div> 
-            <div class="col-lg-5"> 
+            </div>
+            <div class="col-lg-5">
               <div class="form-group  visible" id="pan_card_snap_div">
                 <label class="control-label">Pan Card Snap</label>
                     <input type="file" id="pan_card_snap" name="file[]" accept="image/*" onchange="loadFile(event)">
               </div>
             </div>
-            <div class="col-lg-7">  
+            <div class="col-lg-7">
                <div class="form-group  visible" id="experience_snap_div">
                 <label class="control-label">Experience(if any) Snap</label>
                     <input type="file" id="experience_snap" name="file[]" accept="image/*" onchange="loadFile(event)">
               </div>
             </div>
-            <div class="col-lg-5">  
+            <div class="col-lg-5">
                <div class="form-group visible " id="relv_snap_div">
                 <label class="control-label">Relv. Letter(if any) Snap</label>
                   <input type="file" id="relv_letter_snap" name="file[]" accept="image/*" onchange="loadFile(event)">
               </div>
             </div>
-             <div class="col-lg-12">  
+             <div class="col-lg-12">
               <div class="form-group " id="preview_snap_div">
                 <label><b>Preview after selection of photo</b></label>
                     <img id="output"/ class="image_preview">
@@ -758,10 +750,10 @@
               <div class="form-group">
                 <button type="reset" class="btn btn-block btn-primary btn-lg ">Reset</button>
               </div>
-          </div>  
+          </div>
         </fieldset>
         </div>
-      </div> 
+      </div>
     </div>
     <!-- /col-lg-6 -->
   </form>
@@ -792,7 +784,7 @@
     <!-- jQuery datepicker-->
 
     <script src="custom-js/bootstrap-datepicker.js"></script>
-    
+
     <script src="custom-js/filteration-button.js"></script>
 
     <script type="text/javascript" src="custom-js/filtration_method.js"></script>
@@ -815,7 +807,7 @@
       $(document).ready(function () {
         $('.example1').datepicker({
           format: "yyyy-mm-dd"
-        });  
+        });
       });
     </script>
     <script>
@@ -824,7 +816,7 @@
         output.src = URL.createObjectURL(event.target.files[0]);
       };
     </script>
-     
+
     <script>
       $('#timepicker1').timepicki();
       $('#custom-time').click(function() {
@@ -852,12 +844,13 @@
 
 
 
-<?php 
+
+<?php
 if(isset($_POST['submit_preview'])) {
   include('connection.php');
   $query = mysqli_query($con,"UPDATE emp_table SET empid = '".$_POST['empid']."', biomatric_id='".$_POST['bmi']."',firstname = '".$_POST['firstname']."',lastname = '".$_POST['last_name']."', gender = '".$_POST['gender']."',dateofbirth= '".$_POST['dateofbirth']."',mobilenumber = '".$_POST['mobilenumber']."',emercontactno = '".$_POST['ecn']."',emailid = '".$_POST['emailid']."',dateofjoining = '".$_POST['dateofjoining']."',bloodgroup = '".$_POST['bloodgroup']."' ,parents = '".$_POST['parents']."',permanentaddress ='".$_POST['parmentaddress']."' ,tempaddress = '".$_POST['tempaddress']."',shift = '".$_POST['shift']."',status = '".$_POST['status']."' ,flag = '".$_POST['flag']."',employeerole = '".$_POST['employeerole']."',workunderteam = '".$_POST['workingteam']."',reportedmanagerid = '".$_POST['rmi']."',refecontactno = '".$_POST['rcn']."' ,bankacdetails = '".$_POST['bankacdetails']."',bankacnumber = '".$_POST['ban']."' ,nameinbank = '".$_POST['nib']."',accounttype = '".$_POST['accounttype']."',ifsccode = '".$_POST['ifsc']."' where id = '".$_POST['id']."'");
   $user = $_POST['empid'];
-  $j = 0; 
+  $j = 0;
   $q=mysqli_query($con,"SELECT emp_id from template_roster_table where emp_id='".$_POST['empid']."'");
   $count=mysqli_num_rows($q);
   if($count>0){
@@ -915,31 +908,31 @@ if(isset($_POST['submit_preview'])) {
       $name = $filename.'.'.$file_extension;
     }
     $target_path = $target_path .$user.'/'. $name;     // Set the target path with a new name of image
-    $j = $j + 1; 
+    $j = $j + 1;
          // Increment the number of uploaded images according to the files in array.
     if (($_FILES["file"]["size"][$i])  // Approx. 500kb files can be uploaded.
     && in_array($file_extension, $validextensions)) {
       if (move_uploaded_file($_FILES['file']['tmp_name'][$i], $target_path)) {
       // If file moved to uploads folder.
-        
+
       }
       else {     //  If File Was Not Moved.
         echo '<script>mscAlert("'.$j ." - ".' please try again!");</script>';
       }
-      
+
     }
-    
+
   }
-  
+
   if($query) {
     echo '<script type="text/javascript" >mscAlert({title: "Done",subtitle: "successfully modify.",  // default: ""
         okText: "Close",    // default: OK
-        });</script>';    
+        });</script>';
   }
   else {
     echo '<script type="text/javascript" >mscAlert({title: "Sorry",subtitle: "fail to modify.",  // default: ""
         okText: "Close",    // default: OK
-        });</script>';    
+        });</script>';
   }
-}  
+}
 ?>
